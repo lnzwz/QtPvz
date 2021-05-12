@@ -4335,7 +4335,7 @@ void MyGLWidget::paintEvent(QPaintEvent *e)
     QPainter memdc(this);
     if(ty==0)
     {
-        QFont f("",floor(8*m_wnd->m_sf+1e-10),QFont::Bold,false);memdc.setFont(f);
+        QFont f("",floor(4*m_wnd->m_sf+1e-10),QFont::Bold,false);memdc.setFont(f);
         memdc.setPen(QPen(Qt::NoPen));
         QBrush b(QColor(0,0,0,150)),b2(QColor(93,0,1));
         b2.setStyle(Qt::SolidPattern);b.setStyle(Qt::SolidPattern);
