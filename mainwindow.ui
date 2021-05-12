@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1260</width>
+    <height>810</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>植物大战僵尸</string>
+  </property>
+  <property name="unifiedTitleAndToolBarOnMac">
+   <bool>false</bool>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="13" column="6">
+     <widget class="QRadioButton" name="tui">
+      <property name="text">
+       <string>不可能</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="0">
+     <spacer name="horizontalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="9" column="6">
+     <widget class="QDoubleSpinBox" name="speed">
+      <property name="minimum">
+       <double>0.250000000000000</double>
+      </property>
+      <property name="maximum">
+       <double>15.000000000000000</double>
+      </property>
+      <property name="singleStep">
+       <double>0.250000000000000</double>
+      </property>
+      <property name="value">
+       <double>1.000000000000000</double>
+      </property>
+     </widget>
+    </item>
+    <item row="14" column="6">
+     <widget class="QLineEdit" name="lineEdit">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="6">
+     <widget class="QRadioButton" name="normal">
+      <property name="text">
+       <string>困难</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="5">
+     <widget class="QCheckBox" name="Auto">
+      <property name="text">
+       <string>自动</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="3" colspan="4">
+     <widget class="QPushButton" name="quick">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="icons.qrc">
+        <normaloff>:/icons/119.png</normaloff>:/icons/119.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>100</width>
+        <height>32</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="13" column="5">
+     <widget class="QRadioButton" name="hard">
+      <property name="text">
+       <string>疯狂</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="3" colspan="4">
+     <widget class="QPushButton" name="open">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="icons.qrc">
+        <normaloff>:/icons/121.png</normaloff>:/icons/121.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>100</width>
+        <height>32</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="3" colspan="4">
+     <widget class="QPushButton" name="btc">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="icons.qrc">
+        <normaloff>:/icons/116.png</normaloff>:/icons/116.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>100</width>
+        <height>32</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="3" colspan="4">
+     <widget class="QPushButton" name="buy">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="icons.qrc">
+        <normaloff>:/icons/118.png</normaloff>:/icons/118.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>100</width>
+        <height>32</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="3" colspan="4">
+     <widget class="QPushButton" name="stop">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="icons.qrc">
+        <normaloff>:/icons/117.png</normaloff>:/icons/117.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>100</width>
+        <height>32</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="14" column="4" colspan="2">
+     <widget class="QLabel" name="label">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>关卡(1~65)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="5">
+     <widget class="QCheckBox" name="Doub">
+      <property name="text">
+       <string>双倍</string>
+      </property>
+     </widget>
+    </item>
+    <item row="11" column="5">
+     <widget class="QRadioButton" name="xin">
+      <property name="text">
+       <string>新手</string>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="5" colspan="2">
+     <widget class="QProgressBar" name="prog">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>false</bool>
+      </property>
+      <property name="invertedAppearance">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="3" colspan="4">
+     <widget class="QPushButton" name="save">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="icons.qrc">
+        <normaloff>:/icons/120.png</normaloff>:/icons/120.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>100</width>
+        <height>32</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="5">
+     <widget class="QRadioButton" name="easy">
+      <property name="text">
+       <string>普通</string>
+      </property>
+     </widget>
+    </item>
+    <item row="11" column="6">
+     <widget class="QRadioButton" name="water">
+      <property name="text">
+       <string>简单</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="5">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="a_open">
+   <property name="text">
+    <string>打开</string>
+   </property>
+  </action>
+  <action name="a_save">
+   <property name="text">
+    <string>保存</string>
+   </property>
+  </action>
+  <action name="a_quit">
+   <property name="text">
+    <string>退出</string>
+   </property>
+  </action>
+  <action name="a_start">
+   <property name="text">
+    <string>新游戏</string>
+   </property>
+  </action>
+  <action name="a_buy">
+   <property name="text">
+    <string>购买能量豆</string>
+   </property>
+  </action>
+  <action name="a_quick">
+   <property name="text">
+    <string>加速恢复</string>
+   </property>
+  </action>
+  <action name="a_add">
+   <property name="text">
+    <string>加速</string>
+   </property>
+  </action>
+  <action name="a_sub">
+   <property name="text">
+    <string>减速</string>
+   </property>
+  </action>
+  <action name="a_sta">
+   <property name="text">
+    <string>查看状态</string>
+   </property>
+  </action>
+  <action name="a_over">
+   <property name="text">
+    <string>结束游戏</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="icons.qrc"/>
+  <include location="icons.qrc"/>
+ </resources>
+ <connections/>
+</ui>
