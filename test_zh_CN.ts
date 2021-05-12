@@ -4,18 +4,18 @@
 <context>
     <name>CGame</name>
     <message>
-        <location filename="mainwindow.cpp" line="1780"/>
-        <location filename="mainwindow.cpp" line="1797"/>
+        <location filename="mainwindow.cpp" line="1779"/>
+        <location filename="mainwindow.cpp" line="1796"/>
         <source>BUG</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1995"/>
+        <location filename="mainwindow.cpp" line="1994"/>
         <source>FULL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="2167"/>
+        <location filename="mainwindow.cpp" line="2169"/>
         <source>提示</source>
         <translation type="unfinished"></translation>
     </message>
@@ -138,83 +138,83 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="609"/>
+        <location filename="mainwindow.cpp" line="608"/>
         <source>出大BUG了</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="677"/>
-        <location filename="mainwindow.cpp" line="972"/>
-        <location filename="mainwindow.cpp" line="1359"/>
-        <location filename="mainwindow.cpp" line="1413"/>
-        <location filename="mainwindow.cpp" line="4275"/>
-        <location filename="mainwindow.cpp" line="4279"/>
+        <location filename="mainwindow.cpp" line="676"/>
+        <location filename="mainwindow.cpp" line="971"/>
+        <location filename="mainwindow.cpp" line="1358"/>
+        <location filename="mainwindow.cpp" line="1412"/>
         <location filename="mainwindow.cpp" line="4285"/>
-        <location filename="mainwindow.cpp" line="4301"/>
-        <location filename="mainwindow.cpp" line="4305"/>
+        <location filename="mainwindow.cpp" line="4289"/>
+        <location filename="mainwindow.cpp" line="4295"/>
+        <location filename="mainwindow.cpp" line="4311"/>
+        <location filename="mainwindow.cpp" line="4315"/>
         <source>提示</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="929"/>
+        <location filename="mainwindow.cpp" line="928"/>
         <source>警告</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="929"/>
+        <location filename="mainwindow.cpp" line="928"/>
         <source>一大波僵尸即将来袭！</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="972"/>
+        <location filename="mainwindow.cpp" line="971"/>
         <source>胜利</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1127"/>
+        <location filename="mainwindow.cpp" line="1126"/>
         <source>Timer Bug</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1413"/>
+        <location filename="mainwindow.cpp" line="1412"/>
         <source>此操作将结束正在进行的游戏</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="4186"/>
-        <location filename="mainwindow.cpp" line="4208"/>
+        <location filename="mainwindow.cpp" line="4196"/>
+        <location filename="mainwindow.cpp" line="4218"/>
         <source>选择文件</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="4187"/>
-        <location filename="mainwindow.cpp" line="4209"/>
+        <location filename="mainwindow.cpp" line="4197"/>
+        <location filename="mainwindow.cpp" line="4219"/>
         <source>大战僵尸存档(*.dzjs)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="4275"/>
+        <location filename="mainwindow.cpp" line="4285"/>
         <source>花费450阳光购买一颗能量豆</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="4279"/>
+        <location filename="mainwindow.cpp" line="4289"/>
         <source>能量豆数量已达到上限！</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="4285"/>
-        <location filename="mainwindow.cpp" line="4305"/>
+        <location filename="mainwindow.cpp" line="4295"/>
+        <location filename="mainwindow.cpp" line="4315"/>
         <source>阳光不足！</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="4301"/>
+        <location filename="mainwindow.cpp" line="4311"/>
         <source>此操作可以加速回复30秒，要求至少5264阳光，操作后阳光将除以2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="4459"/>
+        <location filename="mainwindow.cpp" line="4429"/>
         <source>游戏还没有开始</source>
         <translation type="unfinished"></translation>
     </message>

@@ -201,7 +201,7 @@ public:
     int hjs[MMN];
     int XS,bh[MMM*MSI+100][MMN];
     int t_ai,lst[MMN];
-    bool SZZ,zk,b64;
+    bool SZZ,zk,b64,h_wa[MMN];
     int m_ng[MMM][MMN],m_dc[MMM][MMN],m_ice[MMM][MMN];
     int lalj[MMN],lazd[MMM][MMN],lawg[MMM][MMN];
 public:

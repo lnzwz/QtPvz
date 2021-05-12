@@ -38,7 +38,6 @@ MainWindow::MainWindow(QWidget *parent)
     gp->addButton(ui->water);
     gp->addButton(ui->xin);
     ui->buy->setVisible(0);
-    //setWindowFlags(Qt::FramelessWindowHint);
 }
 
 MainWindow::~MainWindow()
@@ -509,7 +508,7 @@ bool MainWindow::Plant(int x,int y)
             m_game.m_zhw[zz].nfs=0;
         }
     }
-    if(x>=0&&x<=(MM-1)*SI&&y>=0&&y<MN&&m_nzw!=-1)
+    if(x>=0&&x<=(MM-1)*SI&&y>=0&&y<MN&&m_nzw!=-1&&TM-m_game.m_ice[x/SI][y]>=(m_hd?800:400))
     {
         if(!m_b11||m_b12)
         {
@@ -2075,14 +2074,15 @@ bool CGame::MoveJs(int shu)
     bool rt=false;
     if(m_jsh[shu].hb%2==0||(m_jsh[shu].lx==12&&m_jsh[shu].shm>30)||m_jsh[shu].lx==11||m_jsh[shu].lx>=100)//若寒冰效果，速度变为一半，车不受影响
     {
-        if((m_jsh[shu].x+85*SI/110)/SI>=0&&(m_jsh[shu].x+85*SI/110)/SI<MM&&m_jsh[shu].lx<100&&m_dc[(m_jsh[shu].x+85*SI/110)/SI][m_jsh[shu].y]&&rand()%10==0&&m_jsh[shu].lx!=8)
+        int tx=(m_jsh[shu].x+85*SI/110)/SI,ty=m_jsh[shu].y;
+        if(tx>=0&&tx<MM&&m_jsh[shu].lx<100&&m_dc[tx][ty]&&rand()%10==0&&m_jsh[shu].lx!=8)
         {
             if(m_jsh[shu].lx==9||m_jsh[shu].lx==11)
-                m_dc[(m_jsh[shu].x+85*SI/110)/SI][m_jsh[shu].y]=0;
+                m_dc[tx][ty]=0;
             else if(m_jsh[shu].lx==12&&m_jsh[shu].shm>10)
             {
                 m_jsh[shu].shm=10;
-                m_dc[(m_jsh[shu].x+85*SI/110)/SI][m_jsh[shu].y]-=1;
+                m_dc[tx][ty]-=1;
             }
             else m_jsh[shu].shm-=1;
             m_jsh[shu].id=GetJsIcon(m_jsh[shu],*this);
@@ -2092,6 +2092,8 @@ bool CGame::MoveJs(int shu)
                 return true;
             }
         }
+        if(tx>=0&&tx<MM&&m_jsh[shu].lx==12)
+            m_ice[tx][ty]=TM;
         int i=GetFirstZw(m_jsh[shu].x,m_jsh[shu].y);
         m_jsh[shu].x-=m_jsh[shu].sd;
         if(m_jsh[shu].lx==17&&rand()%300==0&&m_jsh[shu].x<=830)
@@ -2411,8 +2413,11 @@ void CGame::Draw(QPainter &memdc)
         {
             for(int y=0;y<MN;y++)
             {
-                if(GetZwShu(x*SI,y)!=-1)
-                   memdc.drawPixmap(QRect(MPoint(x*SI+50,y*SI+60),MSize(SI,SI)),m_wnd->ico[114]);
+                int t=GetZwShu(x*SI,y);
+                if(t!=-1&&m_zhw[t].lx!=33)
+                    memdc.drawPixmap(QRect(MPoint(x*SI+50,y*SI+60),MSize(SI,SI)),m_wnd->ico[114]);
+                if(TM-m_ice[x][y]<(m_wnd->m_hd?800:400))
+                    memdc.fillRect(QRect(MPoint(x*SI+50,y*SI+60+SI/3),MSize(SI,SI*2/3)),QColor(255,255,255));
             }
         }
         QPen pe(Qt::black);pe.setStyle(Qt::SolidLine);
@@ -3249,7 +3254,7 @@ bool CGame::KillJs(int l, int r,int y, int kill)//杀僵尸
             else
             {
                 m_jsh[i].shm+=kill;
-                m_jsh[i].hb=100;
+                m_jsh[i].hb=0;
             }
             if(m_jsh[i].shm<=0)
             {
@@ -3282,6 +3287,11 @@ bool CGame::KillJsLine(int y,int kill)//杀行
             else
                 m_jsh[i].id=GetJsIcon(m_jsh[i],*this);
         }
+    }
+    if(kill==90)
+    {
+        for(int x=0;x<MM;x++)
+            m_ice[x][y]=-1e8;
     }
     return rt;
 }
@@ -3317,7 +3327,7 @@ void CGame::CreateGame(int lx)
         for(int j=0;j<MN;j++)
         {
             m_keng[i][j]=m_ng[i][j]=0;
-            m_dc[i][j]=0;
+            m_dc[i][j]=0;m_ice[i][j]=-1e8;
         }
     }
     for(int i=0;i<MN;i++)
@@ -4376,46 +4386,6 @@ void MyGLWidget::paintEvent(QPaintEvent *e)
         //memdc.drawPixmap(QRect(MPoint(1040,0),MSize(330,610)),m_wnd->ico[125]);
         m_wnd->m_game.Draw(memdc);
     }
-    /*if(XUAN)
-    {
-        memdc.setPen(QPen(Qt::NoPen));
-        QBrush b(QColor(0,0,0,150)),b2(QColor(93,0,1));
-        b2.setStyle(Qt::SolidPattern);b.setStyle(Qt::SolidPattern);
-        memdc.setBrush(b2);memdc.drawRect(QRect(MPoint(0,610),MSize(1040,140)));
-        for(int n=0;n<XUAN;n++)
-        {
-            if(m_wnd->m_xuan[n]==-1)break;
-            if(n>=m_wnd->SHU-(m_wnd->m_b11&&!m_wnd->m_b12))break;
-            memdc.drawRect(QRect(MPoint(n*90,610),MSize(90,140)));
-            memdc.drawPixmap(QRect(MPoint(n*90,610),MSize(90,100)),m_wnd->ico[115]);
-            memdc.drawPixmap(QRect(MPoint(n*90+20,625),MSize(50,50)),m_wnd->ico[m_wnd->m_zw[m_wnd->m_xuan[n]].id]);
-            if(!m_wnd->m_b11||m_wnd->m_b12)
-            {
-                memdc.setBrush(b);
-                memdc.drawRect(QRect(MPoint(n*90+16, 625),MSize(58,int((800-m_wnd->m_en[m_wnd->m_xuan[n]])/800.0*75.0))));
-                memdc.setPen(QColor(0,0,0));
-                memdc.drawText(MPoint(n*90+34,695),QString::asprintf("%d",m_wnd->m_zw[m_wnd->m_xuan[n]].yg));
-            }
-            QString nu;memdc.setPen(QColor(0,240,0));
-            if(n==10)nu="-> -";
-            else nu=QString::asprintf("-> %d",(n+1)%10);
-            memdc.drawText(MPoint(n*90+30,725),nu);
-            memdc.setPen(Qt::NoPen);memdc.setBrush(b2);
-        }
-        if(m_wnd->m_b11&&!m_wnd->m_b12&&m_wnd->SHU)
-            memdc.drawRect(QRect(MPoint((m_wnd->SHU-1)*90,610),MSize(90,140)));
-        if(m_wnd->m_b48)
-        {
-            memdc.setBrush(b);int t=TM-m_wnd->l48;
-            if(t>20)t=20;
-            memdc.drawRect(QRect(MPoint(XUAN*90+16, 625),MSize(58,int((20-t)/20.0*75.0))));
-        }
-        if(m_wnd->m_game.m_lx==2||m_wnd->m_game.m_lx==3)
-        {
-            memdc.setPen(Qt::NoPen);memdc.setBrush(QColor(0,0,60,60));
-            memdc.drawRect(QRect(MPoint(0,0),QSize(size().width(),m_wnd->m_sf*(MN*SI+60))));
-        }
-    }*/
     memdc.end();m_wnd->lad=m_wnd->tim.elapsed();
 }
 
