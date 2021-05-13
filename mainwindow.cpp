@@ -70,7 +70,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         else if(z==Qt::Key_S||z==Qt::Key_Down)ty+=1;
         else if(z==Qt::Key_A||z==Qt::Key_Left)tx-=SI;
         else if(z==Qt::Key_D||z==Qt::Key_Right)tx+=SI;
-        if(tx>=0&&tx<=(MM-1)*SI&&ty>=0&&ty<MN&&m_game.GetZwShu(tx,ty)==-1)
+        if(tx>=0&&tx<=(MM-1)*SI&&ty>=0&&ty<MN&&m_game.GetZwShu(tx,ty)==-1&&TM-m_game.m_ice[tx/SI][ty]>=(m_hd?800:400))
         {
             int z=m_game.GetZwShu(m_xx,m_xy);
             if(z!=-1)
@@ -133,7 +133,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
         {
             int x=((pt.x()-150)/SI)*SI;
             int y=((pt.y()-60)/SI);
-            if(x>=0&&x<=(MM-1)*SI&&y>=0&&y<MN&&m_game.GetZwShu(x,y)==-1)
+            if(x>=0&&x<=(MM-1)*SI&&y>=0&&y<MN&&m_game.GetZwShu(x,y)==-1&&TM-m_game.m_ice[x/SI][y]>=(m_hd?800:400))
             {
                 int z=m_game.GetZwShu(m_xx,m_xy);
                 if(z!=-1)
@@ -208,7 +208,22 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
     {
         bool t=(m_nzw==-1);
         QPoint pt=SPoint(event->pos().x(),event->pos().y());
-        if(m_nzw!=-1)
+        if(m_xx!=-1)
+        {
+            int x=((pt.x()-150)/SI)*SI;
+            int y=((pt.y()-60)/SI);
+            if(x>=0&&x<=(MM-1)*SI&&y>=0&&y<MN&&m_game.GetZwShu(x,y)==-1&&TM-m_game.m_ice[x/SI][y]>=(m_hd?800:400))
+            {
+                int z=m_game.GetZwShu(m_xx,m_xy);
+                if(z!=-1)
+                {
+                    m_game.m_zhw[z].x=x,m_game.m_zhw[z].y=y;
+                    m_game.CalZw();
+                }
+                m_xx=x;m_xy=y;
+            }
+        }
+        else if(m_nzw!=-1)
         {
             if(m_nzw==-2)
             {
@@ -281,7 +296,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
     m_sf=(a<b?a:b);
     if(fabs(od-m_sf)>1e-10)
         Initicon();
-    QFont f("",floor(5*m_sf),false);setFont(f);
+    //QFont f("",floor(5*m_sf),false);setFont(f);
     gl->resize(floor(1040*m_sf+1e-10),floor(610*m_sf+1e-10));
     gx->resize(floor(100*m_sf+1e-10),floor(610*m_sf+1e-10));
     gl->move(floor(100*m_sf+1e-10),ME);
@@ -508,36 +523,39 @@ bool MainWindow::Plant(int x,int y)
             m_game.m_zhw[zz].nfs=0;
         }
     }
-    if(x>=0&&x<=(MM-1)*SI&&y>=0&&y<MN&&m_nzw!=-1&&TM-m_game.m_ice[x/SI][y]>=(m_hd?800:400))
+    if(x>=0&&x<=(MM-1)*SI&&y>=0&&y<MN&&m_nzw!=-1)
     {
-        if(!m_b11||m_b12)
+        if(TM-m_game.m_ice[x/SI][y]>=(m_hd?800:400))
         {
-            if(m_en[m_nzw]>=800)
+            if(!m_b11||m_b12)
+            {
+                if(m_en[m_nzw]>=800)
+                {
+                    m_zw[m_nzw].x=x;
+                    m_zw[m_nzw].y=y;
+                    if(m_game.NewZw(m_zw[m_nzw]))
+                        m_en[m_nzw]=0;
+                }
+                gl->repaint();gx->repaint();
+            }
+            else
             {
                 m_zw[m_nzw].x=x;
                 m_zw[m_nzw].y=y;
                 if(m_game.NewZw(m_zw[m_nzw]))
-                    m_en[m_nzw]=0;
-            }
-            gl->repaint();gx->repaint();
-        }
-        else
-        {
-            m_zw[m_nzw].x=x;
-            m_zw[m_nzw].y=y;
-            if(m_game.NewZw(m_zw[m_nzw]))
-            {
-                int n = 0;
-                for(n=0;n<SHU;n++)
                 {
-                    if(m_xuan[n]==m_nzw)
-                        break;
+                    int n = 0;
+                    for(n=0;n<SHU;n++)
+                    {
+                        if(m_xuan[n]==m_nzw)
+                            break;
+                    }
+                    for(n+=1;n<SHU;n++)
+                        m_xuan[n-1]=m_xuan[n];
+                    SHU-=1;
+                    m_xuan[SHU]=-1;
+                    m_game.m_yg=9999;
                 }
-                for(n+=1;n<SHU;n++)
-                    m_xuan[n-1]=m_xuan[n];
-                SHU-=1;
-                m_xuan[SHU]=-1;
-                m_game.m_yg=9999;
             }
         }
         rt=true;
@@ -2092,7 +2110,7 @@ bool CGame::MoveJs(int shu)
                 return true;
             }
         }
-        if(tx>=0&&tx<MM&&m_jsh[shu].lx==12)
+        if(tx>=0&&tx<MM&&m_jsh[shu].lx==12&&m_jsh[shu].shm>10)
             m_ice[tx][ty]=TM;
         int i=GetFirstZw(m_jsh[shu].x,m_jsh[shu].y);
         m_jsh[shu].x-=m_jsh[shu].sd;
@@ -3259,7 +3277,7 @@ bool CGame::KillJs(int l, int r,int y, int kill)//杀僵尸
             if(m_jsh[i].shm<=0)
             {
                 DestroyJs(i);
-                i-=1;
+                if(!SZZ)i-=1;
             }
             else
                  m_jsh[i].id=GetJsIcon(m_jsh[i],*this);
@@ -4345,7 +4363,7 @@ void MyGLWidget::paintEvent(QPaintEvent *e)
     QPainter memdc(this);
     if(ty==0)
     {
-        QFont f("",floor(4*m_wnd->m_sf+1e-10),QFont::Bold,false);memdc.setFont(f);
+        QFont f("",floor(8*m_wnd->m_sf+1e-10),QFont::Bold,false);memdc.setFont(f);
         memdc.setPen(QPen(Qt::NoPen));
         QBrush b(QColor(0,0,0,150)),b2(QColor(93,0,1));
         b2.setStyle(Qt::SolidPattern);b.setStyle(Qt::SolidPattern);

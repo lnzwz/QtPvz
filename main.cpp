@@ -289,7 +289,7 @@ int GetJsIcon(SJsh &js,CGame &ga)
     case 101:
         return 81;
     default:
-        return 0;
+        return 59;
     }
 }
 
