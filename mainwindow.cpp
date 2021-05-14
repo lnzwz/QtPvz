@@ -319,11 +319,11 @@ void MainWindow::Init()
     m_zw[7].Create(nul,0,100000000,1000000000,0,1600,0,0,11,125,6);//高坚果
     m_zw[8].Create(nul,-4,200,0,0,100000000,0,0,12,50,7);//倭瓜
     m_zw[9].Create(QColor(0,200,0),4,2400,2500,5,60,0,0,43,375,8,30*SI/110);//西瓜
-    m_zw[10].Create(nul,-8,1000,1000000000,0,600,0,0,82,75,19);//恢复坚果
+    m_zw[10].Create(nul,-8,1000,1000000000,0,500,0,0,82,1000,19);//恢复坚果
     m_zw[11].Create(QColor(10,170,255),5,2500,1800,4,60,0,0,55,500,10,30*SI/110,true);//冰瓜
     m_zw[12].Create(nul,-9,5000*pow(SI/110.0,0.25),1500,0,60,0,0,94,125,20);//双子
     m_zw[13].Create(nul,-10,1000,1500,0,80,0,0,95,125,21);//医疗
-    m_zw[14].Create(nul,90,500,0,40,60,0,0,68,150,16,0,false,false,true);//大嘴花
+    m_zw[14].Create(nul,90,300,0,100,60,0,0,68,150,16,0,false,false,true);//大嘴花
 
     m_zw[15].Create(nul,0,1000000000,0,0,60,0,0,56,25,11);//灯
     m_zw[16].Create(nul,90,500,0,0,60,0,0,71,25,17,40,true,false,true);//土豆地雷
@@ -335,7 +335,7 @@ void MainWindow::Init()
 
     m_zw[21].Create(nul,0,1000000000,0,0,0,0,0,62,25,14);//荷叶
     m_zw[22].Create(QColor(255,255,0),1,1500,3000,4,60,0,0,98,250,22,10*SI/110);//星星
-    m_zw[23].Create(nul,-11,1100,2000,0,60,0,0,101,200,23);//忧郁蘑菇
+    m_zw[23].Create(nul,-11,1100,2000,0,60,0,0,101,200,23,0,0,true);//忧郁蘑菇
     m_zw[24].Create(nul,0,0,0,0,0,0,0,102,125,24);//南瓜
 
     m_zw[25].Create(nul,0,1000000000,0,0,50,0,0,104,250,25);//反弹
@@ -343,10 +343,10 @@ void MainWindow::Init()
     m_zw[27].Create(nul,-13,80000,0,0,1,0,0,110,2,27);//大葱
     m_zw[28].Create(nul,0,0,0,0,0,0,0,130,50,28);//咖啡豆
     m_zw[29].Create(nul,0,0,0,0,0,0,0,132,200,29);//地刺
-    m_zw[30].Create(nul,-14,5000,0,0,60,0,0,134,400,30);
-    m_zw[31].Create(nul,-15,1000000000,0,0,60,0,0,135,400,31);
-    m_zw[32].Create(nul,0,100000000,0,0,3,0,0,141,175,32,0,0,true);
-    m_zw[33].Create(nul,0,100000000,0,0,60,0,0,142,200,33);
+    m_zw[30].Create(nul,-14,5000,0,0,60,0,0,134,400,30);//大炮2
+    m_zw[31].Create(nul,-15,1000000000,0,0,60,0,0,135,400,31);//大炮1
+    m_zw[32].Create(nul,0,100000000,0,0,3,0,0,141,175,32,0,0,true);//魅惑菇
+    m_zw[33].Create(nul,0,100000000,0,0,60,0,0,142,200,33);//节点
 
 
     int zws[MAXGQS+4]={3,2,2,2,1,2,1,1,1,0,2};
@@ -453,7 +453,7 @@ void MainWindow::Initicon()
         ico[i].load(QString::asprintf("://icons/%d.png",i));
         if(i>=116&&i<=124)continue;
         else if(i==139||i==140)
-            ico[i]=ico[i].scaled(floor(ico[i].width()*SI/250.0*m_sf),floor(ico[i].height()*SI/250.0*m_sf),Qt::KeepAspectRatio);
+            ico[i]=ico[i].scaled(floor(ico[i].width()*SI/220.0*m_sf),floor(ico[i].height()*SI/220.0*m_sf),Qt::KeepAspectRatio);
         else if(i==115||i==111||i==113||i==125)
             ico[i]=ico[i].scaled(floor(ico[i].width()/2.0*m_sf),floor(ico[i].height()/2.0*m_sf),Qt::KeepAspectRatio);
         else
@@ -1260,7 +1260,7 @@ int MainWindow::MakeGq(int gq)//制作关卡
     int lx=(gq==2048?0:(gq-1)/GQS);
     if(gq==MAXGQS+3||gq==MAXGQS+5)
     {
-        m_p[13]=1;m_p[14]=0;
+        m_p[13]=1;m_p[14]=0;m_zw[23].mg=false;
         m_p[10]-=1;m_p[11]-=2;m_p[12]-=1;m_p[15]=3-m_ea;
     }
     m_game.b64=(gq==MAXGQS+4);
@@ -1369,7 +1369,7 @@ int MainWindow::MakeGq(int gq)//制作关卡
     {
         SHU=0;XUAN=11;
         JSH=MAXJSH;
-        m_b11=true;m_zw[32].mg=false;
+        m_b11=true;m_zw[32].mg=m_zw[23].mg=false;
         ui->prog->setRange(0,MN*(SI<=55?3000:1000));
         return 0;
     }
@@ -1528,7 +1528,7 @@ void MainWindow::StartGame(int lx)
     SetTimer(1002,m_b11?6000*pow(SI/110.0,0.9):m_time[0],NULL);
     if(lx==0||lx==1||lx==4||lx==5)
         SetTimer(1003,6000,NULL);
-    SetTimer(1004,m_b11?140000:m_jg[0],NULL);
+    SetTimer(1004,m_b11?110000:m_jg[0],NULL);
     if(m_ai)SetTimer(1008,400,NULL);
     if(m_b11)
     {
@@ -2467,7 +2467,7 @@ void CGame::Draw(QPainter &memdc)
                     memdc.fillRect(QRect(MPoint(x*SI+50,y*SI+60+SI/3),MSize(SI,SI*2/3)),QColor(255,255,255));
             }
         }
-        QPen pe(Qt::black);pe.setStyle(Qt::SolidLine);
+        QPen pe(Qt::black);pe.setStyle(Qt::SolidLine);memdc.setPen(pe);
         for(int x=0;x<=MN;x++)
             memdc.drawLine(MPoint(50,x*SI+60),MPoint(MM*SI+50,x*SI+60));
         for(int x=0;x<=MM;x++)
@@ -2634,7 +2634,7 @@ void CGame::Draw(QPainter &memdc)
                     int zx=zd.x+left+50,zy=hy+left-SI/3.66+45;
                     zx=floor(zx*m_wnd->m_sf);zy=floor(zy*m_wnd->m_sf);
                     memdc.translate(zx,zy);memdc.rotate(zd.x-zd.sx);
-                    memdc.drawPixmap(QRect(MPoint(-im.size().width()/2,-im.size().height()/2),MSize(im.size().width(),im.size().height())),im);
+                    memdc.drawPixmap(QRect(QPoint(-im.size().width()/2,-im.size().height()/2),QSize(im.size().width(),im.size().height())),im);
                     memdc.rotate(zd.sx-zd.x);memdc.translate(-zx,-zy);
                 }
             }
@@ -3161,9 +3161,9 @@ bool CGame::NotZw(int shu)//特殊植物
         DestroyZw(shu);rt=true;
         break;
     case 8://全息坚果
-        m_zhw[shu].shm+=(m_wnd->m_hd?10:15);
-        if(m_zhw[shu].shm>800*(m_wnd->m_ea>=2?2:1))
-            m_zhw[shu].shm=800*(m_wnd->m_ea>=2?2:1);
+        m_zhw[shu].shm+=(m_wnd->m_hd?6:10);
+        if(m_zhw[shu].shm>500*(m_wnd->m_ea>=2?1.5:1))
+            m_zhw[shu].shm=500*(m_wnd->m_ea>=2?1.5:1);
         m_zhw[shu].id=GetZwIcon(m_zhw[shu]);
         break;
     case 9://双子

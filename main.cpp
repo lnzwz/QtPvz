@@ -77,7 +77,7 @@ int GetZwIcon(SZhw &zw)
     case 19:
         if(zw.shm<40)
             return 126;
-        rtn=82-(zw.shm-1)/100+7;
+        rtn=82-(zw.shm-1)/65+7;
         if(rtn<82)
             rtn=82;
         return rtn;
