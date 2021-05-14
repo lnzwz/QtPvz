@@ -110,6 +110,15 @@ int GetZwIcon(SZhw &zw)
         return 141;
     case 33:
         return 142;
+    case 34:
+        return 143;
+    case 35:
+        if(zw.shm>300)
+            return 144;
+        else if(zw.shm>100)
+            return 145;
+        else
+            return 146;
     default:
         return 0;
     }
@@ -337,9 +346,9 @@ int GetJsEat(SZhw&zw,SJsh&js,CGame &ga)//��ý�ʬ����Ծ����
             return 0;
         }
         if(zw.shm<=100&&!ga.m_ng[zw.x/SI][zw.y])
-            et=20;
+            et=18;
         else
-            et=37;
+            et=35;
         ga.m_ng[zw.x/SI][zw.y]-=et;et=0;
         if(ga.m_ng[zw.x/SI][zw.y]<0)
         {
@@ -377,7 +386,7 @@ int GetJsEat(SZhw&zw,SJsh&js,CGame &ga)//��ý�ʬ����Ծ����
         if(zw.shm<=100&&!ga.m_ng[zw.x/SI][zw.y])
             et=30;
         else
-            et=95;
+            et=65;
         ga.m_ng[zw.x/SI][zw.y]-=et;et=0;
         if(ga.m_ng[zw.x/SI][zw.y]<0)
         {

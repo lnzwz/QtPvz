@@ -141,5 +141,9 @@
         <file>icons/140.png</file>
         <file>icons/141.png</file>
         <file>icons/142.png</file>
+        <file>icons/143.png</file>
+        <file>icons/144.png</file>
+        <file>icons/145.png</file>
+        <file>icons/146.png</file>
     </qresource>
 </RCC>

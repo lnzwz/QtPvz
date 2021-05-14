@@ -2,7 +2,7 @@
 #define STDAFX_H
 
 
-#define MAXSHU 34
+#define MAXSHU 36
 #define MXUAN 12
 #define MAXJSH 16
 #define MAXND 1000

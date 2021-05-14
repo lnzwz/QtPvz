@@ -266,7 +266,12 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 void MainWindow::DoDraw()
 {
     QPainter memdc(this);
-    memdc.drawPixmap(QRect(QPoint(floor(1140*m_sf)-1,ME),MSize(330,610)),ico[125]);
+    memdc.drawPixmap(QRect(MPoint(1140,ME),MSize(330,610)),ico[125]);
+    if(m_game.m_lx==2||m_game.m_lx==3)
+    {
+        memdc.setPen(Qt::NoPen);memdc.setBrush(QColor(0,0,60,60));
+        memdc.drawRect(QRect(MPoint(1140,ME),MSize(330,610)));
+    }
     if(!m_b11)
     {
         QPen p(QColor(255,0,0));p.setStyle(Qt::SolidLine);
@@ -319,7 +324,7 @@ void MainWindow::Init()
     m_zw[7].Create(nul,0,100000000,1000000000,0,1600,0,0,11,125,6);//高坚果
     m_zw[8].Create(nul,-4,200,0,0,100000000,0,0,12,50,7);//倭瓜
     m_zw[9].Create(QColor(0,200,0),4,2400,2500,5,60,0,0,43,375,8,30*SI/110);//西瓜
-    m_zw[10].Create(nul,-8,1000,1000000000,0,500,0,0,82,1000,19);//恢复坚果
+    m_zw[10].Create(nul,-8,1000,1000000000,0,500,0,0,82,100,19);//恢复坚果
     m_zw[11].Create(QColor(10,170,255),5,2500,1800,4,60,0,0,55,500,10,30*SI/110,true);//冰瓜
     m_zw[12].Create(nul,-9,5000*pow(SI/110.0,0.25),1500,0,60,0,0,94,125,20);//双子
     m_zw[13].Create(nul,-10,1000,1500,0,80,0,0,95,125,21);//医疗
@@ -329,7 +334,7 @@ void MainWindow::Init()
     m_zw[16].Create(nul,90,500,0,0,60,0,0,71,25,17,40,true,false,true);//土豆地雷
 
     m_zw[17].Create(nul,-5,8900,0,0,60,0,0,57,25,12,0,false,true);//阳光菇
-    m_zw[18].Create(QColor(255,0,255),1,2400,1600,4,60,0,0,58,0,13,5,false,true);//小喷菇
+    m_zw[18].Create(QColor(255,0,255),1,2400,1600,4,60,0,0,58,0,13,10*SI/110,false,true);//小喷菇
     m_zw[19].Create(nul,-6,500,0,0,1,0,0,63,125,15,10,false,true);//毁灭菇
     m_zw[20].Create(nul,-7,500,0,0,1,0,0,72,125,18,0,false,true);//寒冰菇
 
@@ -340,6 +345,7 @@ void MainWindow::Init()
 
     m_zw[25].Create(nul,0,1000000000,0,0,50,0,0,104,250,25);//反弹
     m_zw[26].Create(nul,-12,2500/3,5000,0,60,0,0,106,450,26);//双头大喷菇
+
     m_zw[27].Create(nul,-13,80000,0,0,1,0,0,110,2,27);//大葱
     m_zw[28].Create(nul,0,0,0,0,0,0,0,130,50,28);//咖啡豆
     m_zw[29].Create(nul,0,0,0,0,0,0,0,132,200,29);//地刺
@@ -347,17 +353,19 @@ void MainWindow::Init()
     m_zw[31].Create(nul,-15,1000000000,0,0,60,0,0,135,400,31);//大炮1
     m_zw[32].Create(nul,0,100000000,0,0,3,0,0,141,175,32,0,0,true);//魅惑菇
     m_zw[33].Create(nul,0,100000000,0,0,60,0,0,142,200,33);//节点
+    m_zw[34].Create(nul,0,100000000,0,0,60,0,0,143,704,34);//加速器
+    m_zw[35].Create(nul,0,100000000,1000000000,0,600,0,0,144,125,35);//有毒坚果
 
 
-    int zws[MAXGQS+4]={3,2,2,2,1,2,1,1,1,0,2};
-    zws[20]=4;zws[40]=1;zws[41]=1;zws[42]=1;zws[43]=1;zws[58]=3;zws[59]=6;
-    for(int n=1;n<MAXGQS+4;n++)
+    int zws[MAXGQS+5]={3,2,2,2,1,2,1,1,1,0,2};
+    zws[20]=4;zws[40]=1;zws[41]=1;zws[42]=1;zws[43]=1;zws[58]=4;zws[59]=7;
+    for(int n=1;n<MAXGQS+5;n++)
         zws[n]+=zws[n-1];
-    for(int n=0;n<=MAXGQS+3;n++)
+    for(int n=0;n<=MAXGQS+4;n++)
         m_zws[n]=zws[n];
 
     for(int i=0;i<MAXSHU;i++)wsad[i]=0;
-    wsad[4]=1;wsad[6]=2;wsad[7]=2;wsad[9]=2;wsad[10]=3;wsad[11]=2;wsad[13]=2;wsad[14]=2;wsad[22]=2;wsad[23]=2;wsad[26]=1;wsad[27]=1;
+    wsad[4]=1;wsad[6]=2;wsad[7]=2;wsad[9]=1;wsad[10]=3;wsad[11]=2;wsad[13]=1;wsad[14]=2;wsad[22]=2;wsad[23]=1;wsad[26]=1;wsad[27]=1;wsad[34]=1;wsad[35]=1;
     //创建僵尸：速度，生命，吃的速度，0，0，图片ID，编号，是否能跳跃，是否发射
     m_js[0].Create(1,6,1,0,0,3,0);//普通僵尸
     m_js[1].Create(1,12,1,0,0,5,1);//塑料僵尸
@@ -374,7 +382,7 @@ void MainWindow::Init()
     m_js[12].Create(1,200,10000,0,0,49,9);//巨人僵尸
     m_js[13].Create(1,20,0,0,0,92,15);//苦力怕
     m_js[14].Create(2,25,2,0,0,96,16,false,true);//末影人
-    m_js[15].Create(1,35,1,0,0,107,17);//zhannan
+    m_js[15].Create(1,35,1,0,0,107,17);//张楠
     //冷却速度
     m_hf[0]=12;
     m_hf[1]=15;
@@ -386,7 +394,7 @@ void MainWindow::Init()
     m_hf[7]=5;
     m_hf[8]=4;
     m_hf[9]=10;
-    m_hf[10]=7.5;
+    m_hf[10]=5.5;
     m_hf[11]=3.8;
     m_hf[12]=8;
     m_hf[13]=3;
@@ -410,6 +418,8 @@ void MainWindow::Init()
     m_hf[31]=0.5;
     m_hf[32]=2;
     m_hf[33]=2.5;
+    m_hf[34]=1.704;
+    m_hf[35]=4.5;
     //相对概率
     m_p[0]=3;
     m_p[1]=4;
@@ -448,7 +458,7 @@ void MainWindow::Init()
 
 void MainWindow::Initicon()
 {
-    for(int i=1;i<=142;i++)
+    for(int i=1;i<=146;i++)
     {
         ico[i].load(QString::asprintf("://icons/%d.png",i));
         if(i>=116&&i<=124)continue;
@@ -1147,7 +1157,29 @@ void MainWindow::OnTimer()
         }
         if(z!=-1)
         {
-            tmr[z].ne+=tmr[z].jg;
+            if(nIDEvent<1000)
+            {
+                int ne[4][2]={SI,0,0,1,-SI,0,0,-1};
+                bool zd=false;
+                for(int s=0;s<4;s++)
+                {
+                    int x=m_game.m_zhw[nIDEvent].x+ne[s][0],y=m_game.m_zhw[nIDEvent].y+ne[s][1];
+                    if(x>=0&&x<=(MM-1)*SI&&y>=0&&y<MN)
+                    {
+                        int t=m_game.GetZwShu(x,y);
+                        if(t!=-1&&m_game.m_zhw[t].lx==34)
+                        {
+                            zd=true;
+                            break;
+                        }
+                    }
+                }
+                if(zd)
+                    tmr[z].ne+=tmr[z].jg*2/3;
+                else
+                    tmr[z].ne+=tmr[z].jg;
+            }
+            else tmr[z].ne+=tmr[z].jg;
             //tmr[z].ne=tim.elapsed()+tmr[z].jg;
             if(rand()%int(1e9)<floor(tmr[z].yu*1e9))
                 tmr[z].ne+=1;
@@ -1173,7 +1205,7 @@ int MainWindow::MakeGq(int gq)//制作关卡
             sd=1.1;
         ui->speed->setValue(sd);
     }
-    m_hd=m_b48=false;m_ea=1;
+    m_tui=m_hd=m_b48=false;m_ea=1;
     if(ui->xin->isChecked())
     {
         m_ea=4;
@@ -1441,7 +1473,7 @@ int MainWindow::MakeGq(int gq)//制作关卡
         }
     }
     if(lx==2||lx==3)
-        m_zw[0].time=10000,m_zw[12].time=5300;
+        m_zw[0].time*=1.5,m_zw[12].time*=1.5;
     if(m_gq==30||m_gq==62||m_gq==64)m_gq=60;
     return lx;
 }
@@ -1527,7 +1559,7 @@ void MainWindow::StartGame(int lx)
     SetTimer(1001,20,NULL);
     SetTimer(1002,m_b11?6000*pow(SI/110.0,0.9):m_time[0],NULL);
     if(lx==0||lx==1||lx==4||lx==5)
-        SetTimer(1003,6000,NULL);
+        SetTimer(1003,(m_b48?10000:6000),NULL);
     SetTimer(1004,m_b11?110000:m_jg[0],NULL);
     if(m_ai)SetTimer(1008,400,NULL);
     if(m_b11)
@@ -1923,15 +1955,35 @@ bool CGame::Eat(int zshu,int jshu)
     else m_zhw[zshu].shm-=et;
     if(m_jsh[jshu].lx<100&&m_jsh[jshu].eat)//吃东西恢复生命
     {
-        if(m_jsh[jshu].lx==0)
-            m_jsh[jshu].shm+=rand()%200==0;
-        else if(m_jsh[jshu].lx==1)
-            m_jsh[jshu].shm+=rand()%160==0;
-        else if(m_jsh[jshu].lx==6)
-            m_jsh[jshu].shm+=rand()%50==0;
-        else if(m_jsh[jshu].lx!=4)
-            m_jsh[jshu].shm+=rand()%100==0;
+        if(m_zhw[zshu].lx==35)
+        {
+            if(m_jsh[jshu].lx==6)
+                m_jsh[jshu].shm-=rand()%5==0;
+            else
+                m_jsh[jshu].shm-=rand()%10==0;
+        }
+        else
+        {
+            if(m_jsh[jshu].lx==0)
+                m_jsh[jshu].shm+=rand()%200==0;
+            else if(m_jsh[jshu].lx==1)
+                m_jsh[jshu].shm+=rand()%160==0;
+            else if(m_jsh[jshu].lx==6)
+                m_jsh[jshu].shm+=rand()%50==0;
+            else if(m_jsh[jshu].lx!=4)
+                m_jsh[jshu].shm+=rand()%100==0;
+        }
         m_jsh[jshu].id=GetJsIcon(m_jsh[jshu],*this);
+        if(m_jsh[jshu].shm<=0)
+        {
+            if(m_zhw[zshu].shm<=0)//吃光
+            {
+                m_zhw[zshu].shm=0;
+                DestroyZw(zshu);
+            }
+            DestroyJs(jshu);
+            return true;
+        }
     }
     bool rt=false;
     if(m_zhw[zshu].lx==32&&(!m_zhw[zshu].mg||m_lx==2||m_lx==3)&&et&&m_jsh[jshu].lx!=9&&m_jsh[jshu].lx!=11&&m_jsh[jshu].lx!=12)
@@ -2643,7 +2695,7 @@ void CGame::Draw(QPainter &memdc)
                 QPen p(zd.color);QBrush br(zd.color);
                 p.setStyle(Qt::SolidLine);br.setStyle(Qt::SolidPattern);
                 memdc.setPen(p);memdc.setBrush(br);
-                if(zd.tx-zd.zx>440)
+                if(zd.tx<MM*SI+20&&zd.tx-zd.zx>420)
                     de[i]=true;
                 else
                     memdc.drawEllipse(QRect(MPoint(zd.x+left+50,zd.y*SI+left+60),MSize(zd.dx,zd.dx)));
@@ -4431,8 +4483,12 @@ void MyGLWidget::paintEvent(QPaintEvent *e)
     else
     {
         memdc.setRenderHint(QPainter::Antialiasing);
-        //memdc.drawPixmap(QRect(MPoint(1040,0),MSize(330,610)),m_wnd->ico[125]);
         m_wnd->m_game.Draw(memdc);
+        if(m_wnd->m_game.m_lx==2||m_wnd->m_game.m_lx==3)
+        {
+            memdc.setPen(Qt::NoPen);memdc.setBrush(QColor(0,0,60,60));
+            memdc.drawRect(QRect(MPoint(0,0),QSize(size().width(),size().height())));
+        }
     }
     memdc.end();m_wnd->lad=m_wnd->tim.elapsed();
 }
