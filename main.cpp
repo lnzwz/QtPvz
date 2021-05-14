@@ -421,7 +421,11 @@ void Fash(SJsh &js,CGame &ga)
     case 16://ĩӰ��
         js.x=rand()%(MM-1)*SI;
         ga.hjs[js.y]-=1;
-        js.y=rand()%MN;
+        do
+        {
+            js.y=rand()%MN;
+        }
+        while(ga.iswa[js.y]);
         ga.hjs[js.y]+=1;
         break;
     }

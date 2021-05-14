@@ -383,6 +383,9 @@ void MainWindow::Init()
     m_js[13].Create(1,20,0,0,0,92,15);//苦力怕
     m_js[14].Create(2,25,2,0,0,96,16,false,true);//末影人
     m_js[15].Create(1,35,1,0,0,107,17);//张楠
+    for(int i=0;i<18;i++)b_wa[i]=false;
+    b_wa[0]=b_wa[1]=b_wa[2]=b_wa[5]=b_wa[6]=b_wa[8]=true;
+
     //冷却速度
     m_hf[0]=12;
     m_hf[1]=15;
@@ -2100,6 +2103,8 @@ void CGame::NewJs(SJsh js)
 {
     if(m_jshu>800)//上限
         return;
+    while(iswa[js.y]&&js.lx>=0&&!m_wnd->b_wa[js.lx])
+        js.y=rand()%MN;
     hjs[js.y]+=1;
     m_jsh[m_jshu]=js;
     m_jsh[m_jshu].shu = m_jshu;
@@ -2193,6 +2198,8 @@ bool CGame::MoveJs(int shu)
         }
         if(tx>=0&&tx<MM&&m_jsh[shu].lx==12&&m_jsh[shu].shm>10&&m_wnd->r_gq!=MAXGQS+5)
             m_ice[tx][ty]=TM;
+        if(tx>=0&&tx<MM&&m_jsh[shu].lx!=8&&m_keng[tx][ty]==3)
+            m_keng[tx][ty]=2;
         int i=GetFirstZw(m_jsh[shu].x,m_jsh[shu].y);
         m_jsh[shu].x-=m_jsh[shu].sd;
         if(m_jsh[shu].lx==17&&rand()%300==0&&m_jsh[shu].x<=830)
@@ -3435,12 +3442,21 @@ void CGame::CreateGame(int lx)
         for(int j=0;j<MM;j++)
             lazd[j][i]=lawg[j][i]=-1e9;
     }
+    for(int i=0;i<MN;i++)iswa[i]=false;
     if(lx==4)
     {
         for(int i=0;i<MM;i++)
         {
             for(int j=110/SI;j<440/SI;j++)
-                m_keng[i][j]=2;
+                m_keng[i][j]=2,iswa[j]=true;
+        }
+    }
+    else if(b64)
+    {
+        for(int i=0;i<MM;i++)
+        {
+            m_keng[i][1]=2,iswa[1]=true;
+            m_keng[i][MN-2]=2,iswa[MN-2]=true;
         }
     }
     m_ks=true;
@@ -4209,7 +4225,7 @@ void CGame::input(QDataStream &ar)
     }
     for(int i=0;i<MN;i++)
     {
-        ar>>m_car[i]>>m_cing[i];
+        ar>>m_car[i]>>m_cing[i]>>iswa[i];
         ar>>lst[i]>>lalj[i];
     }
     ar>>m_hb>>t_ai>>b64>>zk;
@@ -4233,7 +4249,7 @@ void CGame::output(QDataStream &ar)
     }
     for(int i=0;i<MN;i++)
     {
-        ar<<m_car[i]<<m_cing[i];
+        ar<<m_car[i]<<m_cing[i]<<iswa[i];
         ar<<lst[i]<<lalj[i];
     }
     ar<<m_hb<<t_ai<<b64<<zk;
