@@ -296,7 +296,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
     m_sf=(a<b?a:b);
     if(fabs(od-m_sf)>1e-10)
         Initicon();
-    //QFont f("",floor(5*m_sf),false);setFont(f);
+    QFont f("",floor(5*m_sf),false);setFont(f);
     gl->resize(floor(1040*m_sf+1e-10),floor(610*m_sf+1e-10));
     gx->resize(floor(100*m_sf+1e-10),floor(610*m_sf+1e-10));
     gl->move(floor(100*m_sf+1e-10),ME);
@@ -900,10 +900,23 @@ bool MainWindow::DoTimer(int nIDEvent)
             SetTimer(1004,m_jg[m_n],NULL);//重置修改速度
             if(lj!=1)
             {
-                if((m_gq%10==0||XUAN==0||m_game.b64)&&r_gq!=MAXGQS+5)
-                    m_nd+=1;
+                bool sho=false;
+                if(ui->Short->isChecked())
+                    sho=true;
+                if(sho)
+                {
+                    if((m_gq%10==0||XUAN==0||m_game.b64)&&r_gq!=MAXGQS+5)
+                        m_nd+=1+(m_n%3==0);
+                    else
+                        m_nd+=(m_n%3!=0);
+                }
                 else
-                    m_nd+=m_n%2;
+                {
+                    if((m_gq%10==0||XUAN==0||m_game.b64)&&r_gq!=MAXGQS+5)
+                        m_nd+=1;
+                    else
+                        m_nd+=m_n%2;
+                }
                 if(m_nd>JSH-1)
                     m_nd=JSH-1;
             }
@@ -1151,6 +1164,15 @@ void MainWindow::OnTimer()
 
 int MainWindow::MakeGq(int gq)//制作关卡
 {
+    bool sho=false;
+    if(ui->Short->isChecked())
+    {
+        sho=true;
+        double sd=ui->speed->value();
+        if(sd<1.1-1e-10)
+            sd=1.1;
+        ui->speed->setValue(sd);
+    }
     m_hd=m_b48=false;m_ea=1;
     if(ui->xin->isChecked())
     {
@@ -1280,7 +1302,7 @@ int MainWindow::MakeGq(int gq)//制作关卡
         JSH=MAXJSH;
     if(SHU>MAXSHU)
         SHU=MAXSHU;
-    ND=5+int(DBS*(gq-1+(lx==5?1:0)+(SI<=55?3:0))*4+0.5)+4;
+    ND=5+int(DBS*(gq-1+(lx==5?1:0)+(SI<=55?3:0))*(sho?3:4)+0.5)+(sho?3:4);
     m_jg[1]=m_jg[2]=m_jg[3]=1;m_time[1]=m_time[2]=m_time[3]=1e9;
     if(gq<=8)
         m_time[0]=20000,m_jg[0]=41000;
@@ -1296,19 +1318,22 @@ int MainWindow::MakeGq(int gq)//制作关卡
     else m_time[4] = 7040;
     m_jg[4] = 22000;
     double dad=2010.0/(GQS-1.0);
-    int dbs=2704-int(dad*(gq-1)+0.5)-(lx==5?150:0);
-    int dbt=5000+(gq-1)*480+(lx==5?704:0);
+    int dbs=2704-int(dad*(gq-1)+0.5)-(lx==5?150:0)-(sho?50:0);
+    int dbt=(sho?4000:5000)+(gq-1)*(sho?250:480)+(lx==5?704:0);
     if(gq2<=MAXGQS+3||gq2==2048||gq2==MAXGQS+5)
     {
         if(gq2==2048)
             m_b48=true;
-        for(int n=5;n<ND;n+=4)
+        for(int n=5;n<ND;n+=(sho?3:4))
         {
             int i = 0, j = 0;
-            for(i=n,j=0;i<ND-1&&j<3;i++,j++)
-                m_time[i]=dbs+j*400,m_jg[i]=dbt;
-            m_time[i]=4000,m_jg[i]=20000;
-            dbt+=2100;
+            for(i=n,j=0;i<ND-1&&j<(sho?2:3);i++,j++)
+                m_time[i]=dbs+j*(sho?200:400),m_jg[i]=dbt;
+            if(sho)
+                m_time[i]=3000,m_jg[i]=10000;
+            else
+                m_time[i]=4000,m_jg[i]=20000;
+            dbt+=(sho?900:2100);
         }
     }
     else
@@ -1448,6 +1473,8 @@ void MainWindow::on_btc_clicked()
     ui->tui->setEnabled(0);
     ui->xin->setEnabled(0);
     ui->Doub->setEnabled(0);
+    ui->Short->setEnabled(0);
+    ui->Auto->setEnabled(0);
     try
     {
         StartGame(MakeGq(m_gq));
@@ -1482,6 +1509,8 @@ void MainWindow::GameOver()
     ui->tui->setEnabled(1);
     ui->water->setEnabled(1);
     ui->Doub->setEnabled(1);
+    ui->Short->setEnabled(1);
+    ui->Auto->setEnabled(1);
     if(m_game.m_ks)
         m_game.KillAll();
     SHU=JSH=ND=m_tms=0;
@@ -1555,7 +1584,7 @@ void MainWindow::StartGame(int lx)
         }
         else
         {
-            for(int s=0;s<10*110/SI;s++)
+            for(int s=0;s<(9+m_ea-m_hd)*110/SI;s++)
             {
                 m_zw[33].x=zx;m_zw[33].y=zy;
                 m_game.NewZw(m_zw[33]);
@@ -2110,7 +2139,7 @@ bool CGame::MoveJs(int shu)
                 return true;
             }
         }
-        if(tx>=0&&tx<MM&&m_jsh[shu].lx==12&&m_jsh[shu].shm>10)
+        if(tx>=0&&tx<MM&&m_jsh[shu].lx==12&&m_jsh[shu].shm>10&&m_wnd->r_gq!=MAXGQS+5)
             m_ice[tx][ty]=TM;
         int i=GetFirstZw(m_jsh[shu].x,m_jsh[shu].y);
         m_jsh[shu].x-=m_jsh[shu].sd;
@@ -4124,7 +4153,7 @@ void CGame::input(QDataStream &ar)
     for(int i=0;i<MM;i++)
     {
         for(int j=0;j<MN;j++)
-            ar>>m_keng[i][j]>>m_ng[i][j]>>m_dc[i][j]>>lazd[i][j]>>lawg[i][j];
+            ar>>m_keng[i][j]>>m_ng[i][j]>>m_dc[i][j]>>lazd[i][j]>>lawg[i][j]>>m_ice[i][j];
     }
     for(int i=0;i<MN;i++)
     {
@@ -4148,7 +4177,7 @@ void CGame::output(QDataStream &ar)
     for(int i=0;i<MM;i++)
     {
         for(int j=0;j<MN;j++)
-            ar<<m_keng[i][j]<<m_ng[i][j]<<m_dc[i][j]<<lazd[i][j]<<lawg[i][j];
+            ar<<m_keng[i][j]<<m_ng[i][j]<<m_dc[i][j]<<lazd[i][j]<<lawg[i][j]<<m_ice[i][j];
     }
     for(int i=0;i<MN;i++)
     {
@@ -4212,7 +4241,7 @@ void MainWindow::on_save_clicked()
     QFileDialog *fileDialog = new QFileDialog(this);
     fileDialog->setAcceptMode(QFileDialog::AcceptSave);
     fileDialog->setWindowTitle(tr("选择文件"));
-    fileDialog->setNameFilter(tr("大战僵尸存档(*.dzjs)"));
+    fileDialog->setNameFilter(tr("大战僵尸存档(*)"));
     fileDialog->setFileMode(QFileDialog::AnyFile);
     fileDialog->setViewMode(QFileDialog::Detail);
     if(fileDialog->exec())
@@ -4227,6 +4256,7 @@ void MainWindow::on_save_clicked()
         Save(ar);file.close();
     }
     if(bk)on_stop_clicked();
+    ui->prog->setFocus();
 }
 
 void MainWindow::on_open_clicked()
@@ -4234,7 +4264,7 @@ void MainWindow::on_open_clicked()
     QFileDialog *fileDialog = new QFileDialog(this);
     fileDialog->setAcceptMode(QFileDialog::AcceptOpen);
     fileDialog->setWindowTitle(tr("选择文件"));
-    fileDialog->setNameFilter(tr("大战僵尸存档(*.dzjs)"));
+    fileDialog->setNameFilter(tr("大战僵尸存档(*)"));
     fileDialog->setFileMode(QFileDialog::ExistingFile);
     fileDialog->setViewMode(QFileDialog::Detail);
     if(fileDialog->exec())
@@ -4363,7 +4393,7 @@ void MyGLWidget::paintEvent(QPaintEvent *e)
     QPainter memdc(this);
     if(ty==0)
     {
-        QFont f("",floor(8*m_wnd->m_sf+1e-10),QFont::Bold,false);memdc.setFont(f);
+        QFont f("",floor(6*m_wnd->m_sf+1e-10),QFont::Bold,false);memdc.setFont(f);
         memdc.setPen(QPen(Qt::NoPen));
         QBrush b(QColor(0,0,0,150)),b2(QColor(93,0,1));
         b2.setStyle(Qt::SolidPattern);b.setStyle(Qt::SolidPattern);
@@ -4380,12 +4410,12 @@ void MyGLWidget::paintEvent(QPaintEvent *e)
                 memdc.setBrush(b);
                 memdc.drawRect(QRect(MPoint(0,n*50),MSize((800-m_wnd->m_en[m_wnd->m_xuan[n]])/8,50)));
                 memdc.setPen(QColor(0,240,0));
-                memdc.drawText(MPoint(72,n*50+30),QString::asprintf("%d",m_wnd->m_zw[m_wnd->m_xuan[n]].yg));
+                memdc.drawText(MPoint(72,n*50+27),QString::asprintf("%d",m_wnd->m_zw[m_wnd->m_xuan[n]].yg));
             }
             QString nu;memdc.setPen(QColor(0,0,240));
             if(n==10)nu="-> -";
             else nu=QString::asprintf("-> %d",(n+1)%10);
-            memdc.drawText(MPoint(0,n*50+30),nu);
+            memdc.drawText(MPoint(0,n*50+27),nu);
             memdc.setPen(Qt::NoPen);memdc.setBrush(b2);
         }
         for(int i=0;i<m_wnd->m_dzs;i++)
@@ -4529,10 +4559,12 @@ void MainWindow::left2048()
     }
     for(int i=0;i<MN;i++)
     {
-        SZhw st[MMM];int tp=0;
+        SZhw st[MMM];int tp=0;bool ko=false,bk=false;
         for(int j=0;j<MN;j++)
         {
             SZhw z=lx[j][i];lx[j][i].lx=-1;
+            if(z.lx==-1)ko=true;
+            else if(ko)bk=true;
             while(z.lx!=-1)
             {
                 if(tp==0||z.lx!=st[tp-1].lx||n_2048[z.lx]<=0)
@@ -4553,7 +4585,7 @@ void MainWindow::left2048()
                 }
             }
         }
-        if(tp<MN&&rand()%(2*GL48)==0)
+        if(tp<MN&&rand()%(2*GL48)==0&&(tp==0||bk))
         {
             if(tp==0)st[tp++]=m_zw[1];
             else
@@ -4607,10 +4639,12 @@ void MainWindow::up2048()
     }
     for(int j=0;j<MN;j++)
     {
-        SZhw st[MMN];int tp=0;
+        SZhw st[MMN];int tp=0;bool ko=false,bk=false;
         for(int i=0;i<MN;i++)
         {
             SZhw z=lx[j][i];lx[j][i].lx=-1;
+            if(z.lx==-1)ko=true;
+            else if(ko)bk=true;
             while(z.lx!=-1)
             {
                 if(tp==0||z.lx!=st[tp-1].lx||n_2048[z.lx]<=0)
@@ -4631,7 +4665,7 @@ void MainWindow::up2048()
                 }
             }
         }
-        if(tp<MN&&rand()%GL48==0)
+        if(tp<MN&&rand()%GL48==0&&(tp==0||bk))
         {
             if(tp==0)st[tp++]=m_zw[1];
             else
@@ -4685,10 +4719,12 @@ void MainWindow::right2048()
     }
     for(int i=0;i<MN;i++)
     {
-        SZhw st[MMM];int tp=0;
+        SZhw st[MMM];int tp=0;bool bk=false,ko=false;
         for(int j=MN-1;j>=0;j--)
         {
             SZhw z=lx[j][i];lx[j][i].lx=-1;
+            if(z.lx==-1)ko=true;
+            else if(ko)bk=true;
             while(z.lx!=-1)
             {
                 if(tp==0||z.lx!=st[tp-1].lx||n_2048[z.lx]<=0)
@@ -4705,11 +4741,11 @@ void MainWindow::right2048()
                         if(m_dzs<5)
                             m_dzs+=1;
                     }
-                    z=m_zw[dy[t]];
+                    z=m_zw[dy[t]];bk=true;
                 }
             }
         }
-        if(tp<MN&&rand()%GL48==0)
+        if(tp<MN&&rand()%GL48==0&&(tp==0||bk))
         {
             if(tp==0)st[tp++]=m_zw[1];
             else
@@ -4763,10 +4799,12 @@ void MainWindow::down2048()
     }
     for(int j=0;j<MN;j++)
     {
-        SZhw st[MMN];int tp=0;
+        SZhw st[MMN];int tp=0;bool ko=false,bk=false;
         for(int i=MN-1;i>=0;i--)
         {
             SZhw z=lx[j][i];lx[j][i].lx=-1;
+            if(z.lx==-1)ko=true;
+            else if(ko)bk=true;
             while(z.lx!=-1)
             {
                 if(tp==0||z.lx!=st[tp-1].lx||n_2048[z.lx]<=0)
@@ -4787,7 +4825,7 @@ void MainWindow::down2048()
                 }
             }
         }
-        if(tp<MN&&rand()%GL48==0)
+        if(tp<MN&&rand()%GL48==0&&(tp==0||bk))
         {
             if(tp==0)st[tp++]=m_zw[1];
             else

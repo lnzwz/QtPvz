@@ -293,6 +293,13 @@
       </property>
      </spacer>
     </item>
+    <item row="8" column="6">
+     <widget class="QCheckBox" name="Short">
+      <property name="text">
+       <string>短时</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
