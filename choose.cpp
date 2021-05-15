@@ -13,22 +13,42 @@ Choose::Choose(QWidget *parent) :
 
 void Choose::Init()
 {
+#ifndef Q_OS_ANDROID
+    resize(800,295);
+    ui->buttonBox->move(530,240);
+    ui->label->move(20,250);
+#endif
     for(int i=0,x=0,y=0;i<SHU;i++)
     {
         ck[i]=new QCheckBox(this);
+#ifdef Q_OS_ANDROID
         ck[i]->setIconSize(QSize(80,80));
+#else
+        ck[i]->setIconSize(QSize(40,40));
+#endif
         ck[i]->setIcon(ico[i]);
         ck[i]->setText(QString::asprintf("%d",yg[i]));
         ck[i]->move(x,y);
+#ifdef Q_OS_ANDROID
         y+=80;if(y>=400)y=0,x+=220;
+#else
+        y+=40;if(y>=200)y=0,x+=100;
+#endif
     }
     for(int i=0;i<JSH;i++)
     {
         js[i]=new QLabel(this);
+#ifdef Q_OS_ANDROID
         icj[i]=icj[i].scaled(70,70,Qt::KeepAspectRatio);
         js[i]->resize(QSize(70,70));
         js[i]->setPixmap(icj[i]);
         js[i]->move(i*80,420);
+#else
+        icj[i]=icj[i].scaled(35,35,Qt::KeepAspectRatio);
+        js[i]->resize(QSize(35,35));
+        js[i]->setPixmap(icj[i]);
+        js[i]->move(i*40,210);
+#endif
     }
 }
 

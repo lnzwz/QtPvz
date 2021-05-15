@@ -13,7 +13,16 @@
 #define MMN 10
 #define MMM 18
 #define MSI 55
+#ifdef Q_OS_MAC
 #define ME 0
+#else
+#ifdef Q_OS_ANDROID
+#define ME 0
+#else
+#define ME 24
+#endif
+#endif
+
 #define GL48 5
 
 struct SZhw;

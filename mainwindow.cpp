@@ -20,7 +20,8 @@ MainWindow::MainWindow(QWidget *parent)
     gx->resize(100,610);
     gx->move(0,ME);gx->show();
     srand(time(NULL));
-    /*connect(ui->a_open,&QAction::triggered,this,&MainWindow::on_open_clicked);
+#ifndef Q_OS_ANDROID
+    connect(ui->a_open,&QAction::triggered,this,&MainWindow::on_open_clicked);
     connect(ui->a_save,&QAction::triggered,this,&MainWindow::on_save_clicked);
     connect(ui->a_buy,&QAction::triggered,this,&MainWindow::on_buy_clicked);
     connect(ui->a_quick,&QAction::triggered,this,&MainWindow::on_quick_clicked);
@@ -29,7 +30,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->a_sub,&QAction::triggered,this,&MainWindow::jiansu);
     connect(ui->a_sta,&QAction::triggered,this,&MainWindow::ViewStatus);
     connect(ui->a_quit,&QAction::triggered,this,&MainWindow::Quit);
-    connect(ui->a_over,&QAction::triggered,this,&MainWindow::GameOver);*/
+    connect(ui->a_over,&QAction::triggered,this,&MainWindow::GameOver);
+#else
+    ui->menubar->setVisible(0);
+#endif
     QButtonGroup *gp = new QButtonGroup(this);
     gp->addButton(ui->easy);
     gp->addButton(ui->normal);
@@ -266,7 +270,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 void MainWindow::DoDraw()
 {
     QPainter memdc(this);
-    memdc.drawPixmap(QRect(MPoint(1140,ME),MSize(330,610)),ico[125]);
+    memdc.drawPixmap(QRect(QPoint(gl->pos().x()+gl->size().width(),ME),MSize(330,610)),ico[125]);
     if(m_game.m_lx==2||m_game.m_lx==3)
     {
         memdc.setPen(Qt::NoPen);memdc.setBrush(QColor(0,0,60,60));
@@ -295,13 +299,15 @@ void MainWindow::DoDraw()
 void MainWindow::paintEvent(QPaintEvent *event)
 {
     QSize s=size();
-    double a=s.width()/1234.0;
+    double a=s.width()/1240.0;
     double b=s.height()/610.0;
     double od=m_sf;
     m_sf=(a<b?a:b);
     if(fabs(od-m_sf)>1e-10)
         Initicon();
-    QFont f("",floor(5*m_sf),false);setFont(f);
+    #ifdef Q_OS_ANDROID
+        QFont f("",floor(5*m_sf),false);setFont(f);
+    #endif
     gl->resize(floor(1040*m_sf+1e-10),floor(610*m_sf+1e-10));
     gx->resize(floor(100*m_sf+1e-10),floor(610*m_sf+1e-10));
     gl->move(floor(100*m_sf+1e-10),ME);
@@ -384,7 +390,7 @@ void MainWindow::Init()
     m_js[14].Create(2,25,2,0,0,96,16,false,true);//末影人
     m_js[15].Create(1,35,1,0,0,107,17);//张楠
     for(int i=0;i<18;i++)b_wa[i]=false;
-    b_wa[0]=b_wa[1]=b_wa[2]=b_wa[5]=b_wa[6]=b_wa[8]=true;
+    b_wa[0]=b_wa[1]=b_wa[2]=b_wa[5]=b_wa[6]=b_wa[8]=b_wa[13]=true;
 
     //冷却速度
     m_hf[0]=12;
@@ -664,7 +670,7 @@ bool MainWindow::DoTimer(int nIDEvent)
                 if(m_en[n]>800)
                     m_en[n]=800;
             }
-            tm+=1;
+            tm+=1;//计时器，1次0.04秒
         }
         else if(nIDEvent==1001)//移动子弹
         {
@@ -713,16 +719,16 @@ bool MainWindow::DoTimer(int nIDEvent)
             {
                 if(r<m_p[n])
                     break;
-            }
+            }//随机生成一种
             m_js[n].x=(MM-1)*SI+5;
-            if(n==10)
+            if(n==10)//冰瓜僵尸：寻找掩护
             {
                 int maxs=-100,wz;
                 if(m_hbzw)
                 {
                     for(int j=0;j<MN;j++)
                     {
-                        int shu=(tm-m_lstB[j])-(tm-m_lstC[j]);
+                        int shu=(tm-m_lstB[j])-(tm-m_lstC[j]);//小车
                         if(shu>maxs)
                         {
                             maxs=shu;
@@ -734,7 +740,7 @@ bool MainWindow::DoTimer(int nIDEvent)
                 {
                     for(int j=0;j<MN;j++)
                     {
-                        int shu=(tm-m_lstB[j])-(tm-m_lstJ[j]);
+                        int shu=(tm-m_lstB[j])-(tm-m_lstJ[j]);//巨人
                         if(shu>maxs)
                         {
                             maxs=shu;
@@ -745,7 +751,7 @@ bool MainWindow::DoTimer(int nIDEvent)
                     {
                         for(int j=0;j<MN;j++)
                         {
-                            int shu=(tm-m_lstB[j])-(tm-m_lstD[j]);
+                            int shu=(tm-m_lstB[j])-(tm-m_lstD[j]);//盾牌
                             if(shu>maxs)
                             {
                                 maxs=shu;
@@ -756,7 +762,7 @@ bool MainWindow::DoTimer(int nIDEvent)
                         {
                             for(int j=0;j<MN;j++)
                             {
-                                int shu=(tm-m_lstB[j])-(tm-m_lstT[j]);
+                                int shu=(tm-m_lstB[j])-(tm-m_lstT[j]);//铁桶
                                 if(shu>maxs)
                                 {
                                     maxs=shu;
@@ -771,12 +777,12 @@ bool MainWindow::DoTimer(int nIDEvent)
                 m_js[n].y=wz;
                 m_lstB[wz]=tm;
             }
-            else if(n==8||n==4)
+            else if(n==8||n==4)//大嘴，豌豆射手：寻找掩护
             {
-                int maxs=200,wz;
+                int maxs=200,wz;//8秒
                 for(int j=0;j<MN;j++)
                 {
-                    int shu=tm-m_lstC[j];
+                    int shu=tm-m_lstC[j];//小车
                     if(shu<maxs)
                     {
                         maxs=shu;
@@ -787,7 +793,7 @@ bool MainWindow::DoTimer(int nIDEvent)
                 {
                     for(int j=0;j<MN;j++)
                     {
-                        int shu=tm-m_lstJ[j];
+                        int shu=tm-m_lstJ[j];//巨人
                         if(shu<maxs)
                         {
                             maxs=shu;
@@ -798,7 +804,7 @@ bool MainWindow::DoTimer(int nIDEvent)
                     {
                         for(int j=0;j<MN;j++)
                         {
-                            int shu=tm-m_lstD[j];
+                            int shu=tm-m_lstD[j];//盾牌
                             if(shu<maxs)
                             {
                                 maxs=shu;
@@ -809,7 +815,7 @@ bool MainWindow::DoTimer(int nIDEvent)
                         {
                             for(int j=0;j<MN;j++)
                             {
-                                int shu=tm-m_lstT[j];
+                                int shu=tm-m_lstT[j];//铁桶
                                 if(shu<maxs)
                                 {
                                     maxs=shu;
@@ -823,7 +829,7 @@ bool MainWindow::DoTimer(int nIDEvent)
                 }
                 m_js[n].y=wz;
             }
-            else if(n==12)
+            else if(n==12)//巨人：防止生成在一行
             {
                 int max=-1,wz;
                 for(int j=0;j<MN;j++)
@@ -838,7 +844,7 @@ bool MainWindow::DoTimer(int nIDEvent)
                 m_js[n].y=wz;
                 m_lstJ[wz]=tm;
             }
-            else if(n==11)
+            else if(n==11)//小车：防止生成在一行
             {
                 int max=-1,wz;
                 for(int j=0;j<MN;j++)
@@ -853,7 +859,7 @@ bool MainWindow::DoTimer(int nIDEvent)
                 m_js[n].y=wz;
                 m_lstC[wz]=tm;
             }
-            else if(n==7)
+            else if(n==7)//盾牌：防止生成在一行
             {
                 int max=-1,wz;
                 for(int j=0;j<MN;j++)
@@ -868,7 +874,7 @@ bool MainWindow::DoTimer(int nIDEvent)
                 m_js[n].y=wz;
                 m_lstD[wz]=tm;
             }
-            else if(n==3)
+            else if(n==3)//铁桶：防止生成在一行
             {
                 int max=-1,wz;
                 for(int j=0;j<MN;j++)
@@ -884,12 +890,48 @@ bool MainWindow::DoTimer(int nIDEvent)
                 m_lstT[wz]=tm;
             }
             else
-                m_js[n].y=rand()%MN;
+            {
+                if(m_game.s_wa&&b_wa[m_js[n].lx]&&rand()%2==0)
+                    m_js[n].y=m_game.h_wa[rand()%m_game.s_wa];
+                else
+                    m_js[n].y=rand()%MN;
+            }
             m_game.NewJs(m_js[n]);
             if(!m_b11)
             {
-                jd+=1;
-                ui->prog->setValue(jd);
+                jd+=1;ui->prog->setValue(jd);
+                if(jd%600==0&&ND==90&&!m_ai)
+                {
+                    bool bk=false;
+                    if(!b_zt)on_stop_clicked(),bk=true;
+                    Choose *ch=new Choose(this);
+#ifdef Q_OS_ANDROID
+                    QFont f("",floor(8*m_sf),false);ch->setFont(f);
+#endif
+                    ch->SHU=SHU;ch->XUAN=XUAN;ch->JSH=JSH;
+                    ch->setWindowTitle("更换植物：无尽");
+                    for(int i=0;i<SHU;i++)
+                    {
+                        ch->yg[i]=m_zw[i].yg;
+                        ch->ico[i].load(QString::asprintf("://icons/%d.png",m_zw[i].id));
+                    }
+                    for(int i=0;i<JSH;i++)
+                        ch->icj[i].load(QString::asprintf("://icons/%d.png",m_js[i].id));
+                    ch->setWindowModality(Qt::ApplicationModal);
+                    ch->Init();ch->show();
+                    if(ch->exec())
+                    {
+                        for(int i=0;i<XUAN;i++)
+                            m_xuan[i]=ch->xuan[i];
+                        m_hbzw=false;
+                        for(int n=0;n<XUAN;n++)
+                        {
+                            if(m_zw[m_xuan[n]].hb)
+                                m_hbzw=true;
+                        }
+                    }
+                    if(bk)on_stop_clicked();
+                }
             }
         }
         else if(nIDEvent==1003)//阳光
@@ -916,7 +958,7 @@ bool MainWindow::DoTimer(int nIDEvent)
                 bool sho=false;
                 if(ui->Short->isChecked())
                     sho=true;
-                if(sho)
+                if(sho&&!m_game.b64)
                 {
                     if((m_gq%10==0||XUAN==0||m_game.b64)&&r_gq!=MAXGQS+5)
                         m_nd+=1+(m_n%3==0);
@@ -933,7 +975,7 @@ bool MainWindow::DoTimer(int nIDEvent)
                 if(m_nd>JSH-1)
                     m_nd=JSH-1;
             }
-            if(ND==90&&m_n>=40&&m_n%5==0)
+            if(ND==90&&m_n>=40&&m_n%5==0)//增加难度
             {
                 for(int i=10;i<=12;i++)
                 {
@@ -1333,10 +1375,8 @@ int MainWindow::MakeGq(int gq)//制作关卡
     double jad=(MAXJSH-mr)/(MANG-1.0);
     JSH=int(mr)+int(jad*(gq-1)+0.5);
     SHU=m_zws[gq2-1];
-    if(JSH>MAXJSH)
-        JSH=MAXJSH;
-    if(SHU>MAXSHU)
-        SHU=MAXSHU;
+    if(JSH>MAXJSH)JSH=MAXJSH;
+    if(SHU>MAXSHU)SHU=MAXSHU;
     ND=5+int(DBS*(gq-1+(lx==5?1:0)+(SI<=55?3:0))*(sho?3:4)+0.5)+(sho?3:4);
     m_jg[1]=m_jg[2]=m_jg[3]=1;m_time[1]=m_time[2]=m_time[3]=1e9;
     if(gq<=8)
@@ -1398,8 +1438,8 @@ int MainWindow::MakeGq(int gq)//制作关卡
     for(int n=0;n<ND-1;n++)
         ms+=int(m_jg[n]/m_time[n]);
     m_time[ND-1]=3000,m_jg[ND-1]=100000000;
-    XUAN=9;if(gq2==10||lx!=0||m_b12)XUAN=10;
-    if(gq2==MAXGQS+4)XUAN=11;
+    XUAN=9;if(gq2>=9||lx!=0)XUAN=10;
+    if(gq2==MAXGQS+4||m_b12)XUAN=11;
     if(gq2==MAXGQS+1)
     {
         SHU=0;XUAN=11;
@@ -1451,11 +1491,15 @@ int MainWindow::MakeGq(int gq)//制作关卡
     else if(XUAN&&!m_b48)
     {
         Choose *ch=new Choose(this);
-        QFont f("",floor(8*m_sf),false);
-        ch->setFont(f);
+#ifdef Q_OS_ANDROID
+        QFont f("",floor(8*m_sf),false);ch->setFont(f);
+#endif
         ch->SHU=SHU;ch->XUAN=XUAN;ch->JSH=JSH;
         QString bt[6]={"普通","迷雾","黑夜","黑夜+迷雾","水池","极限"};
-        ch->setWindowTitle(bt[lx]);
+        if(ND==90)
+            ch->setWindowTitle("选择植物：无尽");
+        else
+            ch->setWindowTitle("选择植物："+bt[lx]);
         for(int i=0;i<SHU;i++)
         {
             ch->yg[i]=m_zw[i].yg;
@@ -1707,7 +1751,7 @@ void MainWindow::Save(QDataStream &ar)
     ar<<m_b11<<m_b12<<m_hbzw<<m_gq<<m_ai<<r_gq<<m_ea<<m_hd<<m_tui<<m_b48;
     for(int i=0;i<MN;i++)
         ar<<m_lstJ[i]<<m_lstC[i]<<m_lstD[i]<<m_lstT[i]<<m_lstB[i];
-    ar<<ui->speed->text();
+    ar<<ui->speed->text()<<ui->Short->isChecked();
 }
 void MainWindow::Load(QDataStream &ar)
 {
@@ -1750,6 +1794,8 @@ void MainWindow::Load(QDataStream &ar)
         ui->hard->setChecked(1);
     else
         ui->normal->setChecked(1);
+    bool sho;ar>>sho;
+    ui->Short->setChecked(sho);
 }
 
 void MainWindow::ResetTimer()
@@ -2198,7 +2244,7 @@ bool CGame::MoveJs(int shu)
         }
         if(tx>=0&&tx<MM&&m_jsh[shu].lx==12&&m_jsh[shu].shm>10&&m_wnd->r_gq!=MAXGQS+5)
             m_ice[tx][ty]=TM;
-        if(tx>=0&&tx<MM&&m_jsh[shu].lx!=8&&m_keng[tx][ty]==3)
+        if(tx>=0&&tx<MM&&m_jsh[shu].lx!=8&&m_keng[tx][ty]==3&&GetZwShu(tx*SI,ty)==-1)
             m_keng[tx][ty]=2;
         int i=GetFirstZw(m_jsh[shu].x,m_jsh[shu].y);
         m_jsh[shu].x-=m_jsh[shu].sd;
@@ -2545,10 +2591,13 @@ void CGame::Draw(QPainter &memdc)
                 memdc.drawPixmap(QRect(MPoint(i*SI+50,j*SI+60),MSize(SI,SI)),m_wnd->ico[58+m_keng[i][j]]);
             }
         }
-        if(m_lx==0||m_lx==1||m_lx==4||m_lx==5)
-            memdc.drawPixmap(QRect(MPoint(300+(TM*25.0)/m_wnd->m_ztm*680,0),MSize(60,60)),m_wnd->ico[122]);
-        else
-            memdc.drawPixmap(QRect(MPoint(300+(TM*25.0)/m_wnd->m_ztm*680,0),MSize(60,60)),m_wnd->ico[123]);
+        if(!m_wnd->m_b11)
+        {
+            if(m_lx==0||m_lx==1||m_lx==4||m_lx==5)
+                memdc.drawPixmap(QRect(MPoint(300+(TM*25.0)/m_wnd->m_ztm*680,0),MSize(60,60)),m_wnd->ico[122]);
+            else
+                memdc.drawPixmap(QRect(MPoint(300+(TM*25.0)/m_wnd->m_ztm*680,0),MSize(60,60)),m_wnd->ico[123]);
+        }
         for(int i=0;i<MM;i++)
         {
             for(int j=0;j<MN;j++)
@@ -2738,7 +2787,12 @@ void CGame::Draw(QPainter &memdc)
         m_dshu=ds;
         for(int i=0;i<ds;i++)m_zid[i]=zd[i];
         memdc.setPen(QColor(0,0,0,240));
-        memdc.save();QFont f("默认",floor(10*m_wnd->m_sf+1e-10),QFont::Bold,false);memdc.setFont(f);
+        memdc.save();
+#ifdef Q_OS_ANDROID
+        QFont f("默认",floor(8*m_wnd->m_sf+1e-10),QFont::Bold,false);memdc.setFont(f);
+#else
+        QFont f("默认",floor(20*m_wnd->m_sf+1e-10),QFont::Bold,false);memdc.setFont(f);
+#endif
         if(m_wnd->r_gq!=61&&m_wnd->r_gq!=63)
             memdc.drawText(10,40,QString::asprintf("阳光:%d",m_yg+m_cc));
         memdc.drawText(220,40,QString::asprintf("能量豆:%d",m_wnd->m_dzs));
@@ -3169,15 +3223,15 @@ bool CGame::NotZw(int shu)//特殊植物
     case 2://炸弹
         lazd[m_zhw[shu].x/SI][m_zhw[shu].y]=TM;
         for(int s=-1;s<=1;s++)
-            KillJs(m_zhw[shu].x-1.682*SI,m_zhw[shu].x+1.682*SI,m_zhw[shu].y+s,100);
-        DestroyZw(shu);
+            KillJs(m_zhw[shu].x-1.582*SI,m_zhw[shu].x+1.582*SI,m_zhw[shu].y+s,100);
+        DestroyZw(shu);rt=true;
         break;
     case 3://火爆辣椒
         lalj[m_zhw[shu].y]=TM;
         KillJsLine(m_zhw[shu].y,90);
         DestroyZw(shu);rt=true;
         break;
-    case 4://倭瓜
+    case 4://窝瓜
         {
             bool rtn=false;
             if(KillJs(m_zhw[shu].x,m_zhw[shu].y,80))rtn=true,lawg[m_zhw[shu].x/SI][m_zhw[shu].y]=TM;
@@ -3192,7 +3246,7 @@ bool CGame::NotZw(int shu)//特殊植物
                 if(m_zhw[shu].x/SI+1<MM)lawg[m_zhw[shu].x/SI+1][m_zhw[shu].y]=TM;
             }
             if(rtn)
-                DestroyZw(shu);
+                DestroyZw(shu),rt=true;
             break;
         }
     case 5://阳光菇
@@ -3207,7 +3261,7 @@ bool CGame::NotZw(int shu)//特殊植物
         break;
     case 6://毁灭菇
         for(int s=-2;s<=2;s++)
-            KillJs(m_zhw[shu].x-2.682*SI,m_zhw[shu].x+2.682*SI,m_zhw[shu].y+s,100);
+            KillJs(m_zhw[shu].x-2.582*SI,m_zhw[shu].x+2.582*SI,m_zhw[shu].y+s,100);
         DestroyZw(shu);rt=true;
         m_keng[m_zhw[shu].x/SI][m_zhw[shu].y]=1;//坑
         break;
@@ -3267,7 +3321,7 @@ bool CGame::NotZw(int shu)//特殊植物
                         if(m_ng[tx][ty]>500)
                             m_ng[tx][ty]=500;
                     }
-                    if(!bk)m_yg+=3;
+                    if(!bk)m_yg+=(m_wnd->m_hd?4:3);
                     m_zhw[z].id=GetZwIcon(m_zhw[z]);
                 }
             }
@@ -3278,7 +3332,7 @@ ov:
         m_zhw[shu].nfs=0;
         for(int s=-1;s<=1;s++)
         {
-            if(KillJs(m_zhw[shu].x-1.682*SI,m_zhw[shu].x+1.682*SI,m_zhw[shu].y+s,3))
+            if(KillJs(m_zhw[shu].x-1.582*SI,m_zhw[shu].x+1.582*SI,m_zhw[shu].y+s,3))
                 m_zhw[shu].nfs=1;
         }
         break;
@@ -3340,7 +3394,7 @@ ov:
 
 bool CGame::KillJs(int x, int y, int kill)
 {
-    return KillJs(x-SI*0.682,x+SI*0.682,y,kill);
+    return KillJs(x-SI*0.582,x+SI*0.582,y,kill);
 }
 
 bool CGame::KillJs(int l, int r,int y, int kill)//杀僵尸
@@ -3458,6 +3512,12 @@ void CGame::CreateGame(int lx)
             m_keng[i][1]=2,iswa[1]=true;
             m_keng[i][MN-2]=2,iswa[MN-2]=true;
         }
+    }
+    s_wa=0;
+    for(int i=0;i<MN;i++)
+    {
+        if(iswa[i])
+            h_wa[s_wa++]=i;
     }
     m_ks=true;
     m_hb=false;
@@ -4014,7 +4074,7 @@ void CGame::AI()
                 int r=GetZwShu(x,y);
                 if(r==-1||m_zhw[r].yg<=75)
                 {
-                    int rt=FakeKill(x-SI*0.682,x+SI*0.682,y,90);
+                    int rt=FakeKill(x-SI*0.582,x+SI*0.582,y,80);
                     if(rt>ma)ma=rt,zx=x,zy=y;
                 }
             }
@@ -4037,7 +4097,7 @@ void CGame::AI()
                 {
                     int rt=0;
                     for(int s=-1;s<=1;s++)
-                        rt+=FakeKill(x-SI*1.682,x+SI*1.682,y+s,100);
+                        rt+=FakeKill(x-SI*1.582,x+SI*1.582,y+s,100);
                     if(rt>ma||(rt==ma&&g<mx))ma=rt,zx=x,zy=y,mx=g;
                 }
             }
@@ -4229,6 +4289,12 @@ void CGame::input(QDataStream &ar)
         ar>>lst[i]>>lalj[i];
     }
     ar>>m_hb>>t_ai>>b64>>zk;
+    s_wa=0;
+    for(int i=0;i<MN;i++)
+    {
+        if(iswa[i])
+            h_wa[s_wa++]=i;
+    }
 }
 void CGame::output(QDataStream &ar)
 {
@@ -4300,6 +4366,10 @@ void MainWindow::on_stop_clicked()
 void MainWindow::on_lineEdit_textEdited(const QString &arg1)
 {
     r_gq=m_gq=arg1.toInt();
+    if(m_gq==MAXGQS+4)
+        ui->Doub->setChecked(1);
+    if(m_gq==MAXGQS+1||m_gq==MAXGQS+2||m_gq==MAXGQS+4)
+        ui->Short->setChecked(0);
 }
 
 void MainWindow::on_save_clicked()
@@ -4461,8 +4531,12 @@ void MyGLWidget::paintEvent(QPaintEvent *e)
     QPainter memdc(this);
     if(ty==0)
     {
-        QFont f("",floor(6*m_wnd->m_sf+1e-10),QFont::Bold,false);memdc.setFont(f);
-        memdc.setPen(QPen(Qt::NoPen));
+        #ifdef Q_OS_ANDROID
+            QFont f("",floor(6*m_wnd->m_sf+1e-10),QFont::Bold,false);
+        #else
+            QFont f("",floor(10*m_wnd->m_sf+1e-10),QFont::Bold,false);
+        #endif
+        memdc.setFont(f);memdc.setPen(QPen(Qt::NoPen));
         QBrush b(QColor(0,0,0,150)),b2(QColor(93,0,1));
         b2.setStyle(Qt::SolidPattern);b.setStyle(Qt::SolidPattern);
         memdc.setBrush(b2);memdc.drawRect(QRect(MPoint(0,0),MSize(100,610)));

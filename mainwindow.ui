@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1260</width>
-    <height>810</height>
+    <width>1240</width>
+    <height>610</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -302,7 +302,46 @@
     </item>
    </layout>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1240</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>文件</string>
+    </property>
+    <addaction name="a_open"/>
+    <addaction name="a_save"/>
+    <addaction name="separator"/>
+    <addaction name="a_quit"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>游戏</string>
+    </property>
+    <addaction name="a_start"/>
+    <addaction name="a_buy"/>
+    <addaction name="a_quick"/>
+    <addaction name="separator"/>
+    <addaction name="a_sta"/>
+    <addaction name="a_over"/>
+   </widget>
+   <widget class="QMenu" name="menu_3">
+    <property name="title">
+     <string>控制</string>
+    </property>
+    <addaction name="a_add"/>
+    <addaction name="a_sub"/>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menu_2"/>
+   <addaction name="menu_3"/>
+  </widget>
   <action name="a_open">
    <property name="text">
     <string>打开</string>
@@ -355,7 +394,6 @@
   </action>
  </widget>
  <resources>
-  <include location="icons.qrc"/>
   <include location="icons.qrc"/>
  </resources>
  <connections/>
