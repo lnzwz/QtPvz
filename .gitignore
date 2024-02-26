@@ -1,0 +1,10 @@
+android
+sounds
+android_release.keystore
+*.user
+icons.qrc.depends
+ideas.txt
+ideas.md
+qrc_iconstmp
+trash.cpp
+updates.docx

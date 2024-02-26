@@ -1,0 +1,663 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1240</width>
+    <height>739</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="font">
+   <font>
+    <family>Arial</family>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>植物大战僵尸</string>
+  </property>
+  <property name="unifiedTitleAndToolBarOnMac">
+   <bool>false</bool>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="15" column="1">
+     <widget class="QLabel" name="dfn">
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="3">
+     <widget class="QCheckBox" name="Auto">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>自动</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1" colspan="3">
+     <widget class="QPushButton" name="buy">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Ignored">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="icons.qrc">
+        <normaloff>:/icons/118.png</normaloff>:/icons/118.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>100</width>
+        <height>32</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="2">
+     <widget class="QRadioButton" name="xin">
+      <property name="text">
+       <string>新手</string>
+      </property>
+     </widget>
+    </item>
+    <item row="13" column="2">
+     <widget class="QLabel" name="label">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>关卡(85)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="13" column="3">
+     <widget class="QLineEdit" name="lineEdit">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="2">
+     <widget class="QRadioButton" name="hard">
+      <property name="text">
+       <string>疯狂</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="2">
+     <widget class="QLabel" name="label_2">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>速度</string>
+      </property>
+     </widget>
+    </item>
+    <item row="11" column="3">
+     <widget class="QRadioButton" name="normal">
+      <property name="text">
+       <string>困难</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="3">
+     <widget class="QDoubleSpinBox" name="speed">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="wrapping">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>false</bool>
+      </property>
+      <property name="accelerated">
+       <bool>false</bool>
+      </property>
+      <property name="keyboardTracking">
+       <bool>true</bool>
+      </property>
+      <property name="decimals">
+       <number>2</number>
+      </property>
+      <property name="minimum">
+       <double>0.250000000000000</double>
+      </property>
+      <property name="maximum">
+       <double>100.000000000000000</double>
+      </property>
+      <property name="singleStep">
+       <double>0.250000000000000</double>
+      </property>
+      <property name="value">
+       <double>1.000000000000000</double>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="3">
+     <widget class="QRadioButton" name="water">
+      <property name="text">
+       <string>简单</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1" colspan="3">
+     <widget class="QPushButton" name="btc">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Ignored">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="icons.qrc">
+        <normaloff>:/icons/116.png</normaloff>:/icons/116.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>100</width>
+        <height>32</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="1" colspan="3">
+     <widget class="QPushButton" name="open">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Ignored">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="icons.qrc">
+        <normaloff>:/icons/121.png</normaloff>:/icons/121.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>100</width>
+        <height>32</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <spacer name="horizontalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="11" column="2">
+     <widget class="QRadioButton" name="easy">
+      <property name="text">
+       <string>普通</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1" colspan="3">
+     <widget class="QPushButton" name="quick">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Ignored">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="icons.qrc">
+        <normaloff>:/icons/119.png</normaloff>:/icons/119.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>100</width>
+        <height>32</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="14" column="2">
+     <widget class="QCheckBox" name="hui">
+      <property name="text">
+       <string>回放</string>
+      </property>
+     </widget>
+    </item>
+    <item row="15" column="2">
+     <widget class="QPushButton" name="huisu">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>血量%</string>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1" colspan="3">
+     <widget class="QPushButton" name="stop">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Ignored">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="icons.qrc">
+        <normaloff>:/icons/117.png</normaloff>:/icons/117.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>100</width>
+        <height>32</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="3">
+     <widget class="QRadioButton" name="tui">
+      <property name="text">
+       <string>最终</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1" colspan="3">
+     <widget class="QPushButton" name="save">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Ignored">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="icons.qrc">
+        <normaloff>:/icons/120.png</normaloff>:/icons/120.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>100</width>
+        <height>32</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="1" colspan="3">
+     <widget class="QPushButton" name="bt_oth">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Ignored">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="icons.qrc">
+        <normaloff>:/icons/185.png</normaloff>:/icons/185.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>100</width>
+        <height>32</height>
+       </size>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
+      <property name="default">
+       <bool>false</bool>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="14" column="3">
+     <widget class="QLineEdit" name="luj">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+     </widget>
+    </item>
+    <item row="15" column="3">
+     <widget class="QLineEdit" name="dfnz">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="maxLength">
+       <number>999999999</number>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="2">
+     <widget class="QCheckBox" name="Short">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>快速</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1240</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="nativeMenuBar">
+    <bool>true</bool>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>文件</string>
+    </property>
+    <addaction name="a_open"/>
+    <addaction name="a_save"/>
+    <addaction name="separator"/>
+    <addaction name="a_last"/>
+    <addaction name="a_quit"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>游戏</string>
+    </property>
+    <widget class="QMenu" name="menu_4">
+     <property name="title">
+      <string>秘籍</string>
+     </property>
+     <widget class="QMenu" name="menu_6">
+      <property name="title">
+       <string>作弊</string>
+      </property>
+      <addaction name="action_2"/>
+      <addaction name="action_3"/>
+     </widget>
+     <addaction name="a_sun"/>
+     <addaction name="a_xue"/>
+     <addaction name="menu_6"/>
+    </widget>
+    <addaction name="a_start"/>
+    <addaction name="a_buy"/>
+    <addaction name="a_quick"/>
+    <addaction name="separator"/>
+    <addaction name="a_sta"/>
+    <addaction name="separator"/>
+    <addaction name="a_over"/>
+    <addaction name="a_res"/>
+    <addaction name="menu_4"/>
+    <addaction name="a_swi"/>
+    <addaction name="a_oth"/>
+   </widget>
+   <widget class="QMenu" name="menu_3">
+    <property name="title">
+     <string>控制</string>
+    </property>
+    <addaction name="a_eff"/>
+    <addaction name="a_add"/>
+    <addaction name="a_sub"/>
+    <addaction name="kehu"/>
+    <addaction name="fuwu"/>
+    <addaction name="a_snd"/>
+   </widget>
+   <widget class="QMenu" name="menu_5">
+    <property name="title">
+     <string>图像</string>
+    </property>
+    <addaction name="a_ret"/>
+    <addaction name="a_mw"/>
+    <addaction name="a_swdr"/>
+    <addaction name="a_kjc"/>
+    <addaction name="a_tx"/>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menu_2"/>
+   <addaction name="menu_3"/>
+   <addaction name="menu_5"/>
+  </widget>
+  <action name="a_open">
+   <property name="text">
+    <string>打开</string>
+   </property>
+  </action>
+  <action name="a_save">
+   <property name="text">
+    <string>保存</string>
+   </property>
+  </action>
+  <action name="a_quit">
+   <property name="text">
+    <string>退出</string>
+   </property>
+  </action>
+  <action name="a_start">
+   <property name="text">
+    <string>开始游戏</string>
+   </property>
+  </action>
+  <action name="a_buy">
+   <property name="text">
+    <string>购买能量豆</string>
+   </property>
+  </action>
+  <action name="a_quick">
+   <property name="text">
+    <string>加速恢复</string>
+   </property>
+  </action>
+  <action name="a_add">
+   <property name="text">
+    <string>加速</string>
+   </property>
+  </action>
+  <action name="a_sub">
+   <property name="text">
+    <string>减速</string>
+   </property>
+  </action>
+  <action name="a_sta">
+   <property name="text">
+    <string>查看状态</string>
+   </property>
+  </action>
+  <action name="a_over">
+   <property name="text">
+    <string>结束游戏</string>
+   </property>
+  </action>
+  <action name="a_ret">
+   <property name="text">
+    <string>切换retina模式</string>
+   </property>
+  </action>
+  <action name="a_sun">
+   <property name="text">
+    <string>开启更多阳光</string>
+   </property>
+  </action>
+  <action name="a_xue">
+   <property name="text">
+    <string>显示血量</string>
+   </property>
+  </action>
+  <action name="a_swi">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>更换植物</string>
+   </property>
+  </action>
+  <action name="a_mw">
+   <property name="text">
+    <string>切换迷雾效果</string>
+   </property>
+  </action>
+  <action name="kehu">
+   <property name="text">
+    <string>连接到</string>
+   </property>
+   <property name="toolTip">
+    <string>连接</string>
+   </property>
+  </action>
+  <action name="fuwu">
+   <property name="text">
+    <string>建立服务器</string>
+   </property>
+   <property name="toolTip">
+    <string>开服</string>
+   </property>
+  </action>
+  <action name="a_oth">
+   <property name="text">
+    <string>游戏性设置</string>
+   </property>
+  </action>
+  <action name="a_swdr">
+   <property name="text">
+    <string>开启多线程绘图</string>
+   </property>
+  </action>
+  <action name="a_eff">
+   <property name="text">
+    <string>开启低性能模式</string>
+   </property>
+  </action>
+  <action name="a_kjc">
+   <property name="text">
+    <string>关闭抗锯齿</string>
+   </property>
+  </action>
+  <action name="a_res">
+   <property name="text">
+    <string>重新开始</string>
+   </property>
+  </action>
+  <action name="a_tx">
+   <property name="text">
+    <string>关闭特效</string>
+   </property>
+  </action>
+  <action name="a_snd">
+   <property name="text">
+    <string>开启音效</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>杀死所有僵尸</string>
+   </property>
+  </action>
+  <action name="action_3">
+   <property name="text">
+    <string>无限阳光</string>
+   </property>
+  </action>
+  <action name="a_last">
+   <property name="text">
+    <string>加载上次的存档</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
+ <connections/>
+</ui>
