@@ -3,8 +3,8 @@ sounds
 android_release.keystore
 *.user
 icons.qrc.depends
-ideas.txt
+idea.txt
 ideas.md
-qrc_iconstmp
+qrc_iconstmp.cpp
 trash.cpp
 updates.docx
