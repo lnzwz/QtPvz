@@ -89,7 +89,7 @@
 
 extern int XUAN,TM,MM,MN,SI,FIRETM,ME,HI,W0,W1,W2;
 extern double dan[100],zoom,sinra[10000],cosra[10000];
-extern QPixmap *ico,*ico_bl,*ico_rd,*ico_blk,*ico_sha;
+extern QPixmap *ico,*ico_bl,*ico_red,*ico_blk,*ico_sha;
 extern std::mt19937 RA;
 extern QString path;
 extern bool pub_bl[1000];

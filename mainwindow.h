@@ -154,7 +154,7 @@ public:
     //双倍，AI，困难，不可能，2048，我是僵尸，狂锤，镜面，回放，回放，预处理，短时，柱子，罐子
     bool isdb[MAXND];//是否为旗帜
     double lsZM,m_spd,b_ret;//缩放比例，速度，像素密度
-    QPixmap ico[ICCNT+1],ico_bl[ICCNT+1],ico_rd[ICCNT+1],ico_blk[ICCNT+1],ico_sha[ICCNT+1];
+    QPixmap ico[ICCNT+1],ico_bl[ICCNT+1],ico_red[ICCNT+1],ico_blk[ICCNT+1],ico_sha[ICCNT+1];
     //图标，蓝色图标，镜面图标，魅惑图标，？，镜面魅惑，黑色，影子
     QColor main_col[ICCNT+1],mco[ICCNT+1];//主要颜色
     int n_2048[MAXSHU]={0};//2048合成表

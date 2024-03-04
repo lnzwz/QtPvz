@@ -195,7 +195,7 @@ void Game::DrawZw(QPainter &memdc)const
         const Plant zw=plants[i];
         if (zw.life == -1||zw.id==-1)continue;
         int wi,hi;memdc.save();GetZwTrans(memdc,zw,hi,wi);
-        DrawZwPic(memdc,zw,wi,hi,(cantwo[zw.type]&&zw.grow)?ico_rd:ico);
+        DrawZwPic(memdc,zw,wi,hi,(cantwo[zw.type]&&zw.grow)?ico_red:ico);
         if(zw.type==55&&zw.tag!=-1&&iinum[zw.tag]!=-1)
         {
             int t=iinum[zw.tag],tx=zombies[t].x-zw.x,ty=zombies[t].ry-zw.y*SI;
@@ -435,8 +435,8 @@ void Game::DrawJs(QPainter &memdc,const Zombie&js)const
     int ic_ty=0;
     if(js.sta&2)ic_ty=1;
     else if(TM<js.frez_stp||js.freeze)ic_ty=2;
-    memdc.drawPixmap (QRect(-ox,-oy,z, z),(ic_ty==0?ico:(ic_ty==1?ico_rd:ico_bl))[js.id]);
-    if(js.dun)memdc.drawPixmap (QRect(-ox,-oy,z, z),(ic_ty==0?ico:(ic_ty==1?ico_rd:ico_bl))[GetDunIcon(js)]);
+    memdc.drawPixmap (QRect(-ox,-oy,z, z),(ic_ty==0?ico:(ic_ty==1?ico_red:ico_bl))[js.id]);
+    if(js.dun)memdc.drawPixmap (QRect(-ox,-oy,z, z),(ic_ty==0?ico:(ic_ty==1?ico_red:ico_bl))[GetDunIcon(js)]);
     if(js.spd<0)memdc.scale(-1,1);
     if(js.freeze)
         DrawRandomPoints(memdc,QRect(-ox+z/4,-oy,z/2, z),js.freeze/5,Qt::blue,i);
@@ -558,7 +558,7 @@ void Game::DrawZd(QPainter &memdc)const
         Bullet zd = bullets[i];QColor co=zd.color;
         if (bullets[i].spd < 0) {//魅惑
             memdc.save();memdc.translate(QPoint(zd.x + 50, zd.y * SI + 60));memdc.scale(-1,1);
-            memdc.drawPixmap (QRect(-SI, 0,SI, SI),ico_rd[bullets[i].sx]);
+            memdc.drawPixmap (QRect(-SI, 0,SI, SI),ico_red[bullets[i].sx]);
             memdc.restore();continue;
         }
         int si=zd.siz,left = (SI - si) / 2;zd.x += 15;

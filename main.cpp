@@ -4,7 +4,7 @@
 #include <QStandardPaths>
 int XUAN,TM,MM=9,MN=5,SI=110,FIRETM=30,ME,HI=610,W0=100,W1=1040,W2=140;
 MainWindow *m_wnd;double dan[100],zoom,sinra[10000],cosra[10000];
-QPixmap *ico,*ico_bl,*icm,*ico_rd,*icm_rd,*icm_bl,*ico_blk,*ico_sha;
+QPixmap *ico,*ico_bl,*icm,*ico_red,*icm_rd,*icm_bl,*ico_blk,*ico_sha;
 std::mt19937 RA(std::random_device{}());
 QString path;bool pub_bl[1000];
 int MyRand(int cnt[100],int p[100],int n);

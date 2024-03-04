@@ -14,11 +14,11 @@ MainWindow::MainWindow (QWidget *parent) :
 #ifdef Q_OS_MACOS
     ME=0;
 #endif
-    zoom=1;
+    zoom=1.0;
     lsZM=usermn=-1;tim.start ();
 
     ::ico=ico;::ico_bl=ico_bl;
-    ::ico_blk=ico_blk;::ico_rd=ico_rd;::ico_sha=ico_sha;
+    ::ico_blk=ico_blk;::ico_red=ico_red;::ico_sha=ico_sha;
 
     connect (&icotmr, &QTimer::timeout, this, &MainWindow::UpdateIcon);
     icotmr.setTimerType (Qt::CoarseTimer);
@@ -78,6 +78,8 @@ void MainWindow::showEvent(QShowEvent *event)
     QPixmap pix;pix.load("://icons/202.png");
     QCursor cu(pix,20,15);
     setCursor(cu);cur=cu;
+    pix.load("://icons/10.png");
+    setWindowIcon(pix);
     if(b_ret>1.2)ui->a_ret->setText("关闭retina模式");
     else ui->a_ret->setText("开启retina模式");
 #ifndef Q_OS_ANDROID //菜单栏
@@ -513,7 +515,7 @@ void MainWindow::InitOneIcon(int i)
         else if (i>=216&&i<=219)dx*=1.6;
         else if(i==104||i==105)dx*=2;
         ico[i]=QPixmap::fromImage (ic.scaled (floor (dx), floor (dx), Qt::KeepAspectRatio,Qt::SmoothTransformation));
-        if (i==28) {ico_rd[i]=QPixmap::fromImage(ico[i].toImage().mirrored(1,0));return;}
+            if (i==28) {ico_red[i]=QPixmap::fromImage(ico[i].toImage().mirrored(1,0));return;}
         auto rgb=ic.bits();int si=ic.width()*ic.height();
         long long sr=0,sg=0,sb=0;int cn=0;
         for(int s=0,t=0;s<si;s++,t+=4)//变蓝
@@ -537,7 +539,7 @@ void MainWindow::InitOneIcon(int i)
             if (r>255)r=255;
             rgb[t]=r;rgb[t+1]=g;rgb[t+2]=b;
         }
-        ico_rd[i]=QPixmap::fromImage (ic);
+        ico_red[i]=QPixmap::fromImage (ic);
         ic=ico[i].toImage().convertToFormat(QImage::Format_RGBA8888);
         rgb=ic.bits();si=ic.width()*ic.height();
         for(int s=0,t=0;s<si;s++,t+=4)//变黑
@@ -557,7 +559,7 @@ void MainWindow::InitIcon () //预处理图标
     {
         InitOneIcon(112);
         for (int i=0; i<=ICCNT; i++)
-            ico[i]=ico_bl[i]=ico_rd[i]=ico_blk[i]=ico_sha[i]=ico[112];
+            ico[i]=ico_bl[i]=ico_red[i]=ico_blk[i]=ico_sha[i]=ico[112];
         InitOneIcon(111);
         InitOneIcon(113);
         InitOneIcon(125);
