@@ -109,9 +109,6 @@
         <file>icons/108.png</file>
         <file>icons/109.png</file>
         <file>icons/110.png</file>
-        <file>icons/111.png</file>
-        <file>icons/112.png</file>
-        <file>icons/113.png</file>
         <file>icons/114.png</file>
         <file>icons/115.png</file>
         <file>icons/116.png</file>
@@ -123,7 +120,6 @@
         <file>icons/122.png</file>
         <file>icons/123.png</file>
         <file>icons/124.png</file>
-        <file>icons/125.png</file>
         <file>icons/126.png</file>
         <file>icons/127.png</file>
         <file>icons/128.png</file>
@@ -268,5 +264,36 @@
         <file>icons/263.png</file>
         <file>icons/264.png</file>
         <file>icons/265.png</file>
+        <file>icons/266.png</file>
+        <file>icons/267.png</file>
+        <file>icons/268.png</file>
+        <file>icons/269.png</file>
+        <file>icons/270.png</file>
+        <file>icons/271.png</file>
+        <file>icons/272.png</file>
+        <file>icons/273.png</file>
+        <file>icons/bg/0/mi.png</file>
+        <file>icons/bg/0/ri.png</file>
+        <file>icons/bg/1/mi.png</file>
+        <file>icons/bg/1/ri.png</file>
+        <file>icons/bg/2/mi.png</file>
+        <file>icons/bg/2/ri.png</file>
+        <file>icons/bg/3/mi.png</file>
+        <file>icons/bg/3/ri.png</file>
+        <file>icons/bg/4/mi.png</file>
+        <file>icons/bg/4/ri.png</file>
+        <file>icons/274.png</file>
+        <file>icons/275.png</file>
+        <file>icons/276.png</file>
+        <file>icons/bg/4/0.png</file>
+        <file>icons/bg/4/1.png</file>
+        <file>icons/bg/3/0.png</file>
+        <file>icons/bg/3/1.png</file>
+        <file>icons/bg/2/0.png</file>
+        <file>icons/bg/2/1.png</file>
+        <file>icons/277.png</file>
+        <file>icons/278.png</file>
+        <file>icons/279.png</file>
+        <file>icons/280.png</file>
     </qresource>
 </RCC>

@@ -23,21 +23,21 @@ void MainWindow::on_stop_clicked () { //暂停
     if(tcp.size()>0)
         SendInt(5,beans);
     SwitchStop();
-    ui->label->setFocus ();
+    ui->label_2->setFocus ();
 }
-void MainWindow::on_lineEdit_textEdited (const QString &arg1) {
+void MainWindow::on_lineEdit_textEdited (const QString &str) {
 #ifdef Q_OS_ANDROID
-    char c=arg1.back().toLatin1();
+    char c=str.back().toLatin1();
     if(c>='a'&&c<='z')
     {
-        QString nw=arg1;nw.chop(1);
+        QString nw=str;nw.chop(1);
         ui->lineEdit->setText(nw);
         KeyDown(c-'a'+Qt::Key_A);return;
     }
 #endif
-    QString str=arg1;
-    while(str.length()&&(str.back()<'0'||str.back()>'9'))str.chop(1);
-    m_gq = str.toInt ();
+    m_gq=0;
+    for(int i=0;i<str.length()&&str[i]>='0'&&str[i]<='9';i++)
+        m_gq=m_gq*10+(str[i].toLatin1()-'0');
     int gq=m_gq%100;gqe=gq-MAXGQS;
     if(gqe==1||gqe==2||gqe==3||gqe==5||gqe==9||gqe==11||gqe==12||gqe==13||gqe==15||gqe==16||gqe==21)
     {
@@ -100,7 +100,7 @@ void MainWindow::on_save_clicked () {
     if (bk)
         on_stop_clicked ();
     activateWindow();
-    ui->label->setFocus ();
+    ui->label_2->setFocus ();
 }
 void MainWindow::on_open_clicked () {
     auto fileDialog = std::make_unique<QFileDialog> (this);
@@ -125,29 +125,7 @@ void MainWindow::on_Auto_stateChanged (int arg1) {
     else KillTimer (1008);
     m_ai = arg1;
 }
-void MainWindow::on_buy_clicked () {
-    bool bk = false;
-    if (!isstop)
-        on_stop_clicked (), bk = true;
-    if (QMessageBox::question (this, tr ("提示"), QString::asprintf("花费%d阳光购买一颗能量豆",bean_cst)) == QMessageBox::Yes) {
-        if (beans >= MAXDZS) {
-            QMessageBox::warning (this, tr ("提示"), tr ("能量豆数量已达到上限！"));
-            ui->label->setFocus ();
-            return;
-        }
-        if (m_game.m_yg < bean_cst) {
-            QMessageBox::warning (this, tr ("提示"), tr ("阳光不足！"));
-            ui->label->setFocus ();
-            return;
-        }
-        m_game.m_yg -= bean_cst;
-        beans += 1;bean_cst+=50;
-    }
-    if (bk)
-        on_stop_clicked ();
-    activateWindow();
-    ui->label->setFocus ();
-}
+
 void MainWindow::on_quick_clicked () {
     bool bk = false;
     if (!isstop)
@@ -155,7 +133,7 @@ void MainWindow::on_quick_clicked () {
     if (QMessageBox::question (this, tr ("提示"), tr ("此操作可以加速回复60秒，要求至少6000阳光，操作后阳光将除以2")) == QMessageBox::Yes) {
         if (m_game.m_yg < 6000) {
             QMessageBox::warning (this, tr ("提示"), tr ("阳光不足！"));
-            ui->label->setFocus ();
+            ui->label_2->setFocus ();
             return;
         }
         m_game.m_yg /= 2;
@@ -177,13 +155,14 @@ void MainWindow::on_quick_clicked () {
     if (bk)
         on_stop_clicked ();
     activateWindow();
-    ui->label->setFocus ();
+    ui->label_2->setFocus ();
 }
 
 void MainWindow::on_huisu_clicked () { //回溯
-    ui->label->setFocus();
+    ui->label_2->setFocus ();
     if(b_ycl)//进攻
     {
+        b_ycl=false;
         ui->huisu->setEnabled(0);
         for(int i=0;i<MAXSHU;i++)
         {
@@ -227,7 +206,7 @@ void MainWindow::OnStart()
     QString str=ui->lineEdit->text();
     str.replace("—","--");
     int ex=0,es=0;bool ok;str.toInt(&ok);
-    if(!ok)
+    if(!ok&&str.count('+')+str.count('.')+str.count('-')>0)
     {
         int ji=1;
         while(str.length()>0&&str.back()>='0'&&str.back()<='9')
@@ -241,10 +220,21 @@ void MainWindow::OnStart()
         str.chop(1),ex+=es;
     while(str.length()>0&&(str.back()=='-'||str.back()=='.'))
         str.chop(1),ex-=es;
-    if(ext_dif==0)ext_dif=ex;
+    str.toInt(&ok);
+    if(!ok)
+    {
+        int ji=1,z=0;
+        while(str.length()>0&&str.back()>='0'&&str.back()<='9')
+        {
+            z+=(str.back().toLatin1()-'0')*ji;ji*=10;
+            str.chop(1);
+        }
+        str.chop(1);userlx=z;
+    }
+    ext_dif+=ex;
     m_gq = str.toInt();
     w_tm = plajs=duiz=0;h_sd = 1;
-    b_rd = b_hui = arc=wait_guan=false;
+    b_rd = b_hui = wait_guan=false;
     an_game.zmb_cnt=-1;an_game.started=0;
     while(q_js.size())q_js.pop();
     if (m_game.started) {
@@ -254,7 +244,7 @@ void MainWindow::OnStart()
         if (QMessageBox::question (this, tr ("提示"), tr ("此操作将结束正在进行的游戏")) != QMessageBox::Yes) {
             if (bk)
                 on_stop_clicked ();
-            ui->label->setFocus ();
+            ui->label_2->setFocus ();
             return;
         }
         isstop = false;
@@ -292,11 +282,36 @@ void MainWindow::OnStart()
     }
     if(!b_fast)
     {
-        ui->label->setFocus ();
+        ui->label_2->setFocus ();
         ShowGameButton ();
         update ();
     }
 }
+
+int MainWindow::ChooseGQ()
+{
+    Choogq *ch=new Choogq();
+    ch->setWindowModality(Qt::ApplicationModal);
+    ch->exec();int gg=ch->gq;
+    ext_dif=ch->ext_dif;
+    userlx=ch->userlx;
+    QString str=QString::asprintf("%d",gg);
+    if(userlx!=-1)
+        str+=QString::asprintf("_%d",userlx);
+    if(ext_dif<=2)
+        for(int s=0;s<ext_dif;s++)str+='+';
+    else
+        str+=QString::asprintf("+%d",ext_dif);
+    if(gg>0)ui->lineEdit->setText(str);
+    on_lineEdit_textEdited(str);
+    return gg;
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    ChooseGQ();
+}
+
 
 void MainWindow::on_btc_clicked () //开始
 {
@@ -304,26 +319,21 @@ void MainWindow::on_btc_clicked () //开始
     bool ok;ai_0=ai_1=ai_2=0;b_fast = false;
     QString str=ui->lineEdit->text();
     str.replace("—","--");str.toInt(&ok);
-    if(!ok)
+    if(!ok&&str.count('+')+str.count('.')+str.count('-')>0)
     {
         while(str.length()>0&&str.back()>='0'&&str.back()<='9')str.chop(1);
         while(str.length()>0&&str.back()=='+')str.chop(1);
         while(str.length()>0&&(str.back()=='-'||str.back()=='.'))str.chop(1);
     }
-    int gg=str.toInt(&ok);
-    if(!ok||gg==0)
+    str.toInt(&ok);
+    if(!ok)
     {
-        Choogq *ch=new Choogq();
-        ch->setWindowModality(Qt::ApplicationModal);
-        ch->exec();gg=ch->gq;ext_dif=ch->ext_dif;
-        str=QString::asprintf("%d",gg);
-        if(ext_dif<=2)
-            for(int s=0;s<ext_dif;s++)str+='+';
-        else
-            str+=QString::asprintf("+%d",ext_dif);
-        ui->lineEdit->setText(str);
+        while(str.length()>0&&str.back()>='0'&&str.back()<='9')str.chop(1);
+        str.chop(1);
     }
-    else ext_dif=0;
+    int gg=str.toInt(&ok);
+    if(!ok||gg==0)gg=ChooseGQ();
+    else ext_dif=0,userlx=-1;
     if((gg/100)%2==1&&ui->Auto->isChecked())
     {
         int cnt=(gg%10==0?200:100);
@@ -372,7 +382,7 @@ void MainWindow::EnableButton()
     ui->huisu->hide();
     ui->dfnz->hide();
     ui->stop->hide();
-    ui->buy->hide();
+    //ui->buy->hide();
     ui->quick->hide();
     ui->huisu->setEnabled(1);
     ui->huisu->setFlat(1);
@@ -389,14 +399,10 @@ void MainWindow::EnableButton()
 void MainWindow::ShowGameButton () {//显示/隐藏按钮
     ui->huisu->show();
     ui->dfnz->show();
-    if (gqe == 1 || gqe == 3|| gqe == 9 || b_zhu || b_guan) {
-        ui->buy->hide();
+    if (gqe == 1 || gqe == 3|| gqe == 9 || b_zhu || b_guan)
         ui->quick->hide();
-    }
-    else {
-        ui->buy->show();
+    else
         ui->quick->show();
-    }
     if(!ui->hui->isChecked())
     {
         ui->dfn->hide();
@@ -413,7 +419,7 @@ void MainWindow::ShowGameButton () {//显示/隐藏按钮
 
 void MainWindow::CheckPao(QPoint pt)
 {
-    int zz,x=((pt.x () - 150) / SI) * SI, y=(pt.y () - 60) / SI;
+    int zz,x=((pt.x () - (W0+50)) / SI) * SI, y=(pt.y () - 60) / SI;
     if ((zz = m_game.GetZwShu (x, y)) != -1 && m_game.plants[zz].type == 30 && m_game.plants[zz].grow == m_game.plants[zz].move_spd &&select==-1) //大炮, 且恢复完毕
     {
         int tz = m_game.GetZwShu (x - SI, y);
@@ -426,19 +432,19 @@ void MainWindow::CheckPao(QPoint pt)
 
 void MainWindow::SolveDig(QPoint pt)
 {
-    int x = int ((pt.x () - 150) / SI) * SI;
+    int x = int ((pt.x () - (W0+50)) / SI) * SI;
     int y = int ((pt.y () - 60) / SI);
     if (chui) {
         int wz=m_game.FindZombie(pt);
         if (wz!=-1) {
-            int zx = abs (m_game.zombies[wz].x - 500);
-            m_game.zombies[wz].life -= 80;
+            if(m_game.zombies[wz].tag<0)
+                m_game.zombies[wz].life += 40000, m_game.zombies[wz].vx+=1, chui_sc-=5;
+            else
+                m_game.zombies[wz].life -= 40000;
             if (m_game.zombies[wz].life <= 0)
-                m_game.DestroyJs (wz);
+                m_game.DestroyJs (wz), chui_sc+=1;
             else
                 m_game.zombies[wz].id = GetJsIcon (m_game.zombies[wz]);
-            if (zx <= SI / 3)
-                y_sum += SI / 3 - zx;
         }
         if (imjs)
             select = -1;
@@ -448,7 +454,7 @@ void MainWindow::SolveDig(QPoint pt)
         if(w==-1)
         {
             m_game.m_ng[x / SI][y] = 0;
-            m_game.CalFirst();
+            m_game.nd_calfr=true;
         }
         else
         {
@@ -466,9 +472,9 @@ void MainWindow::Drag(QPoint pt)
     x -= lmsx; y -= lmsy;
     if (m_game.started&&m_b48 &&x * x + y * y >= 6000*zoom*zoom) {
         double jj = atan2 (y, x), p4 = acos (-1.0) / 4.0;
-        if (jj > -p4 - eps && jj < p4 + eps)right2048 ();
-        else if (jj > p4 - eps && jj < 3 * p4 + eps)down2048 ();
-        else if (jj > -3 * p4 - eps && jj < -p4 + eps)up2048 ();
+        if (jj > -p4  && jj < p4)right2048 ();
+        else if (jj > p4 && jj < 3 * p4)down2048 ();
+        else if (jj > -3 * p4 && jj < -p4)up2048 ();
         else left2048 ();
     }
 #ifdef Q_OS_IOS
@@ -482,14 +488,15 @@ void MainWindow::Drag(QPoint pt)
     {
         if(x<-100*zoom)ui->centralwidget->show(),hiui=0;
         else if(x>100*zoom)ui->centralwidget->hide(),hiui=1;
-        W2=(hiui?0:140);
+        W2=(hiui?80:140);
+        resizeEvent(NULL);
         if(m_game.started&&abs(y)>250*zoom&&ma_y-std::max(lmsy,y+lmsy)<=10*zoom&&std::min(lmsy,y+lmsy)-mi_y<=10*zoom)
             on_stop_clicked();
     }
     if(m_game.started&&b_guan)
     {
         x/=zoom;y/=zoom;int ox=lmsx/zoom,oy=lmsy/zoom;
-        if(ox>=150&&oy>=60&&x*x+y*y>=2000)
+        if(ox>=(W0+50)&&oy>=60&&x*x+y*y>=2000)
             SolveDig(QPoint(ox,oy));
     }
     if(m_game.started&&lmsx>=1100*zoom)
@@ -501,13 +508,13 @@ void MainWindow::Drag(QPoint pt)
         if(lr&&du)ui->menubar->show();
         else if(lr&&ud)ViewStatus();
         else if(ud)RestartGame();
-        else if(du)on_buy_clicked();
+        //else if(du)on_buy_clicked();
         else if(lr)ChangeZw();
     }
     if(m_game.started&&m_game.m_yg>=50)
     {
         QPoint pt1=SPoint(lmsx,lmsy),pt2=SPoint(pt.x(),pt.y());
-        pt1-=QPoint(150,60);pt2-=QPoint(150,60);
+        pt1-=QPoint(W0+50,60);pt2-=QPoint(W0+50,60);
         if(pt1.x()>=0&&pt1.x()<MM*SI&&pt1.y()>=0&&pt1.y()<MN*SI&&
             pt2.x()>=0&&pt2.x()<MM*SI&&pt2.y()>=0&&pt2.y()<MN*SI)
         {
@@ -544,8 +551,8 @@ void MainWindow::mouseReleaseEvent (QMouseEvent *event) {
     if (event->button () == Qt::LeftButton) {
         bool t = false;
         QPoint pt = SPoint (event->pos ().x (), event->pos ().y ());
-        if (pt.x () >= 150 && pt.y () >= 60) {
-            int x = int ((pt.x () - 150) / SI) * SI;
+        if (pt.x () >= (W0+50) && pt.y () >= 60) {
+            int x = int ((pt.x () - (W0+50)) / SI) * SI;
             int y = int ((pt.y () - 60) / SI);
             if(select==-1&&wait_guan)
             {
@@ -555,16 +562,19 @@ void MainWindow::mouseReleaseEvent (QMouseEvent *event) {
             }
             t = (select != -1);
             if (select == -2)
-                SolveDig(pt);
+            {
+                if(!chui)
+                    SolveDig(pt);
+            }
             else if (select == -4) //大招
                 SolveDz (pt);
             else if (imjs||plajs)
                 AddJs (pt);
-            else if(select != -3||abs(event->pos ().x ()-lmsx)>=10||abs(event->pos ().y ()-lmsy)>=10)
+            else if(select != -3||abs(event->pos ().x ()-lmsx)>=5||abs(event->pos ().y ()-lmsy)>=5)//防止大炮原地爆炸
                 AddPlant (pt);
             if (!t&&sele_x != -1) //WSAD
             {
-                int x = ((pt.x () - 150) / SI) * SI;
+                int x = ((pt.x () - (W0+50)) / SI) * SI;
                 int y = ((pt.y () - 60) / SI);
                 SolveWSAD(x,y);
             }
@@ -575,16 +585,12 @@ void MainWindow::mouseReleaseEvent (QMouseEvent *event) {
     else if (event->button () == Qt::RightButton) {
         QPoint pt = SPoint (event->pos ().x (), event->pos ().y ());
         int w=m_game.GetZwShu(sele_x,sele_y),z=-1;
-        if (pt.x () >= 150 && pt.y () >= 60)
+        if(w!=-1)m_game.RightKey(w,pt);
+        if (pt.x () >= (W0+50) && pt.y () >= 60)
         {
-            int x = int ((pt.x () - 150) / SI) * SI;
+            int x = int ((pt.x () - (W0+50)) / SI) * SI;
             int y = int ((pt.y () - 60) / SI);
             z=m_game.GetZwShu(x,y);
-        }
-        if(w!=-1&&m_game.plants[w].type==55)
-        {
-            int rt=m_game.FindZombie(pt);
-            if(rt!=-1)m_game.plants[w].tag=m_game.zombies[rt].ii;
         }
         if(z!=-1&&m_game.plants[z].type==62)
         {
@@ -606,7 +612,7 @@ void MainWindow::mouseDoubleClickEvent (QMouseEvent *event) {
     if (dig) //挖
     {
         QPoint pt = SPoint (event->pos ().x (), event->pos ().y ());
-        int x = ((pt.x () - 150) / SI) * SI;
+        int x = ((pt.x () - (W0+50)) / SI) * SI;
         int y = ((pt.y () - 60) / SI);
         if (x >= 0 && x <= (MM - 1) * SI && y >= 0 && y < MN && !imjs)
             SolveDig(pt);
@@ -618,25 +624,21 @@ void MainWindow::mouseDoubleClickEvent (QMouseEvent *event) {
         if(rt!=-1)
         {
             for(int i=0;i<m_game.plt_cnt;i++)
-                if(m_game.plants[i].type==55)m_game.plants[i].tag=m_game.zombies[rt].ii;
+                if(m_game.plants[i].y!=-1&&m_game.plants[i].type==55)m_game.plants[i].tag=m_game.zombies[rt].ii;
         }
     }
     else if(event->button () == Qt::LeftButton)
     {
         QPoint pt = SPoint (event->pos ().x (), event->pos ().y ());
-        int x = ((pt.x () - 150) / SI) * SI;
+        int x = ((pt.x () - (W0+50)) / SI) * SI;
         int y = ((pt.y () - 60) / SI);
         if (x >= 0 && x <= (MM - 1) * SI && y >= 0 && y < MN)
         {
             int w=m_game.GetZwShu(x,y);
-            if(w!=-1&&m_game.plants[w].type==71&&m_game.m_yg>=200)
+            if(w!=-1)m_game.RightKey(w,pt);
+            else
             {
-                m_game.m_yg-=200;
-                m_game.LengJing(w,300);
-            }
-            if(w==-1)
-            {
-                f_shu+=(m_game.wz_fei[x/SI][y]+1)/2;
+                f_shu+=m_game.wz_fei[x/SI][y];
                 m_game.wz_fei[x/SI][y]=0;
                 int ne[4][2]={1,0,0,1,-1,0,0,-1};
                 for(int t=0;t<4;t++)
@@ -650,13 +652,13 @@ void MainWindow::SolveDz (QPoint pt) //处理大招
 {
     if(crea)beans=MAXDZS;
     if (beans > 0) {
-        int x = int ((pt.x () - 150) / SI) * SI;
+        int x = int ((pt.x () - (W0+50)) / SI) * SI;
         int y = int ((pt.y () - 60) / SI);
-        if (pt.x () >= 150 && pt.y () >= 60 && x >= 0 && x <= (MM - 1) * SI && y >= 0 && y < MN) //位置合法
+        if (pt.x () >= (W0+50) && pt.y () >= 60 && x >= 0 && x <= (MM - 1) * SI && y >= 0 && y < MN) //位置合法
         {
             int rt = m_game.GetZwShu (x, y);
             if (rt != -1) {
-                bool rtn = DaZhao (m_game.plants[rt], this);
+                bool rtn = m_game.DaZhao (rt);
                 if (rtn) //成功
                 {
                     beans -= 1;
@@ -671,30 +673,14 @@ void MainWindow::SolveDz (QPoint pt) //处理大招
 
 void MainWindow::SwiXuan()
 {
-    if(imjs)
-    {
-        for(int i=0;i<XUAN;i++)
-            m_xuan[i]=x_js[i];
-    }
-    bool bshu=b_guan;
-    if(is11&&!is12)bshu=1;
-    if(bshu)XUAN=SHU;
-    for(int i=0;i<MXUAN;i++)
-        std::swap(m_xuan[i],a_xuan[i]);
-    std::swap(XUAN,a_xs);
-    if(bshu)SHU=XUAN;
-    if(imjs)
-    {
-        for(int i=0;i<XUAN;i++)
-            x_js[i]=m_xuan[i];
-    }
-    swizw^=1;
+    if(xuan_st+MXUAN<XUAN)xuan_st+=MXUAN;
+    else xuan_st=0;
 }
 
 void MainWindow::SolveSel(QPoint pt)
 {
-    int y = int (pt.y () / 50.0);
-    if (pt.y () > 550 && pt.y () <= 610 && pt.x () <= 100)
+    int y = floor(pt.y () / 50.0);
+    if (pt.y () > HI-45 && pt.y () <= HI && pt.x () <= W0)
     {
         int x=pt.x();
         if(x >= 55)
@@ -707,14 +693,14 @@ void MainWindow::SolveSel(QPoint pt)
         else SwiXuan();
     }
     else if (imjs||plajs) {
-        if (pt.x () <= 100 && y < MXUAN)
-            select = x_js[y],sele_x=-1;
+        if (pt.x () <= W0 && y+1>=0&&y+1 < MXUAN)
+            select = x_js[y+1],sele_x=-1;
     }
-    else if (pt.x () <= 100 && y < XUAN && y < SHU && m_game.m_yg >= plants[m_xuan[y]].cost)
-        select = m_xuan[y],sele_x=-1;
-    int x = int ((pt.x () - 150) / SI);
+    else if (pt.x () <= W0 && y+1>=0 && y+1<XUAN && y+1<MXUAN)
+        select = m_xuan[(xuan_st+y+1)%XUAN],sele_x=-1;
+    int x = int ((pt.x () - (W0+50)) / SI);
     y = int ((pt.y () - 60) / SI);
-    if (pt.x () >= 150 && y < MN && x >= 0 && x < MM && m_game.GetZwShu (x * SI, y) != -1) {
+    if (pt.x () >= (W0+50) && y < MN && x >= 0 && x < MM && m_game.GetZwShu (x * SI, y) != -1) {
         sele_x = x * SI;
         sele_y = y;
     }
@@ -722,8 +708,9 @@ void MainWindow::SolveSel(QPoint pt)
 
 void MainWindow::mousePressEvent (QMouseEvent *event) //同上
 {
+    //-1无 -2铲子 -3大炮 -4能量豆
     if(event->button ()==Qt::RightButton)
-        ui->label->setFocus();
+        ui->label_2->setFocus ();
     lmsx = event->pos ().x ();
     lmsy = event->pos ().y ();
     mi_x=ma_x=lmsx;mi_y=ma_y=lmsy;
@@ -731,7 +718,7 @@ void MainWindow::mousePressEvent (QMouseEvent *event) //同上
     if (event->button () == Qt::LeftButton) {
         bool t = (select == -1),tt=t;
         QPoint pt = SPoint (event->pos ().x (), event->pos ().y ());
-        if (pt.x () >= 150 && pt.y () >= 60) {
+        if (pt.x () >= (W0+50) && pt.y () >= 60) {
             if (select != -1) {
                 if (select == -2)
                     SolveDig(pt);
@@ -745,15 +732,15 @@ void MainWindow::mousePressEvent (QMouseEvent *event) //同上
                     t = true;
             }
             else if (sele_x != -1) {
-                int x = ((pt.x () - 150) / SI) * SI;
+                int x = ((pt.x () - (W0+50)) / SI) * SI;
                 int y = ((pt.y () - 60) / SI);
                 SolveWSAD(x,y);
             }
             if(tt)CheckPao(pt);
         }
-        else if(pt.x () >= 150 && pt.y () < 60)
+        else if(pt.x () >= (W0+50) && pt.y () < 60)
         {
-            if(pt.x()>=900&&pt.x()<=1100)show_life^=1;
+            if(pt.x()>=800&&pt.x()<=1100)show_life^=1;
             if(pt.x()>1100&&pt.x()<=1140)select=-2;
             else select=-1;
         }
@@ -773,25 +760,67 @@ bool MainWindow::TypeStr(const char*s)
     return 1;
 }
 
+void MainWindow::MJ_Kill()
+{
+    for(int i=0;i<m_game.zmb_cnt;i++)
+    {
+        m_game.zombies[i].y=-1;
+        m_game.zmb_ii[m_game.zombies[i].ii]=-1;
+    }
+    m_game.zmb_cnt=0;zuobi=1;
+    for(int i=0;i<MN;i++)
+        m_game.row_zmb[i]=0;
+}
+
+void MainWindow::MJ_InfSn()
+{
+    zuobi=1;inf_sun=true;
+    m_game.m_yg=999999;
+}
+
+void MainWindow::MJ_AdSn()
+{
+    zuobi=1;
+    m_game.m_yg+=1000;
+}
+
+void MainWindow::MJ_ClrCD()
+{
+    for(int i=0;i<MAXSHU;i++)
+        if(cd_spd[i]>0)cd[i]=800;
+}
+
+void MainWindow::MJ_Car()
+{
+    for(int i=0;i<MN;i++)
+        if(m_game.cars[i]<=0)
+            m_game.cars[i]=1;
+}
+
 void MainWindow::KeyDown(int z)
 {
     m_zf[++zf_len]=z;
-    if(!duiz&&TypeStr("kill"))
+    if(!duiz)
     {
-        m_game.zmb_cnt=0;zuobi=1;
-        for(int i=0;i<MN;i++)
-            m_game.row_zmb[i]=0;
+        if(TypeStr("kill"))
+            MJ_Kill();
+        else if(TypeStr("infsn"))
+            MJ_InfSn();
+        else if(TypeStr("adsn"))
+            MJ_AdSn();
+        else if(TypeStr("clrcd"))
+            MJ_ClrCD();
+        else if(TypeStr("car"))
+            MJ_Car();
     }
-    if(!duiz&&TypeStr("infsn"))
-        zuobi=1,m_game.m_yg=99999999;
-    if(zf_len>=3&&m_zf[zf_len-2]==Qt::Key_S&&m_zf[zf_len-1]==Qt::Key_U&&m_zf[zf_len]==Qt::Key_N)//sun指令
+    if(zf_len>=3&&TypeStr("sun"))//sun指令
         SwitchSun();
     if(z==Qt::Key_Escape)select=sele_x=sele_y=-1;
     else if(z==Qt::Key_C&&can_swi)ChangeZw();
     else if(z==Qt::Key_X)ShowLife();
-    else if(z==Qt::Key_J&&duiz)plajs^=1;
-    else if(z==Qt::Key_B&&duiz&&beans<5&&exp>=20000)beans+=1,exp-=20000;
-    else if(z==Qt::Key_F&&duiz&&exp>=25000)z_fs+=1,exp-=25000;
+    /*else if(z==Qt::Key_J&&duiz)plajs^=1;
+    else if(z==Qt::Key_B&&duiz&&beans<5&&exp>=20000)beans+=1,exp-=20000,labeanTM=TM;
+    else if(z==Qt::Key_F&&duiz&&exp>=25000)z_fs+=1,exp-=25000;*/
     else if(z==Qt::Key_O)OtherPre();
     else if(z==Qt::Key_Z)SwiXuan();
     else if(z==Qt::Key_Q&&crea&&m_game.started)
@@ -812,13 +841,15 @@ void MainWindow::KeyDown(int z)
         int w=m_game.GetZwShu(sele_x,sele_y);
         if(w==-1||m_game.plants[w].type!=55)w=-1;
         for(int i=0;i<m_game.plt_cnt;i++)
-            if(m_game.plants[i].type==55&&(w==-1||i==w))
+            if(m_game.plants[i].y!=-1&&m_game.plants[i].type==55&&(w==-1||i==w))
             {
                 if(z==Qt::Key_L)m_game.plants[i].tag=m_game.LeftZombie(m_game.plants[i].tag);
                 else m_game.plants[i].tag=m_game.RightZombie(m_game.plants[i].tag);
             }
     }
     else if(z==Qt::Key_P)SwitchStop();
+    //else if(z==Qt::Key_M&&gqe==7&&select==-2)
+    //    on_
     bool b = false;
     if (z == ' ') //暂停
     {
@@ -833,6 +864,8 @@ void MainWindow::KeyDown(int z)
         select = 9, b = 1,sele_x=-1;
     else if (z == Qt::Key_Minus)
         select = 10, b = 1,sele_x=-1;
+    else if(z == Qt::Key_Equal)
+        select = 11, b = 1,sele_x=-1;
     else if (z == '`') //铲子
         select = -2,sele_x=-1;
     else if (sele_x != -1) //可以WSAD
@@ -862,11 +895,12 @@ void MainWindow::KeyDown(int z)
     if (b) { //处理选择的项目
         if (imjs||plajs)
             select = x_js[select];
-        else if (select >= XUAN || select >= SHU)
+        else if (select >= XUAN)
             select = -1;
         else {
-            if (m_game.m_yg >= plants[m_xuan[select]].cost)
-                select = m_xuan[select];
+            int t=m_xuan[(xuan_st+select)%XUAN];
+            if (m_game.m_yg >= plants[t].cost)
+                select = t;
             else
                 select = -1;
         }
@@ -888,11 +922,15 @@ void MainWindow::ViewStatus () {//查看状态
         QString str=GetGqStr(real_gq);
         str+=QString::asprintf ("\n总共出现了%d只僵尸，还剩下%d只，进度%.2lf%%\n已进行%.2lf分钟，预计剩余%.2lf分钟\n僵尸生成速度：%.2lfs/个", m_game.jd, zom_cnt-m_game.jd, double (m_game.jd)/zom_cnt*100, TM*25/60000.0/m_spd,(m_ztm  - TM * 25)/ 60000.0/m_spd,tm_js[m_n]/1000.0);
         if(gqe==12)str=GetGqStr(real_gq)+QString::asprintf("\n已完成%d轮",m_n);
+        for(int i=0;i<MN;i++)
+            str+=QString::asprintf("%d ",m_game.row_zmb[i]);
+        str+=QString::asprintf("\ndbg=%d\n",dbg);
+        str+=dbg_str;
         QMessageBox::information (this, tr (""),str);
     }
 }
 void MainWindow::Quit () {
-    exit (0);
+    QCoreApplication::exit(0);
 }
 
 
@@ -919,14 +957,6 @@ void MainWindow::jiansu () {//减速
     ui->speed->setValue (sd);
     if (bk)
         on_stop_clicked ();
-}
-void MainWindow::Retina()
-{
-    b_ret=3-b_ret;
-    if(b_ret>1.2)ui->a_ret->setText("关闭retina模式");
-    else ui->a_ret->setText("开启retina模式");
-    zoom=(zoom*(drty?1:b_ret));
-    InitIcon();
 }
 void MainWindow::SwitchSun()
 {
@@ -955,7 +985,7 @@ void MainWindow::SendGameData()
     if(duiz)
     {
         da<<4<<TM;
-        m_game.Save(da);
+        m_game.output(da);
     }
     else
     {
@@ -996,7 +1026,7 @@ bool MainWindow::DoWSAD(int sx,int sy,int tx,int ty)
     if (tx >= 0 && tx <= (MM - 1) * SI && ty >= 0 && ty < MN
             && wsad_col[tx/SI][ty]!=-1&&(sele_x==-1||wsad_col[tx/SI][ty]==wsad_col[sele_x/SI][sele_y])
             &&m_game.GetZwShu (tx, ty) == -1 && !m_game.IsIcy(tx/SI,ty)
-            &&(m_game.m_keng[tx/SI][ty]==0||m_game.m_keng[tx/SI][ty]==3)) {
+            &&(m_game.gird_type[tx/SI][ty]==0||m_game.gird_type[tx/SI][ty]==3)) {
         int z = m_game.GetZwShu (sele_x, sele_y);
         if (z != -1)m_game.MoveZw(z,tx,ty),rt=1;
         sele_x = tx; sele_y = ty;
@@ -1079,12 +1109,12 @@ void MainWindow::SwiMw()
     low_mw=(low_mw+1)%3;
 }
 
-void MainWindow::SwiTmrDelay()
+/*void MainWindow::SwiTmrDelay()
 {
     tmr_delay^=1;
     if(tmr_delay)ui->a_eff->setText("关闭低性能模式");
     else ui->a_eff->setText("开启低性能模式");
-}
+}*/
 
 void MainWindow::on_bt_oth_clicked()
 {
@@ -1103,15 +1133,12 @@ void MainWindow::SwiDraw()
     else
     {
         drtmr.stop();
-        gl.resize(draw->gl->size());gl.move(draw->gl->pos());
 #ifndef NO_UI
         gl.show();
 #endif
         ui->a_swdr->setText("开启多线程绘图");
     }
-    lszm=tim.elapsed();
-    if(!m_game.started&&!icotmr.isActive())
-        icotmr.start(10);
+    ResetIcons();
 }
 
 void MainWindow::SwiKJC()
@@ -1137,7 +1164,7 @@ void MainWindow::SwiSound()
 
 void MainWindow::OtherPre()
 {
-    Other *ch = new Other (this);
+    Other *ch = new Other();
     for (int i = 0; i < MAXJSH; i++)
     {
         ch->ico[i].load (QString::asprintf ("://icons/%d.png", od_ico[i]));
@@ -1149,6 +1176,8 @@ void MainWindow::OtherPre()
     ch->b_two=b_two;
     ch->b_xie=xie;
     ch->b_sun=b_sun;
+    ch->car_num=m_game.car_num;
+    ch->car_ryg=m_game.car_ryg;
     ch->usermn=usermn;ch->usermm=usermm;ch->usersi=usersi;
     ch->setWindowModality (Qt::ApplicationModal);
     ch->Init ();ch->show ();
@@ -1165,22 +1194,24 @@ void MainWindow::OtherPre()
         usermn=ch->usermn;
         usermm=ch->usermm;
         usersi=ch->usersi;
+        m_game.car_num=ch->car_num;
+        m_game.car_ryg=ch->car_ryg;
     }
 }
 
 void MainWindow::on_speed_textChanged(const QString &arg1)
 {
+    bool ok;
+    double sd=ui->speed->text ().toDouble (&ok);
+    if(!ok)return;
+    m_spd=sd;
+    ui->label_2->setFocus ();
     if(m_game.started)
     {
-        bool bk = false;
-        if (!isstop)
-            on_stop_clicked (), bk = true,stop_cnt-=1;
-        m_spd=ui->speed->text ().toDouble ();
-        if (bk)on_stop_clicked ();
-        ui->label->setFocus();
+        KillTimer(1001);
+        SetTimer(1001,20*(m_spd<1?m_spd:1));
+        tm_det=v_tm-m_spd*tim.elapsed();
     }
-    else
-        m_spd=ui->speed->text ().toDouble ();
 }
 
 void MainWindow::on_kehu_triggered()
@@ -1225,4 +1256,18 @@ void MainWindow::LoadLast(bool st)
         return;
     }
     else if(!st)QMessageBox::information(this,"","未检测到存档！");
+}
+
+void MainWindow::FullScreen()
+{
+    setWindowState(windowState() ^ Qt::WindowFullScreen);
+}
+
+void MainWindow::SwiBG()
+{
+    bgid=(bgid+1)%BGCNT;
+    InitOneIcon(111);
+    InitOneIcon(112);
+    InitOneIcon(113);
+    InitOneIcon(125);
 }

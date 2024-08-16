@@ -16,7 +16,7 @@ class Choogq : public QDialog
 public:
     explicit Choogq(QWidget *parent = nullptr);
     ~Choogq();
-    int gq,ext_dif;
+    int gq,ext_dif,userlx;
     QButtonGroup *gp2,*gp3,*gp4;
     QRadioButton bt[50];
 

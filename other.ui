@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>703</width>
-    <height>305</height>
+    <height>349</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>300</x>
-     <y>264</y>
+     <y>304</y>
      <width>121</width>
      <height>32</height>
     </rect>
@@ -33,7 +33,7 @@
    <property name="geometry">
     <rect>
      <x>150</x>
-     <y>264</y>
+     <y>304</y>
      <width>131</width>
      <height>32</height>
     </rect>
@@ -59,7 +59,7 @@
    <property name="geometry">
     <rect>
      <x>26</x>
-     <y>270</y>
+     <y>310</y>
      <width>51</width>
      <height>16</height>
     </rect>
@@ -72,7 +72,7 @@
    <property name="geometry">
     <rect>
      <x>80</x>
-     <y>268</y>
+     <y>308</y>
      <width>51</width>
      <height>21</height>
     </rect>
@@ -140,7 +140,7 @@
    <property name="geometry">
     <rect>
      <x>470</x>
-     <y>270</y>
+     <y>310</y>
      <width>41</width>
      <height>21</height>
     </rect>
@@ -155,21 +155,21 @@
   <widget class="QCheckBox" name="zdy">
    <property name="geometry">
     <rect>
-     <x>550</x>
+     <x>540</x>
      <y>230</y>
-     <width>101</width>
+     <width>121</width>
      <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string>自定义场地</string>
+    <string>自定义场地大小</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
      <x>440</x>
-     <y>270</y>
+     <y>310</y>
      <width>31</width>
      <height>21</height>
     </rect>
@@ -182,7 +182,7 @@
    <property name="geometry">
     <rect>
      <x>520</x>
-     <y>270</y>
+     <y>310</y>
      <width>16</width>
      <height>21</height>
     </rect>
@@ -198,7 +198,7 @@
    <property name="geometry">
     <rect>
      <x>540</x>
-     <y>270</y>
+     <y>310</y>
      <width>41</width>
      <height>21</height>
     </rect>
@@ -214,7 +214,7 @@
    <property name="geometry">
     <rect>
      <x>590</x>
-     <y>270</y>
+     <y>310</y>
      <width>31</width>
      <height>21</height>
     </rect>
@@ -230,7 +230,7 @@
    <property name="geometry">
     <rect>
      <x>620</x>
-     <y>270</y>
+     <y>310</y>
      <width>41</width>
      <height>21</height>
     </rect>
@@ -240,6 +240,58 @@
    </property>
    <property name="readOnly">
     <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>25</x>
+     <y>275</y>
+     <width>61</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>小车数量</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="Car_num">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>273</y>
+     <width>51</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>1</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="Car_ryg">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>273</y>
+     <width>51</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>0</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>165</x>
+     <y>275</y>
+     <width>61</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>丢车返还</string>
    </property>
   </widget>
  </widget>

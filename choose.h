@@ -21,7 +21,7 @@ public:
 
 public:
     QPixmap ico[MAXSHU],icj[MAXJSH];
-    int xuan[MXUAN*2],SHU,XUAN,yg[MAXSHU],dfn[MAXSHU],JSH;
+    int xuan[MAXXUAN],SHU,XUAN,yg[MAXSHU],dfn[MAXSHU],JSH;
     QCheckBox *ck[MAXSHU];
     QTimer timer;
     QElapsedTimer tim;
@@ -29,10 +29,13 @@ public:
 
 
 private slots:
-    void on_buttonBox_accepted();
     void OnTimer();
 
     void on_lastc_clicked();
+
+    void on_bt_ok_clicked();
+
+    void on_bt_can_clicked();
 
 private:
     Ui::Choose *ui;

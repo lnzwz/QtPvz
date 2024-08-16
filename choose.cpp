@@ -15,16 +15,19 @@ Choose::Choose(QWidget *parent) :
 
 void Choose::Init()
 {
-    int si=40;
-    resize((SHU+CN-1)/CN*(si*2+20),si*CN+130);
+    int si=40,wi=(SHU+CN-1)/CN*(si*2+20);
+    wi=std::max(wi,JSH*35+10);
+    if(wi<600)wi=600;
+    resize(wi,si*CN+130);
 #ifdef Q_OS_ANDROID
     ui->buttonBox->move(130,280);
     ui->lastc->move(380,280);
     ui->label->move(20,270);si=30;
     resize(800,320);
 #else
-    ui->buttonBox->move(230,si*CN+95);
-    ui->lastc->move(380,si*CN+95);
+    ui->bt_ok->move(230,si*CN+95);
+    ui->bt_can->move(320,si*CN+95);
+    ui->lastc->move(410,si*CN+95);
     ui->label->move(20,si*CN+85);
 #endif
     for(int i=0,x=0,y=0;i<SHU;i++)
@@ -52,7 +55,6 @@ void Choose::Init()
     QFile file (path+QString::asprintf ("lastc/%d.in", gq));
     if(file.open (QIODevice::ReadOnly))ui->lastc->setEnabled(1);
     else ui->lastc->setEnabled(0);
-    ui->buttonBox->raise();
 }
 
 Choose::~Choose()
@@ -64,7 +66,7 @@ Choose::~Choose()
 
 void Choose::Sort()
 {
-    int m=0,sa[MXUAN*2]={0},sb[MXUAN*2]={0};
+    int m=0,sa[MAXXUAN]={0},sb[MAXXUAN]={0};
     for(int i=0;i<SHU;i++)
     {
         if(ck[i]->isChecked())
@@ -84,23 +86,11 @@ void Choose::Sort()
             }
         }
     }
+    for(int i=0;i<XUAN;i++)
+        xuan[i]=-1;
     for(int i=0;i<m;i++)
         xuan[i]=sa[i];
     cho_cnt=m;
-}
-
-void Choose::on_buttonBox_accepted()
-{
-    Sort();
-    if(gq!=-1)
-    {
-        QFile file (path+QString::asprintf ("lastc/%d.in", gq));
-        file.open (QIODevice::WriteOnly);
-        QDataStream ar (&file);
-        for(int i=0;i<XUAN;i++)
-            ar<<xuan[i];
-        file.close();
-    }
 }
 
 void Choose::OnTimer()
@@ -116,7 +106,7 @@ void Choose::OnTimer()
         else dfn[n]=-1;
     }
     ui->label->setText(QString::asprintf("还能选%d个",XUAN-m));
-    ui->buttonBox->buttons()[0]->setEnabled(m==XUAN);
+    ui->bt_ok->setEnabled(m<=XUAN);
     if(m<=XUAN)Sort();
     update();
 }
@@ -147,9 +137,33 @@ void Choose::on_lastc_clicked()
     for(int i=0;i<XUAN;i++)
     {
         int t;ar>>t;
-        if(t>=SHU)continue;
+        if(t>=SHU||t==-1)continue;
         ck[t]->setChecked(1);
         dfn[t]=i;xuan[i]=t;
     }
     file.close();
 }
+
+void Choose::on_bt_ok_clicked()
+{
+    if(xuan[XUAN-1]==-1&&QMessageBox::question(this,"提示","你尚未使用全部卡槽，确认要继续吗？")!=QMessageBox::Yes)
+        return;
+    Sort();
+    if(gq!=-1)
+    {
+        QFile file (path+QString::asprintf ("lastc/%d.in", gq));
+        file.open (QIODevice::WriteOnly);
+        QDataStream ar (&file);
+        for(int i=0;i<XUAN;i++)
+            ar<<xuan[i];
+        file.close();
+    }
+    accept();
+}
+
+
+void Choose::on_bt_can_clicked()
+{
+    reject();
+}
+

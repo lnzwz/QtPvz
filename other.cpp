@@ -41,7 +41,8 @@ void Other::on_lastc_clicked()
     for(int i=0;i<MAXJSH;i++)
         ar>>del_js[i];
     ar>>auto_fire>>crea>>b_two>>b_xie>>b_sun;
-    ar>>usermn>>usermm>>usersi;
+    ar>>usermn>>usermm>>usersi>>xmul;
+    ar>>car_num>>car_ryg;
     file.close();Sync();
 }
 
@@ -64,13 +65,16 @@ void Other::on_buttonBox_accepted()
     else usermn=-1;
     bool ok;xmul=ui->xm->text().toDouble(&ok)/100.0;
     if(!ok)xmul=1.0;
+    car_num=ui->Car_num->text().toInt();
+    car_ryg=ui->Car_ryg->text().toInt();
     QFile file (path+QString::asprintf ("lastc/oth.in"));
     file.open (QIODevice::WriteOnly);
     QDataStream ar (&file);
     for(int i=0;i<MAXJSH;i++)
         ar<<del_js[i];
     ar<<auto_fire<<crea<<b_two<<b_xie<<b_sun;
-    ar<<usermn<<usermm<<usersi;
+    ar<<usermn<<usermm<<usersi<<xmul;
+    ar<<car_num<<car_ryg;
     file.close();
 }
 
@@ -97,6 +101,9 @@ void Other::Sync()
     ui->two->setChecked(b_two);
     ui->xie->setChecked(b_xie);
     ui->DbSun->setChecked(b_sun);
+    ui->xm->setText(QString::asprintf("%g",xmul*100.0));
+    ui->Car_num->setText(QString::asprintf("%d",car_num));
+    ui->Car_ryg->setText(QString::asprintf("%d",car_ryg));
     if(usermn!=-1)
     {
         ui->Usermn->setText(QString::asprintf("%d",usermn));

@@ -16,7 +16,7 @@ class Other : public QDialog
 
 public:
     bool del_js[MAXJSH],can_del[MAXJSH],auto_fire,crea,b_two,b_xie,inited,b_sun;
-    double xmul;int usermn,usermm,usersi;
+    double xmul;int usermn,usermm,usersi,car_num,car_ryg;
     explicit Other(QWidget *parent = nullptr);
     ~Other();
     void Init();

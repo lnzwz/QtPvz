@@ -48,14 +48,14 @@ int Game::Valid (int x, int sy = 0)const //植物可行(AI)
         return z;
     return -1;
 }
-int Game::FakeKill (int xl, int xr, int y, int kill)const {
+int Game::FakeKill (int xl, int xr, int y, int kill) {
     if (y < 0 || y >= 5)
         return 0;
     int jg = 0, tx = 770;
     if (GetZwShu (tx, y) == -1)
         tx = 660;
     for (int i = 0; i < zmb_cnt; i++) {
-        if (zombies[i].life < 0 || zombies[i].type >= 100 || (zombies[i].type <= 5 && jd > 100) || ((zombies[i].eat >= 200 || (zombies[i].eat <= 2 && zombies[i].type != 16)) && zombies[i].x > tx + 90) || (zombies[i].eat == 40 && zombies[i].x > tx + 100))
+        if (zombies[i].y==-1 || zombies[i].life < 0 || zombies[i].type >= 100 || (zombies[i].type <= 5 && jd > 100) || ((zombies[i].eat >= 200 || (zombies[i].eat <= 2 && zombies[i].type != 16)) && zombies[i].x > tx + 90) || (zombies[i].eat == 40 && zombies[i].x > tx + 100))
             continue;
         if (zombies[i].y == y && zombies[i].x >= xl && zombies[i].x <= xr && zombies[i].type < 100) {
             int ad = zombies[i].life;ad/=1000;
@@ -129,7 +129,7 @@ bool Game::UnderCar (int x, int y)const {
     }
     return false;
 }
-bool Game::BeforeShe (int x, int y)const {//是否在射手前面（AI）
+bool Game::BeforeShe (int x, int y) {//是否在射手前面（AI）
     int mi = 10000;
     for (int i = 0; i < zmb_cnt; i++) {
         if ((zombies[i].type == 8 || zombies[i].type == 10|| zombies[i].type == 22) && zombies[i].y == y && zombies[i].x >= x - 10 && zombies[i].x < mi) //不能在射手的面前种植
@@ -204,7 +204,7 @@ double Game::wsad_cal(int sz[5][9])
         if(x>8)x=8;if(x<0)x=0;
         double z=su[y][x],tx;
         if(fabs(z)<eps)tx=-SI*2;
-        else tx=js.x-js.life/z/50*js.spd/2.0;
+        else tx=js.x-js.life/z/50*js.vx/2.0;
         if(tx<-SI)tx=-SI;
         tx=885-tx;jg+=tx*tx;
     }
@@ -225,10 +225,10 @@ void Game::AI () {
         return;
     t_ai += 1;
     int ma = 1e9, zy = -1, zx;
-    bool ff = false, tt = false;
+    bool tt = false;
     for (int i = 0; i < zmb_cnt; i++) //判断危机情况
     {
-        if (zombies[i].type == 11 || zombies[i].type >= 100 || zombies[i].eat == 0 || zombies[i].type == 16 || zombies[i].spd == 0)
+        if (zombies[i].type == 11 || zombies[i].type >= 100 || zombies[i].eat == 0 || zombies[i].type == 16 || zombies[i].vx == 0)
             continue; //不对子弹，苦力怕，小偷进行处理
         int x = ((zombies[i].x + 30) / SI) * SI, y = zombies[i].y, z;
         int he = 0;
@@ -256,17 +256,17 @@ void Game::AI () {
                     ji = true; //扫描到坚果
             }
             if (zombies[i].type != 8&&zombies[i].type != 18) //特判跳跳
-                tm += SI / (zombies[i].spd/2.0) * 40;
+                tm += SI / (zombies[i].vx/2.0) * 40;
             else
                 tm -= 40;
         }
-        int t = x / (zombies[i].spd/2.0); //进家的时间
+        int t = x / (zombies[i].vx/2.0); //进家的时间
         if (zombies[i].shoot)
             t -= 100;
-        if (!car[y])
+        if (!cars[y])
             t -= 200;
         if (he <= zombies[i].life && (t < ma || (t == ma && zombies[i].life > zx)))
-            ma = t, zy = y, zx = x, ff = (zombies[i].shoot && zombies[i].type != 16), tt = (zombies[i].type == 8);
+            ma = t, zy = y, zx = x, tt = (zombies[i].type == 8);
         if (!ji && zombies[i].shoot && zombies[i].type != 16) //种植坚果挡住子弹
         {
             bool zd = false;
@@ -611,7 +611,7 @@ void Game::AI () {
                         //DaZhao (plants[plt_cnt - 1], m_wnd);
                         //m_wnd->beans -= 1;
                     }
-                    else zk = true;
+                    else plt_kui = true;
                     xs += 2;
                     zd = true;
                     break;
@@ -636,7 +636,7 @@ void Game::AI () {
                             //DaZhao (plants[plt_cnt - 1], m_wnd);
                             //m_wnd->beans -= 1;
                         }
-                        else zk = true;
+                        else plt_kui = true;
                         xs += 2;
                         zd = true;
                         break;
@@ -672,11 +672,11 @@ void Game::AI () {
                     {
                         m_wnd->select = (!is_day?17:0);
                         m_wnd->AddPlant (x, y);
-                        if (m_wnd->beans && !zk) {
-                            DaZhao (plants[plt_cnt - 1], m_wnd);
+                        if (m_wnd->beans && !plt_kui) {
+                            DaZhao (plt_cnt - 1);
                             m_wnd->beans -= 1;
                         }
-                        else zk=1;
+                        else plt_kui=1;
                         xs += 1;
                         zd = true;
                         break;
@@ -703,7 +703,7 @@ void Game::AI () {
             int rt = Find (zz,ss, mz);
             if (rt != -1 && !UnderGaint (rt * SI, y) && !UnderCar (rt * SI, y) && !BeforeShe (rt * SI, y) && !UnderMonth (rt * SI, y)) //不能在危险处种植
             {
-                if (!car[y])
+                if (!cars[y])
                     hg[y] -= 4;
                 if (hg[y] - hj[y] / 15 < ma)
                     ma = hg[y] - hj[y] / 15, mz = hg[y], zy = y;
@@ -848,8 +848,8 @@ void Game::AI () {
                 ma = xh[y], zy = y;
         }
         if (ma >= (endless?300:200) && jd > 50) {
-            if (m_yg > m_wnd->bean_cst && m_wnd->beans < 1) {
-                m_yg -= m_wnd->bean_cst;m_wnd->bean_cst+=100;
+            if (m_yg > m_wnd->plants[99].cost && m_wnd->beans < 1) {
+                m_yg -= m_wnd->plants[99].cost;plants[99].cost+=50;
                 m_wnd->beans += 1;
             }
             if (m_wnd->beans) {
@@ -865,7 +865,7 @@ void Game::AI () {
                     for (int x = 0; x <= 550; x += SI) {
                         int z = GetZwShu (x, zy);
                         if (z != -1 && plants[z].type == 44 && plants[z].time != 100) {
-                            DaZhao (plants[z], m_wnd);
+                            DaZhao (z);
                             lst[zy] = t_ai;
                             m_wnd->beans -= 1;
                             break;
@@ -877,7 +877,7 @@ void Game::AI () {
                         for (int x = 0; x <= 550; x += SI) {
                             int z = GetZwShu (x, zy);
                             if (z != -1 && plants[z].type == 10 && plants[z].time != 100) {
-                                DaZhao (plants[z], m_wnd);
+                                DaZhao (z);
                                 lst[zy] = t_ai;
                                 m_wnd->beans -= 1;
                                 break;
@@ -968,7 +968,7 @@ void Game::AI () {
             m_wnd->AddPlant (wx*SI,wy);
         }
     }
-    if(m_wnd->cd[18]>800-(1e-10))
+    /*if(m_wnd->cd[18]>800-(eps))
     {
         int wx=-1,wy=-1,ma=((!is_day)||is_cycle?-1:0);
         for(int i=MM-2;i>=0;i--)
@@ -976,7 +976,7 @@ void Game::AI () {
             for(int j=0;j<MN;j++)
                 if(GetZwShu(SI*i,j)==-1)
                 {
-                    int z=(UnderGaint(SI*i,j)?8:0)+(BeforeShe(SI*i,j)?4:0)+(NearCGT(SI*i,j)?2:0)+(i<=MM-4&&UnderMonth(SI*i,j)?1:0)-(m_keng[i][j]==2);
+                    int z=(UnderGaint(SI*i,j)?8:0)+(BeforeShe(SI*i,j)?4:0)+(NearCGT(SI*i,j)?2:0)+(i<=MM-4&&UnderMonth(SI*i,j)?1:0)-(gird_type[i][j]==2);
                     if(z>ma)ma=z,wx=i,wy=j;
                 }
         }
@@ -985,8 +985,8 @@ void Game::AI () {
             m_wnd->select = 18;
             m_wnd->AddPlant (wx*SI,wy);
         }
-    }
-    /*if(m_wnd->cd[0]>800-(1e-10))
+    }*/
+    /*if(m_wnd->cd[0]>800-(eps))
     {
         int wx=-1,wy=-1,ma=0;
         for(int i=MM-2;i>=0;i--)
@@ -1017,7 +1017,7 @@ void Game::AI () {
         }
         if(w!=-1)
         {
-            DaZhao (plants[w], m_wnd);
+            DaZhao (w);
             m_wnd->beans -= 1;
         }
     }
@@ -1071,8 +1071,8 @@ void Game::AI () {
         for(int i=0;i<plt_cnt;i++)
             if(plants[i].type==s)cn+=1;
         if(cn>=5){continue;}
-        if(m_wnd->duiz&&TM>1000&&m_wnd->exp>=m_wnd->expnd[s]&&TM-lstcar>1000&&m_wnd->cd[s]>800-(1e-10)&&TM-lstup>20000)zan=1;
-        if(m_wnd->duiz&&TM>1000&&m_yg>=m_wnd->plants[s].cost*1.5&&m_wnd->exp>=m_wnd->expnd[s]&&TM-lstcar>1000&&m_wnd->cd[s]>800-(1e-10))
+        if(m_wnd->duiz&&TM>1000&&m_wnd->exp>=m_wnd->expnd[s]&&TM-lstcar>1000&&m_wnd->cd[s]>800-(eps)&&TM-lstup>20000)zan=1;
+        if(m_wnd->duiz&&TM>1000&&m_yg>=m_wnd->plants[s].cost*1.5&&m_wnd->exp>=m_wnd->expnd[s]&&TM-lstcar>1000&&m_wnd->cd[s]>800-(eps))
         {
             int wx=-1,wy=-1;
             for(int i=1;i<MM;i++)

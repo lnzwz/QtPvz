@@ -2,8 +2,9 @@
 #include "stdafx.h"
 #include <QApplication>
 #include <QStandardPaths>
-int XUAN,TM,MM=9,MN=5,SI=110,FIRETM=30,ME,HI=610,W0=100,W1=1040,W2=140;
-MainWindow *m_wnd;double dan[100],zoom,sinra[10000],cosra[10000];
+int RXUAN,XUAN,TM,MM=9,MN=5,SI=110,FIRETM=30,ME,HI=610,W0=110,W1=1040,W2=140,TOP=50;
+double dan[100],zoom,sinra[10000],cosra[10000],PI=acos(-1.0),XW=616.0/2433,YW=400.0/1536,XT=81.0/2433,YT=172.0/1536;
+MainWindow *m_wnd;
 QPixmap *ico,*ico_bl,*icm,*ico_red,*icm_rd,*icm_bl,*ico_blk,*ico_sha;
 std::mt19937 RA(std::random_device{}());
 QString path;bool pub_bl[1000];
@@ -67,6 +68,26 @@ bool operator<(const ARC&a,const ARC&b)
 {
     return a.a<b.a;
 }
+
+std::pair<double,double> solve_ecfc(double a,double b,double c)
+{
+    double dt=b*b-4*a*c;
+    dt=sqrt(dt);
+    return std::make_pair((-b+dt)/(a+a),(-b-dt)/(a+a));
+}
+/*template<class T>
+QDataStream& operator<<(QDataStream& ar, T& obj)
+{
+    obj.output(ar);
+    return ar;
+}
+template<class T>
+QDataStream& operator>>(QDataStream& ar, T& obj)
+{
+    obj.input(ar);
+    return ar;
+}*/
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);

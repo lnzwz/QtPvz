@@ -23,22 +23,16 @@ set(PROJECT_SOURCES
         stdafx.h
         icons.qrc
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
-        choose.cpp
-        choose.h
-        choose.ui
-        game.h
+        mainwindow.h mainwindow.cpp mainwindow.ui
+        choose.h choose.cpp choose.ui
+        game.h game.cpp
         game_ai.cpp
         config.cpp
         draw.cpp
-        game.cpp
         action.cpp
         ico.rc
         logo.icns
-        mythread.h
-        mythread.cpp
+        mythread.h mythread.cpp
         choogq.h choogq.cpp choogq.ui
         other.h other.cpp other.ui
         myglwidget.h myglwidget.cpp
@@ -52,8 +46,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         WIN32
         ${PROJECT_SOURCES}
-        README.md
-        trash.cpp
+        #README.md
+        #trash.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET pvz APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -85,7 +79,8 @@ target_link_libraries(pvz PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_
 #endif()
 
 if(WIN32)
-    target_compile_options(pvz PRIVATE /Ox)
+    #target_compile_options(pvz PRIVATE /Ox)
+    target_compile_options(pvz PRIVATE -O3)
 else()
     target_compile_options(pvz PRIVATE -O3)
 endif()
