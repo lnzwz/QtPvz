@@ -891,7 +891,7 @@ void Game::DrawZwLife(QPainter&memdc)
     {
         const Plant zw=plants[i];
         if(zw.y==-1||zw.id==-1)continue;
-        QString str=QString::asprintf("%.1f",zw.life);
+        QString str=QString::asprintf("%.1f",zw.life/20.0);
         if(zw.life>=1e7)str="∞";
         if(zw.grow)str+=QString::asprintf(",%d",zw.grow);
         if(zw.fire)str+=QString::asprintf(",%d",zw.fire);

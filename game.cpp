@@ -41,8 +41,8 @@ Game::Game () {
         if(x<=200)frez_spd[x]=pow(0.5,x/100.0);
         else frez_spd[x]=100.0/(x+200);
     }
-    int shr[23]={0,4,9,37,39,41,44,53,59,60,61,64,65,67,68,76,77,89,90,91,96,100,102};
-    for(int i=0;i<23;i++)is_shear[shr[i]]=1;
+    int shr[24]={0,4,9,13,37,39,41,44,53,59,60,61,64,65,67,68,76,77,89,90,91,96,100,102};
+    for(int i=0;i<24;i++)is_shear[shr[i]]=1;
     int zha[11]={3,5,42,57,70,72,73,74,7,93,99};
     for(int i=0;i<11;i++)is_zha[zha[i]]=zw_wudi[zha[i]]=1;
     int cntovzw[10]={1,90,22,83,26,13,59,94,39,102};
@@ -364,12 +364,15 @@ int Game::SpecialEat(int z_i,int j_i,double sq)
         ad*=sq;js.tag+=int(ad*8+0.5);
         if (js.tag >= 200) {
             int ki=0;
-            if(ty==53||ty==35)
+            if(ty==53||ty==35||ty==101)
+            {
                 ki=40000;//砸到有毒植物
+                LineXu(js.x,js.y,0.5);
+            }
             if(z_i!=-1)HurtZw(z_i,js.eat,1);
             js.tag=0;
-            LineXu(js.x,js.y,1.5);
-            if(HurtJs_Fast(j_i,ki,0,44))return 0;
+            if(ki>0&&HurtJs_Fast(j_i,ki,0,44))
+                return 0;
         }
         return js.id;
     }
@@ -697,7 +700,7 @@ bool Game::Eat (int x, int y,int j_i,double sq) //吃,返回是否被杀死
             {
                 ki=30*std::fmin(et,8);
                 if(pt==58||pt==63||pt==18)//减速
-                    FreezeJs(j_i,(pt==63?310:80));
+                    FreezeJs(j_i,(pt==63?320:80));
                 else if(pt==63)FreezeStopJs(j_i,80);//冰豆
                 else if(pt==75)//虚弱豆
                     js.xu=std::max(js.xu,2.0);
@@ -734,9 +737,9 @@ bool Game::Eat (int x, int y,int j_i,double sq) //吃,返回是否被杀死
         else if(pt==53)//巴豆
         {
             if(has_mouth[zt])
-                ki=js.life,LineXu(js.x,js.y,1.2);
+                ki=js.life,LineXu(js.x,js.y,0.2);
             else if(zt==9||zt==28)
-                LineXu(js.x,js.y,1.5);//砸扁，造成更高虚弱效果
+                LineXu(js.x,js.y,0.5);//砸扁，造成更高虚弱效果
             co=53;
         }
         if(HurtJs_Fast(j_i,ki,0,co))
@@ -850,14 +853,14 @@ void Game::Goj (int z_i) //植物攻击
         if(plants[z_i].dzsy==0)//大招结束
             EndDaZhao(z_i),ladz=1;
     }
-    if(jianguo[plants[z_i].type])return;
     plants[z_i].nxt_tm = m_wnd->v_tm + plants[z_i].time;
     if(plants[z_i].stop||plants[z_i].frez_stp)return;
     if (plants[z_i].mush&&is_day)return;
     if (plants[z_i].attack < 0) //非标准植物
         return SpecialPlt (z_i);
+    if(jianguo[plants[z_i].type])return;
     Bullet zd=BulletFromZw(z_i);
-    if(is_tou[zd.from])//投手，轨迹
+    if(is_tou[zd.from]||zd.from==13)//投手，轨迹，小喷菇
     {
         if(zd.left)
         {
@@ -869,8 +872,16 @@ void Game::Goj (int z_i) //植物攻击
             int t=GetFirstJs(zd.x,zd.y,&zd);
             zd.tx=(t==-1?MM*SI+20:zombies[t].x);
         }
-        zd.vy=-abs(zd.tx-zd.x)/zd.vx/2*G;
-        zd.y_flt=zd.y*SI;
+        if(zd.from==13)//小喷菇
+        {
+            if(abs(zd.x-zd.tx)>400)
+                return;
+        }
+        else
+        {
+            zd.vy=-abs(zd.tx-zd.x)/zd.vx/2*G;
+            zd.y_flt=zd.y*SI;
+        }
     }
     if(!dzsy&&(zd.from==0||zd.from==4||zd.from==9||zd.from==61||zd.from==60||zd.from==65||zd.from==67||zd.from==86||zd.from==90||zd.from==100))//可以暴击
     {
@@ -1805,8 +1816,8 @@ bool Game::BulletOverZw(int bi)
         }
         DestroyZd(bi);return true;
     }
-    if(zd.freeze&&!is_tou[zd.from])
-        zd.freeze+=plants[t].freeze/5;
+    //if(zd.freeze&&!is_tou[zd.from])
+    //    zd.freeze+=plants[t].freeze/5;
     return false;
 }
 
@@ -2417,11 +2428,13 @@ void Game::SpecialPlt (int z_i) //特殊植物
             DestroyZw (z_i,0);
             break;
         case 8: //全息坚果
-            if(TM-zw.la_et<20)break;
-            t=zw.mxlf/sp*mul;
-            if(zw.life>zw.mxlf*0.8)t/=2;
-            zw.life=std::min(zw.life+t,zw.mxlf);
-            zw.id = GetZwIcon (zw);
+            if(TM-zw.la_et>=20)
+            {
+                double t=zw.mxlf/sp*mul;
+                if(zw.life>zw.mxlf*0.8)t/=2;
+                zw.life=std::min(zw.life+t,zw.mxlf);
+                zw.id = GetZwIcon (zw);
+            }
             break;
         case 9: //双子向日葵
             t=(sn+(zw.tag?5*mul:0));
@@ -2525,7 +2538,8 @@ void Game::SpecialPlt (int z_i) //特殊植物
                 }
                 double xu=1+0.2*mul;
                 if(zombies[i].xu<xu)zombies[i].xu=xu;
-                HurtJs(i,1000*mul,0,ty,100*mul,10);
+                zombies[i].freeze+=10;
+                HurtJs(i,1000*mul,0,ty,0,10);
             }
             for(int i=0;i<plt_cnt;i++)
                 if(plants[i].y!=-1&&plants[i].Burning())plants[i].fire=FIRETM+1;
@@ -3253,7 +3267,7 @@ void Game::LineXu(int x,int y,double xu)
 {
     for(int i=0;i<zmb_cnt;i++)
         if(zombies[i].y==y&&zombies[i].x>=x&&zombies[i].type<100)
-            zombies[i].xu=std::max(zombies[i].xu,xu);//施加虚弱效果
+            zombies[i].xu+=xu;//施加虚弱效果
 }
 
 void Game::DoZwAnimine(int tm,double spd)
@@ -3416,6 +3430,13 @@ void Game::RightKey(int w, QPoint pt)
         plants[w].tag-=1;
         if(plants[w].tag==0)
             plants[w].tr=0;
+    }
+    else if(ty==62&&plants[w].tag!=-1&&plants[w].grow>0)
+    {
+        int t=m_wnd->tyToNumP[plants[w].tag];
+        plants[w].grow-=1;m_wnd->cd[t]=800;
+        if(plants[w].grow==0)plants[w].tag=-1;
+        m_wnd->select=t;m_wnd->SendDeltaUse(w);
     }
 }
 

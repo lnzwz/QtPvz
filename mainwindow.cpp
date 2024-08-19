@@ -235,11 +235,11 @@ void MainWindow::InitZw()
     plants[74].Create(nul,-29,0,0,25,80,0,0,240,80,74);//虚弱炸弹
     plants[75].Create(nul,0,1e8,0,0,1,0,0,241,30,75);//虚弱豆
     plants[76].Create(Qt::gray,0,1000,dza,4,80,0,0,242,100,76,si);//虚弱射手
-    plants[10].Create (nul, -8, 1000, dzj, 60, 700, 0, 0, 82, 100, 19); //全息坚果
+    plants[10].Create (nul, -8, 1000, dzj, 50, 700, 0, 0, 82, 100, 19); //全息坚果
     plants[12].Create (Qt::white, -9, 8000, 20, 4, 80, 0, 0, 94, 120, 20, 1); //双子向日葵
     plants[67].Create(GREEN,0,1600,dza,4,80,0,0,229,100,67, si);//有毒射手
     plants[68].Create(GREEN,0,1600,dzb,4,80,0,0,230,200,68, si);//双发有毒射手
-    plants[70].Create(nul,-24,0,0,50,50,0,0,234,100,70);//毒气弹
+    plants[70].Create(nul,-24,0,0,150,50,0,0,234,100,70);//毒气弹
     plants[14].Create (QColor(169,72,166), -21, 1000, 0, 10, 80, 0, 0, 68, 150, 16); //大嘴花
     plants[102].Create(QColor(173,100,67),1,2000,dzc,2,80,0,0,281,500,102,si);//橡木弓手
     plants[90].Create(DIANCO,1,1600,dza,4,80,0,0,254,125,90,si);//闪电射手
@@ -294,10 +294,10 @@ void MainWindow::InitZw()
     plants[94].Create (QColor(185,27,39), 2, 600, dza, 2, 80, 0, 0, 270, 350, 94);//猫尾草
     plants[24].Create (nul, 0, 0, 0, 0, 600, 0, 0, 268, 80, 24); //南瓜
     plants[27].Create (nul, -13, 2000, 0, 30, 40, 0, 0, 110, 20, 27); //大葱
-    plants[33].Create (QColor (255, 140, 0), 0, 1e8, 0, 0, 80, 0, 0, 142, 25, 33); //大蒜
+    plants[33].Create (QColor (255, 140, 0), 0, 1e8, 0, 0, 80, 0, 0, 142, 40, 33); //大蒜
     plants[29].Create (Qt::gray, 0, 1e8, 0, 0, 120, 0, 0, 132, 125, 29); //地刺
     plants[31].Create (nul, -26, 1e8, 0, 0, 160, 0, 0, 135, 275, 31); //大炮1
-    plants[30].Create (nul, -14, 3600, 0, 10, 160, 0, 0, 134, 275, 30); //大炮2
+    plants[30].Create (nul, -14, 2500, 0, 10, 160, 0, 0, 134, 275, 30); //大炮2
     plants[37].Create (GREEN, 1, 1600, dzb, 4, 100, 0, 0, 155, 80, 37, si); //豌豆荚
     plants[85].Create (nul,0,1e8,0,0,80,0,0,15,175,85);//分裂泡泡
     plants[100].Create(GREEN, 1, 1600, dza, 4, 80, 0, 0, 278, 150, 100, 25);//分裂射手
@@ -348,7 +348,7 @@ void MainWindow::InitZw()
     plants[26].attack=250;
     plants[102].attack=200;
     plants[67].du=plants[68].du=25;
-    plants[69].du=70;
+    plants[69].du=50;
     plants[55].tag=plants[62].tag=-1;//定向，存储
     plants[71].tag=-1e9;//棱镜
     plants[61].freeze=160;//强力寒冰
@@ -499,8 +499,8 @@ void MainWindow::MakeTuJian()
 {
     InitIcon();
     QString str="## 植物图鉴\n";
-    str+="| 名称 | 图片 | 功能 | 阳光 | 冷却时间 | 生命值 | 攻击力 | 攻击间隔 | 攻击范围 | 大招时间 |\n";
-    str+="| ---- | ---- | ---- | ---- | -------- | ------ | ------ | -------- | -------- | -------- |\n";
+    str+="| 名称 | 图片 | 功能/备注 | 阳光 | 冷却时间 | 生命值 | 攻击力 | 攻击间隔 | 攻击范围 | 大招时间 |\n";
+    str+="| ---- | ---- | --------- | ---- | -------- | ------ | ------ | -------- | -------- | -------- |\n";
     char zw_na[][20]={"向日葵","豌豆射手","小坚果","炸弹","玉米投手","巴豆","冰豆","火球射手","火爆辣椒","寒冰射手","双发射手","高坚果","倭瓜","卷心菜投手","西瓜投手","土豆地雷","三线射手",
                     "普通机枪射手","激光豆","强力寒冰射手","虚弱炸弹","虚弱豆","虚弱射手","全息坚果","双子向日葵","有毒射手","双发有毒射手","毒气弹","大嘴花","橡木弓手","闪电射手","模仿者",
                     "火龙草","导电坚果","辣椒投手","冰冻炸弹","火炬树桩","冰火炬树桩","冰龙草","小炸弹","椰子小炮","彩色机枪射手","火药桶","闪电炸弹","冰西瓜投手","有毒投手","中毒坚果",
@@ -508,6 +508,9 @@ void MainWindow::MakeTuJian()
                     "双头豌豆射手","阳光菇","小喷菇","大喷菇","毁灭菇","寒冰菇","魅惑菇","磁力菇","荷叶","咖啡豆","忧郁蘑菇","猫尾草","南瓜","大葱","大蒜","地刺","玉米加农炮1","玉米加农炮2",
                     "豌豆荚","分裂泡泡","分裂射手","仙人掌","棱镜","加速器","有毒坚果","魅惑炸弹","血量升级","速度升级","攻击升级","金盏花","翻转工具","化肥","能量花","点火器","灭火器",
                     "僵尸加速器","植物开关","培养皿"};
+    std::string info[MAXSHU];
+    info[0]="每次产出$25$阳光，首次耗时减半";
+    info[1]="$10\\%$暴击率<br>（$9\\%$概率$2$倍伤害，$1\\%$概率$4$倍伤害）<br>（对于所有单发射手，下略）";
     for(int s=0;s<MAXSHU;s++)
     {
         int i=p_shun[s],id=plants[i].id;
@@ -515,33 +518,41 @@ void MainWindow::MakeTuJian()
         str+="| ";str+=zw_na[s];
         str+=QString::asprintf(" | ![%s](./tujian/%d.png) | ",zw_na[s],id);
         const Plant&zw=plants[i];
-        if(zw.mush)str+="蘑菇 | ";
-        else str+="| ";
-        str+=QString::asprintf("%d | ",zw.cost);
-        str+=QString::asprintf("%.1lf秒 | ",40.0/cd_spd[i]);
-        str+=QString::asprintf("%.1lf | ",zw.life/20.0);
+        if(zw.mush)str+="蘑菇 ";
+        str+=info[s];
+        str+="| ";
+        str+=QString::asprintf("$%d$ | ",zw.cost);
+        str+=QString::asprintf("$%.1lf$秒 | ",40.0/cd_spd[i]);
+        str+=QString::asprintf("$%.1lf$ | ",zw.life/20.0);
         if(zw.attack>=0)
         {
             if(zw.attack>0)
-                str+=QString::asprintf("%d",zw.attack/100);
+                str+=QString::asprintf("$%d$",zw.attack/100);
         }
         else
         {
             if(zw.move_spd>0)
-                str+=QString::asprintf("%d",zw.move_spd*10);
+                str+=QString::asprintf("$%d$",zw.move_spd*10);
         }
         int fi=0;double q=0;
         if(zw.attack>0&&(zw.color==RED||zw.color==DBLUE))fi=10;
         if(zw.type==92)fi=20;
         if(zw.type==90)q=0.9;
-        if(zw.freeze>0)str+=QString::asprintf("（附加%.1lf秒寒冰效果）",zw.freeze/20.0);
-        if(zw.du>0)str+=QString::asprintf("（附加%.1lf点中毒效果）",zw.du/50.0);
-        if(fi>0)str+=QString::asprintf("（附加%d点火焰效果）",fi/10);
-        if(q>0)str+=QString::asprintf("（附加%.1lf点电荷）",q);
-        if(zw.time>0&&zw.time<1e8)str+=QString::asprintf(" | %.1lf秒 | ",zw.time/1000.0);
+        if(zw.freeze>0)str+=QString::asprintf("（附加$%.1lf$秒寒冰效果）",zw.freeze/20.0);
+        if(zw.du>0)str+=QString::asprintf("（附加$%.1lf$点中毒效果）",zw.du/50.0);
+        if(fi>0&&zw.freeze==0)str+=QString::asprintf("（附加$%d$点火焰效果）",fi/10);
+        if(q>0)str+=QString::asprintf("（附加$%.1lf$点电荷）",q);
+        if(zw.time>0&&zw.time<1e8)str+=QString::asprintf(" | $%.1lf$秒 | ",zw.time/1000.0);
         else str+=QString::asprintf(" | | ");
         int ji=zw.jian+fi+int(5*q+0.5);
-        if(ji>0)str+=QString::asprintf("%d | ",ji);
+        if(m_game.is_zha[zw.type])
+        {
+            int fw=3;
+            if(zw.type==7)fw=1;
+            else if(zw.type==15)fw=5;
+            str+=QString::asprintf("$%d$✖$%d$ | ",fw,fw);
+        }
+        else if(ji>0)str+=QString::asprintf("$%d$ | ",ji);
         else str+=QString::asprintf("| ");
         if(zw.dztm>0)
         {
@@ -549,7 +560,7 @@ void MainWindow::MakeTuJian()
             if(zw.type==41||zw.type==37)tm=40;
             else if(zw.type==102)tm=300;
             else if(m_game.jianguo[zw.type])tm=2000;
-            str+=QString::asprintf("%.1lf秒 | ",zw.dztm*tm/1000.0);
+            str+=QString::asprintf("$%.1lf$秒 | ",zw.dztm*tm/1000.0);
         }
         else str+=QString::asprintf("| ");
         str+='\n';

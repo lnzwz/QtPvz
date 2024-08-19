@@ -586,23 +586,6 @@ void MainWindow::mouseReleaseEvent (QMouseEvent *event) {
         QPoint pt = SPoint (event->pos ().x (), event->pos ().y ());
         int w=m_game.GetZwShu(sele_x,sele_y),z=-1;
         if(w!=-1)m_game.RightKey(w,pt);
-        if (pt.x () >= (W0+50) && pt.y () >= 60)
-        {
-            int x = int ((pt.x () - (W0+50)) / SI) * SI;
-            int y = int ((pt.y () - 60) / SI);
-            z=m_game.GetZwShu(x,y);
-        }
-        if(z!=-1&&m_game.plants[z].type==62)
-        {
-            Plant&zw=m_game.plants[z];
-            if(zw.tag!=-1&&zw.grow>0)
-            {
-                int t=tyToNumP[zw.tag];
-                zw.grow-=1;cd[t]=800;
-                if(zw.grow==0)zw.tag=-1;
-                select=t;SendDeltaUse(z);
-            }
-        }
         else SolveDz (pt);
     }
 }
@@ -638,11 +621,15 @@ void MainWindow::mouseDoubleClickEvent (QMouseEvent *event) {
             if(w!=-1)m_game.RightKey(w,pt);
             else
             {
+                bool nd=(m_game.wz_fei[x/SI][y]==5);
                 f_shu+=m_game.wz_fei[x/SI][y];
                 m_game.wz_fei[x/SI][y]=0;
-                int ne[4][2]={1,0,0,1,-1,0,0,-1};
-                for(int t=0;t<4;t++)
-                    m_game.MoveZw(m_game.GetZwShu(x+ne[t][0]*SI,y+ne[t][1]));
+                if(nd)
+                {
+                    int ne[4][2]={1,0,0,1,-1,0,0,-1};
+                    for(int t=0;t<4;t++)
+                        m_game.MoveZw(m_game.GetZwShu(x+ne[t][0]*SI,y+ne[t][1]));
+                }
             }
         }
     }
