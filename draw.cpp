@@ -321,17 +321,15 @@ QColor Game::GetLifeColor(double z)const
 
 int Game::GetJsDrawY(const Zombie&js,double&aa)
 {
-    int t=0,z = SI;
+    int t=0, z = ico_si[js.id].height();
     bool stp=((TM<js.stp_tm||TM<js.frez_stp)&&js.type != 12 && js.type != 11 && js.type !=19 && js.type < 100);
-    if (js.type == 9||js.type==31||js.type==11)z *= 1.3;
-    if (js.type == 28)z *= 1.6;
     int y= js.y * SI + t + 60 + SI - z;
-    if(js.type==9||js.type==28)y-=int(js.tag)*SI/550;
+    if(js.type==9||js.type==28)y-=int(js.tag)*SI/550;//巨人抬起
     else if(js.type==21)y-=js.fss * SI / 55;
     if(js.type==8&&js.sp_eat&&!stp)//跳跳
         y-=SI*(sin(TM/(js.freeze?12.0:6.0))+0.8)/6;
-    if(js.type==19)y-=SI/2;
-    if(js.type==10&&js.fss!=-1)//小鬼
+    if(js.type==19)y-=SI/2;//气球
+    if(js.type==10&&js.fss!=-1)//小鬼投掷
     {
         int l=js.fss,r=js.fs_nd,x=js.x;
         y-=(r-l)*(r-l)/4/300;x-=(l+r)/2;
@@ -343,7 +341,7 @@ int Game::GetJsDrawY(const Zombie&js,double&aa)
         if(t!=-1&&plants[t].ti&&(js.x+SI/2)%SI>SI/4)
             y+=2.38*(abs((js.x+SI/2)%SI-SI*5/8)-SI*3/8);
     }
-    if(js.type==102)y-=SI*2/3-(SI*2/3)*js.fss/js.fs_nd;
+    if(js.type==102)y-=SI*2/3-(SI*2/3)*js.fss/js.fs_nd;//僵尸的窝瓜
     y+=(js.y_flt-js.y*SI);
     aa=sin(TM*0.06*js.vx+js.ii)*3;//大幅度
     if(js.freeze)aa=sin(TM*0.03*js.vx+js.ii)*2;
@@ -356,9 +354,7 @@ void Game::DrawJs(QPainter &memdc,const Zombie&js)
 {
     int i=js.ii;double aa;
     bool stp=(TM<js.stp_tm&&js.type != 12 && js.type != 11 && js.type !=19 && js.type < 100);
-    int y=js.y_flt+60+GetJsDrawY(js,aa),z=SI;
-    if (js.type == 9||js.type==11||js.type==31)z *= 1.3;
-    if (js.type == 28)z *= 1.6;
+    int y=js.y_flt+60+GetJsDrawY(js,aa),z=ico_si[js.id].height();;
     int tx=js.x+50+SI-z,ox=z/2,oy=z*0.8;memdc.save();
     if(iswa[js.y])
         memdc.drawPixmap (QRect(tx-z/12,y,z, z),ico[118]);
@@ -479,7 +475,7 @@ void Game::DrawZdPic(QPainter &memdc, double x, double y, double rot, double p, 
     memdc.translate (x, y);
     if(!m_wnd->low_eff&&fabs(rot)>1e-6)
         memdc.rotate(rot);
-    int iw=ico[id].width()*p,ih=ico[id].height()*p;
+    int iw=ico_si[id].width()*p,ih=ico_si[id].height()*p;
     memdc.drawPixmap (QRect(-iw/2,-ih/2,iw,ih), ico[id]);
     memdc.restore();
 }
@@ -503,10 +499,10 @@ void Game::DrawZd(QPainter &memdc) const
             if(zd.from==56&&zd.color==YUMI)
                 DrawBall(memdc,zx,zy,co,si);
             else
-                DrawZdPic(memdc,zx,zy,zd.x_flt*0.7,si/m_wnd->b_ret/zoom/24,GetZdIcon(zd));
+                DrawZdPic(memdc,zx,zy,zd.x_flt*0.7,si/24.0,GetZdIcon(zd));
         }
         else if(zd.from==94)//猫尾草
-            DrawZdPic(memdc,zd.x_flt+SI/2.0+50,zd.y_flt+SI/2.0+60,zd.gettheta()/PI*180,1.0/m_wnd->b_ret/zoom,161);
+            DrawZdPic(memdc,zd.x_flt+SI/2.0+50,zd.y_flt+SI/2.0+60,zd.gettheta()/PI*180,1.0,161);
         else
         {
             int hx=zd.x,hy=int(zd.y_flt-SI/10.0+0.5),si=zd.siz,fr=zd.from,lf=(SI-si)/2;
@@ -516,26 +512,27 @@ void Game::DrawZd(QPainter &memdc) const
                 int yy=0;if(si==1)yy=SI/8-SI/10;
                 else if(si==2)yy=-SI/4.4;
                 int x = (hx + lf + 50-(si==2?SI/9:0)), y = (hy + lf - SI / 3.66 + 60-yy);
-                QPixmap&im = ico[161];
-                memdc.drawPixmap (QRect (QPoint (x, y), im.size ()/m_wnd->b_ret/zoom), im);
+                memdc.drawPixmap (QRect (QPoint (x, y), ico_si[161]), ico[161]);
             }
+            else if(fr==102)//箭
+                DrawZdPic(memdc,hx+50+SI/4,hy+60+SI/2,zd.gettheta()/PI*180,si/30.0,282);
             else if ((co==RED||co==DBLUE)&&fr!=60) //火球
             {
                 int x = (hx + lf + 60-si), y = (hy + lf + 60-si/17);
-                QPixmap&im = (co==RED?ico[150]:ico[204]);
-                memdc.drawPixmap (QRect (QPoint (x, y), im.size ()*si/m_wnd->b_ret/zoom/90), im);
+                int id = (co==RED?150:204);
+                memdc.drawPixmap (QRect (QPoint (x, y), ico_si[id]*si/90), ico[id]);
                 if(zd.du)
-                    DrawRandomPoints(memdc,QRect (QPoint (x, y), im.size ()*si/m_wnd->b_ret/zoom/90),zd.du/2,DUCO,0);
+                    DrawRandomPoints(memdc,QRect (QPoint (x, y), ico_si[id]*si/90),zd.du/2,DUCO,0);
             }
             else if(fr==22||fr==83)//星星
-                DrawZdPic(memdc,hx+50+SI/2,hy+60+SI/2,TM*10,si/m_wnd->b_ret/zoom/45,fr==22?114:267);
+                DrawZdPic(memdc,hx+50+SI/2,hy+60+SI/2,TM*10,si/45.0,fr==22?114:267);
             else if (fr==13) //小喷菇
             {
                 memdc.setPen (co);memdc.setBrush (co);
                 DrawBall(memdc,hx + lf + 50, hy + lf + 60 + SI / 4+SI/10,co,si,0,zd.du);
             }
             else if (co == Qt::white)//粉兔
-                DrawZdPic(memdc,hx+lf+50,hy+lf+60,hx*1.7,1.0/m_wnd->b_ret/zoom,174);
+                DrawZdPic(memdc,hx+lf+50,hy+lf+60,hx*1.7,1.0,174);
             else //其他
             {
                 int t=(fr==60?(zd.left+1):0);
@@ -831,7 +828,7 @@ void Game::DrawSt(QPainter &memdc)const
         else if(st.ty==11&&TM<st.tm)//图片
         {
             int h=SI;
-            if(st.id<0)h=SI*(double(rand())/RAND_MAX*0.2+0.9);
+            if(st.id<0)h=SI*(double(RA())/RA.max()*0.2+0.9);
             memdc.drawPixmap(QRect(st.x+50,st.y+60+SI-h,SI,h),ico[abs(st.id)]);
         }
         else if(st.ty==13&&TM<=st.tm+20)
@@ -932,9 +929,7 @@ void Game::DrawShadow(QPainter &memdc,double tt)
     {
         if(zombies[i].y==-1)continue;
         double aa;
-        int yy=GetJsDrawY(zombies[i],aa),y=zombies[i].y_flt+60+yy,z=SI;
-        if (zombies[i].type == 9)z *= 1.3;
-        if (zombies[i].type == 28)z *= 1.6;
+        int yy=GetJsDrawY(zombies[i],aa),y=zombies[i].y_flt+60+yy,z=ico_si[zombies[i].id].height();
         int tx=zombies[i].x+50+SI-z,ox=z/2,oy=z*0.8;memdc.save();
         memdc.translate(QPoint(tx,SI+y-yy));
         memdc.shear(2.5*(0.5-tt),0);memdc.scale(1,0.4+fabs(0.5-tt)/2.0);
@@ -1004,19 +999,18 @@ void Game::Draw (QPainter &memdc,bool an)
         memdc.setPen(Qt::NoPen);
         for (int x = 0; x < MM; x++)
             for (int y = 0; y < MN; y++)
+            {
+                if (IsKeng(x,y))
+                    memdc.drawPixmap(QRect(x*SI+50,y*SI+60,SI,SI),ico[59]);
                 if (IsIcy(x,y))
                     DrawGradientLine(memdc,x*SI+50,y*SI+60,SI,SI/3.0,SI/3.0,SI/3.0,Qt::white,QColor(255,255,255,50));
+            }
         if(!m_wnd->low_eff)DrawShadow(memdc,tt);
         if (m_wnd->m_b48 || m_wnd->imjs) {
             pe.setColor (QColor (255, 0, 0));
             memdc.setPen (pe);
             memdc.drawLine (QPoint(MN * SI + 50, 60), QPoint(MN * SI + 50, MN * SI + 60));
         }
-        /*else if (m_wnd->chui) {
-            pe.setColor (QColor (255, 0, 0));
-            memdc.setPen (pe);
-            memdc.drawLine (QPoint(500, 60), QPoint(500, MN * SI + 60));
-        }*/
         else if(m_wnd->b_guan)
         {
             pe.setColor (QColor (0, 150, 0));
@@ -1033,24 +1027,21 @@ void Game::Draw (QPainter &memdc,bool an)
         }
         pe.setColor (QColor(139,69,19));
         pe.setWidthF(SI/25.0);
-        for (int i = 0; i < MM; i++) {
+        for (int i = 0; i < MM; i++) {//绘制水池
             for (int j = 0; j < MN; j++) {
-                if(gird_type[i][j]==0)continue;
-                int a=i * SI + 50, b=j * SI + 60;
-                if (gird_type[i][j] == 1)
-                    memdc.drawPixmap (QRect(a, b, SI, SI),ico[59]);
-                else
+                if(grid_type[i][j]==1)
                 {
+                    int a=i * SI + 50, b=j * SI + 60;
                     DrawGradientLine(memdc,a,b,SI,SI*0.4,SI*0.2,SI*0.4,
                                      QColor(0,181+10*sin(TM*0.02),255,170+20*sin(TM*0.023)),
                                      QColor(0,171+15*sin(TM*0.029),255,70+30*sin(TM*0.037)));
-                    if(gird_type[i][j]==3)
+                    if(m_hy[i][j]>0)
                         memdc.drawPixmap (QRect(a, b+SI*0.3, SI, SI),ico[62]);
                     int ne[4][2]={1,0,0,1,-1,0,0,-1},fx[4][2]={1,0,1,1,0,1,0,0};
                     for(int s=0;s<4;s++)
                     {
                         int ti=i+ne[s][0],tj=j+ne[s][1];
-                        if(ti<0||ti>=MM||tj<0||tj>=MN||(gird_type[ti][tj]!=2&&gird_type[ti][tj]!=3))
+                        if(ti<0||ti>=MM||tj<0||tj>=MN||grid_type[ti][tj]!=1)
                         {
                             memdc.setPen (pe);
                             memdc.drawLine(a+fx[s][0]*SI,b+fx[s][1]*SI,a+fx[(s+1)%4][0]*SI,b+fx[(s+1)%4][1]*SI);
@@ -1267,7 +1258,7 @@ void MainWindow::DrawLeft(QPainter &memdc) const
             if(!imjs&&!plajs&&cd[w]<800-1e-9)
                 co=Qt::black;
             else if(w == 38||(m_game.m_yg>=yy&&(plajs||exp>=expnd[w])))
-                co=QColor(0,200,0);
+                co=Qt::green;
             memdc.setPen (co);
             QString str=QString::asprintf ("%d", yy);
             memdc.drawText (QPoint (76, i * 50 + 30), str);

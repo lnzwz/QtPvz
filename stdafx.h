@@ -50,7 +50,7 @@
 #include <stack>
 #include <bitset>
 
-#define MAXSHU 102
+#define MAXSHU 103
 #define MXUAN 12
 #define MAXXUAN 24
 #define MAXJSH 29
@@ -61,7 +61,7 @@
 #define MAXGQS 60
 #define MMN 22
 #define MMM 39
-#define ICCNT 280
+#define ICCNT 282
 #define eps 1e-9
 #define ZGQS MAXGQS+25
 #define MAXCZ 2
@@ -120,6 +120,7 @@ extern QPixmap *ico,*ico_bl,*ico_red,*ico_blk,*ico_sha;
 extern std::mt19937 RA;
 extern QString path;
 extern bool pub_bl[1000];
+extern QSize ico_si[ICCNT+1];
 class Zombie;
 int ClearDun(Zombie&js);
 
@@ -249,6 +250,7 @@ struct Zombie
     short type;//编号
     short freeze;//寒冰
     short tag;//状态
+    short eat_jl;//嘴的长度
 
     bool shoot;//是否发射
     bool sp_eat;//特殊吃法
@@ -283,6 +285,7 @@ struct Zombie
         fei=false;
         stp_tm=-1e9;
         xu=1.0;num=-1;
+        eat_jl=SI/2;
     }
     void setspd(int x,bool fu=0)
     {
@@ -291,14 +294,14 @@ struct Zombie
     }
     void input(QDataStream &ar)
     {
-        ar>>life>>vx>>vy>>eat>>ii>>x_flt;
+        ar>>life>>vx>>vy>>eat>>ii>>x_flt>>eat_jl;
         ar>>x>>y>>y_flt>>id>>tag>>stp_tm>>frez_stp;
         ar>>type>>sp_eat>>freeze>>du>>dun;
         ar>>shoot>>fss>>fei>>fs_nd>>xu>>mxlf;
     }
     void output(QDataStream &ar)const
     {
-        ar<<life<<vx<<vy<<eat<<ii<<x_flt;
+        ar<<life<<vx<<vy<<eat<<ii<<x_flt<<eat_jl;
         ar<<x<<y<<y_flt<<id<<tag<<stp_tm<<frez_stp;
         ar<<type<<sp_eat<<freeze<<du<<dun;
         ar<<shoot<<fss<<fei<<fs_nd<<xu<<mxlf;

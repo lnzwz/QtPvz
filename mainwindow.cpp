@@ -214,7 +214,7 @@ void MainWindow::InitZw()
     QColor nul=Qt::white;//创建植物：子弹颜色，攻击力(负数表示特殊植物)，间隔时间，大招时间,移动速度(子弹),生命值,0,0,图片ID,阳光,类型,子弹大小,是否寒冰,是否蘑菇,是否灰烬类
     plants[0].Create (Qt::white, -1, 18000, 20, 0, 80, 0, 0, 2, 50, 1); //向日葵
     plants[1].Create (GREEN, 1, 1600, dza, 4, 80, 0, 0, 1, 80, 0, si); //豌豆射手
-    plants[2].Create (Qt::black, 37, 1e8, dzj, 2, 750, 0, 0, 4, 60, 2); //坚果
+    plants[2].Create (Qt::black, 0, 1e8, dzj, 2, 750, 0, 0, 4, 60, 2); //小坚果
     plants[3].Create (RED, -2, 0, 0, 100, 50, 0, 0, 7, 150, 3); //炸弹
     plants[56].Create(YUMI,1,1600,dza,4,80,0,0,210,120,56,ts);//玉米投手
     plants[53].Create(QColor(186,49,36),0,1e8,1e8,0,1,0,0,196,40,53);//巴豆
@@ -223,89 +223,90 @@ void MainWindow::InitZw()
     plants[5].Create (RED, -3, 0, 0, 90, 50, 0, 0, 9, 125, 5); //火爆辣椒
     plants[6].Create (BLUE, 1, 1900, dza, 4, 80, 0, 0, 48, 100, 9, si, true); //寒冰射手
     plants[64].Create(GREEN,1,1600,60,4,80,0,0,226,175,64,si);//双发射手
-    plants[7].Create (Qt::black, 75, 1e8, dzj, 2, 1500, 0, 0, 11, 130, 6); //高坚果
+    plants[7].Create (Qt::black, 0, 1e8, dzj, 2, 1500, 0, 0, 11, 130, 6); //高坚果
     plants[8].Create (QColor(234,235,112), -4, 0, 0, 80, 1e8, 0, 0, 12, 75, 7); //倭瓜
-    plants[87].Create (Qt::green, 1, 2000, dza, 4, 80, 0, 0, 83, 100, 87,ts); //卷心菜
-    plants[9].Create (Qt::green, 2, 2000, dzc, 4, 80, 0, 0, 43, 250, 8,ts); //西瓜
+    plants[87].Create (Qt::green, 1, 2000, dza, 4, 80, 0, 0, 83, 100, 87,ts); //卷心菜投手
+    plants[9].Create (Qt::green, 2, 2000, dzc, 4, 80, 0, 0, 43, 250, 8,ts); //西瓜投手
     plants[16].Create (QColor(222,190,134), -20, 2000, 0, 10, 120, 0, 0, 71, 30, 17); //土豆地雷
     plants[41].Create(GREEN,1,1200,dzb,4,80,0,0,168,350,41,si);//三线射手
-    plants[77].Create(GREEN,1,1600,dzb,4,80,0,0,243,300,77,si);//普通机枪
+    plants[77].Create(GREEN,1,1600,dzb,4,80,0,0,243,300,77,si);//普通机枪射手
     plants[89].Create(Qt::white,-18,1600,dza,2,80,0,0,256,100,89);//激光豆
     plants[61].Create(DBLUE,1,1900,dza,4,80,0,0,223,270,61,si,1);//强力寒冰射手
     plants[74].Create(nul,-29,0,0,25,80,0,0,240,80,74);//虚弱炸弹
-    plants[75].Create(nul,0,1e8,0,0,1,0,0,241,30,75);//虚弱果
+    plants[75].Create(nul,0,1e8,0,0,1,0,0,241,30,75);//虚弱豆
     plants[76].Create(Qt::gray,0,1000,dza,4,80,0,0,242,100,76,si);//虚弱射手
-    plants[10].Create (nul, -8, 1000, dzj, 60, 700, 0, 0, 82, 100, 19); //恢复坚果
+    plants[10].Create (nul, -8, 1000, dzj, 60, 700, 0, 0, 82, 100, 19); //全息坚果
     plants[12].Create (Qt::white, -9, 8000, 20, 4, 80, 0, 0, 94, 120, 20, 1); //双子向日葵
     plants[67].Create(GREEN,0,1600,dza,4,80,0,0,229,100,67, si);//有毒射手
     plants[68].Create(GREEN,0,1600,dzb,4,80,0,0,230,200,68, si);//双发有毒射手
     plants[70].Create(nul,-24,0,0,50,50,0,0,234,100,70);//毒气弹
-    plants[14].Create (QColor(169,72,166), -21, 1000, 0, 14, 80, 0, 0, 68, 150, 16); //大嘴花
+    plants[14].Create (QColor(169,72,166), -21, 1000, 0, 10, 80, 0, 0, 68, 150, 16); //大嘴花
+    plants[102].Create(QColor(173,100,67),1,2000,dzc,2,80,0,0,281,500,102,si);//橡木弓手
     plants[90].Create(DIANCO,1,1600,dza,4,80,0,0,254,125,90,si);//闪电射手
     plants[84].Create(nul,-33,1000,0,0,80,0,0,259,0,84);//模仿者
     plants[79].Create(RED,-30,2500,dza,3,80,0,0,42,250,79);//火龙草
     plants[95].Create(Qt::black, 0, 1e8, dzj, 0, 1000, 0, 0, 273, 120, 95);//导电坚果
     plants[92].Create(QColor(253,171,49),1,1600,dza,4,80,0,0,257,200,92,si);//辣椒投手
     plants[57].Create (nul, -23, 0, 0, 500, 80, 0, 0, 215, 120, 57); //冰冻炸弹
-    plants[36].Create (nul, 0, 1e8, 0, 0, 160, 0, 0, 149, 150, 36); //火炬
-    plants[58].Create (nul, 0, 1e8, 0, 0, 160, 0, 0, 220, 100, 58,10,true); //冰火炬
+    plants[36].Create (nul, 0, 1e8, 0, 0, 160, 0, 0, 149, 150, 36); //火炬树桩
+    plants[58].Create (nul, 0, 1e8, 0, 0, 160, 0, 0, 220, 100, 58,10,true); //冰火炬树桩
     plants[82].Create(BLUE,-32,3000,dza,1,80,0,0,258,225,82);//冰龙草
     plants[72].Create(RED,-26,0,0,10,80,0,0,238,50,72);//小炸弹
-    plants[98].Create(QColor(99,47,9),-35,1500,0,4,80,0,0,88,250,98,si*2);//小炮
-    plants[44].Create(YELLOW,1,3200,dzb,4,80,0,0,175,500,44, si);//彩色机枪
+    plants[98].Create(QColor(99,47,9),-35,1500,0,4,80,0,0,88,250,98,si*2);//椰子小炮
+    plants[44].Create(YELLOW,1,3200,dzb,4,80,0,0,175,500,44, si);//彩色机枪射手
     plants[78].Create(nul,0,1e8,0,0,80,0,0,248,150,78);//火药桶
     plants[93].Create(DIANCO,-12,0,0,30,80,0,0,272,100,93);//闪电炸弹
-    plants[11].Create (Qt::blue, 3, 2000, dzc, 4, 80, 0, 0, 55, 480, 10, ts, true); //冰瓜
+    plants[11].Create (Qt::blue, 3, 2000, dzc, 4, 80, 0, 0, 55, 480, 10, ts, true); //冰西瓜投手
     plants[69].Create(Qt::yellow,0,2000,dzc,4,80,0,0,231,275,69,ts);//有毒投手
     plants[101].Create(nul, 0, 1e8, dzj, 0, 500, 0, 0, 279, 75, 101);//中毒坚果
     plants[73].Create(nul,-27,0,0,70,80,0,0,239,120,73);//水炸弹
-    plants[55].Create(PINK,-22,1000,75,-1,80,00,0,203,125,55);//定向射手
-    plants[22].Create (Qt::yellow, 1, 1600, dzb, 4, 80, 0, 0, 98, 120, 22, si); //星星
-    plants[83].Create (BLUE, 1, 1900, dzb, 4, 80, 0, 0, 266, 150, 83, si,true); //寒冰星星
+    plants[55].Create(PINK,-22,1000,75,-1,80,00,0,203,125,55);//激光射手
+    plants[22].Create (Qt::yellow, 1, 1600, dzb, 4, 80, 0, 0, 98, 120, 22, si); //杨桃
+    plants[83].Create (BLUE, 1, 1900, dzb, 4, 80, 0, 0, 266, 150, 83, si, true); //寒冰杨桃
     plants[80].Create(GREEN,-31,1600,60,0,1000,0,0,253,250,80);//菜问
     plants[88].Create(GREEN,1,1000,dzb,4,80,0,0,269,200,88,si);//旋转射手
     plants[81].Create(nul,0,1e8,0,0,80,0,0,252,90,81);//毒火炬
-    plants[97].Create(nul,0,1e8,dzj,0,750,0,0,275,30,97);//脑子坚果
+    plants[97].Create(nul,0,1e8,dzj,0,750,0,0,275,30,97);//红薯
     plants[26].Create(PURPLE, 1, 300, dza, 2, 80, 0, 0, 106, 225, 26); //双头大喷菇
-    plants[60].Create(GREEN,1,1600,dza,3,80,0,0,222,300,60,13 * SI / 110);//回旋镖
+    plants[60].Create(GREEN,1,1600,dza,3,80,0,0,222,300,60,13 * SI / 110);//回旋镖射手
     plants[91].Create(DIANCO,-34,6000,dza,5,80,0,0,271,300,91);//闪电芦苇
     plants[96].Create(QColor(232,148,62),2,2000,dza,4,80,0,0,274,375,96,si*3);//橙子射手
-    plants[65].Create(GREEN,10,1600,dzc,4,80,0,0,227,700,65,48*SI/110);//超级射手
+    plants[65].Create(GREEN,10,1600,dzc,4,80,0,0,227,700,65,48*SI/110);//巨型射手
 
-    plants[15].Create (nul, 0, 1e8, 0, 0, 120, 0, 0, 56, 20, 11); //灯
+    plants[15].Create (nul, 0, 1e8, 0, 0, 120, 0, 0, 56, 20, 11); //路灯
     plants[54].Create (GREEN,-15,500,0,5,80,0,0,199,100,54);//三叶草
-    plants[13].Create (nul, -10, 800, 25, 0, 80, 0, 0, 95, 130, 21); //医疗
+    plants[13].Create (nul, -10, 1200, 25, 0, 80, 0, 0, 95, 120, 21); //仙桃
     plants[66].Create (nul,0,0,0,0,0,0,0,228,25,66);//血瓶
     plants[25].Create (nul, 0, 1e8, dzj, 0, 1000, 0, 0, 104, 150, 25); //反弹
     plants[86].Create (GREEN, 1, 1600, dza, 4, 80, 0, 0, 16, 100, 86, si); //双头豌豆射手
 
     plants[17].Create (nul, -5, 12000, 17, 8, 80, 0, 0, 57, 25, 12, 0, false, true); //阳光菇
-    plants[18].Create (PURPLE, 1, 1600, dza, 4, 40, 0, 0, 58, 0, 13, 12 * SI / 110, false, true); //小喷菇
+    plants[18].Create (PURPLE, 1, 1600, dza, 4, 40, 0, 0, 58, 0, 13, ts, false, true); //小喷菇
     plants[59].Create (PURPLE, 1, 150, dza, 2, 80, 0, 0, 221, 350, 59, 8 * SI / 110, false, true);//大喷菇
     plants[19].Create (Qt::black, -6, 0, 0, 150, 40, 0, 0, 63, 175, 15, 10, false, true); //毁灭菇
     plants[20].Create (nul, -7, 0, 0, 200, 40, 0, 0, 72, 125, 18, 0, false, true); //寒冰菇
     plants[32].Create (MHCO, 0, 1e8, 0, 0, 40, 0, 0, 141, 50, 32, 0, false, true); //魅惑菇
     plants[40].Create (nul,-16,500,0,25,80,0,0,158,70,40,0,0,1);//磁力菇
 
-    plants[21].Create (nul, 0, 0, 0, 0, 0, 0, 0, 62, 10, 14); //荷叶
+    plants[21].Create (nul, 0, 0, 0, 0, 800, 0, 0, 62, 10, 14); //荷叶
     plants[28].Create (nul, 0, 0, 0, 0, 0, 0, 0, 130, 50, 28); //咖啡豆
     plants[23].Create (PURPLE, -11, 700, 10, 1, 160, 0, 0, 101, 300, 23, 0, false, true); //忧郁蘑菇
     plants[94].Create (QColor(185,27,39), 2, 600, dza, 2, 80, 0, 0, 270, 350, 94);//猫尾草
     plants[24].Create (nul, 0, 0, 0, 0, 600, 0, 0, 268, 80, 24); //南瓜
     plants[27].Create (nul, -13, 2000, 0, 30, 40, 0, 0, 110, 20, 27); //大葱
-    plants[33].Create (QColor (255, 140, 0), 0, 1e8, 0, 0, 80, 0, 0, 142, 25, 33); //蒜
+    plants[33].Create (QColor (255, 140, 0), 0, 1e8, 0, 0, 80, 0, 0, 142, 25, 33); //大蒜
     plants[29].Create (Qt::gray, 0, 1e8, 1e8, 0, 120, 0, 0, 132, 125, 29); //地刺
     plants[31].Create (nul, -26, 1e8, 0, 0, 160, 0, 0, 135, 275, 31); //大炮1
     plants[30].Create (nul, -14, 3600, 0, 10, 160, 0, 0, 134, 275, 30); //大炮2
     plants[37].Create (GREEN, 1, 1600, dzb, 4, 100, 0, 0, 155, 80, 37, si); //豌豆荚
     plants[85].Create (nul,0,1e8,0,0,80,0,0,15,175,85);//分裂泡泡
-    plants[100].Create(GREEN, 1, 1600, dza, 4, 80, 0, 0, 278, 125, 100, 25);//裂变射手
+    plants[100].Create(GREEN, 1, 1600, dza, 4, 80, 0, 0, 278, 150, 100, 25);//分裂射手
 
 
     plants[39].Create(QColor(185,27,39),1,800,dza,4,80,0,0,159,175,39,0);//仙人掌
     plants[71].Create(Qt::white,-25,500,0,10,80,0,0,236,300,71);//棱镜
     plants[34].Create (nul, 0, 1e8, 0, 0, 80, 0, 0, 143, 160, 34); //加速器
-    plants[35].Create (YELLOW, 37, 1e8, dzj, 2, 750, 0, 0, 144, 100, 35); //有毒坚果
+    plants[35].Create (YELLOW, 0, 1e8, dzj, 2, 750, 0, 0, 144, 100, 35); //有毒坚果
     plants[42].Create (nul, -17, 0, 0, 0, 50, 0, 0, 169, 200, 42); //魅惑炸弹
 
     plants[45].Create (nul, 0, 1e8, 1e8, 0, 200, 0, 0, 115, 800, 45); //血量升级
@@ -313,14 +314,14 @@ void MainWindow::InitZw()
     plants[47].Create (nul, 0, 1e8, 1e8, 0, 200, 0, 0, 177, 1000, 47); //攻击升级
     plants[48].Create (nul, -19, 1000, 0, 0, 80, 0, 0, 179, 120, 48); //金盏花
 
-    plants[43].Create(nul,0,0,0,0,0,0,0,170,5,43);//翻转
+    plants[43].Create(nul,0,0,0,0,0,0,0,170,5,43);//翻转工具
     plants[38].Create(nul, 0, 0, 0, 0, 0, 0, 0, 157, 0, 38);//化肥
     plants[99].Create(nul, -36, 0, 0, 0, 80, 0, 0, 276, 200, 99);//能量花
-    plants[49].Create(nul,0,0,0,0,0,0,0,186,50,49);//点火
-    plants[50].Create(nul,0,0,0,0,0,0,0,187,50,50);//灭火
-    plants[51].Create(nul,0,1e8,1e8,0,1,0,0,194,10,51);//僵尸加速
-    plants[52].Create(nul,0,0,0,0,0,0,0,195,5,52);//开关
-    plants[62].Create(nul,0,1e8,1e8,0,80,0,0,224,50,62);//储存
+    plants[49].Create(nul,0,0,0,0,0,0,0,186,50,49);//点火器
+    plants[50].Create(nul,0,0,0,0,0,0,0,187,50,50);//灭火器
+    plants[51].Create(nul,0,1e8,1e8,0,1,0,0,194,10,51);//僵尸加速器
+    plants[52].Create(nul,0,0,0,0,0,0,0,195,5,52);//植物开关
+    plants[62].Create(nul,0,1e8,1e8,0,80,0,0,224,50,62);//培养皿
 
 
     for(int i=0;i<MAXSHU;i++)plants[i].dztm=plants[i].dztm/5*2;
@@ -330,7 +331,7 @@ void MainWindow::InitZw()
     plt_p[64]=plt_p[56]=plt_p[4]=plt_p[6]=plt_p[87]=plt_p[9]=plt_p[41]=plt_p[67]=15;
     plt_p[37]=15;plt_p[25]=plt_p[29]=plt_p[55]=plt_p[88]=plt_p[90]=plt_p[100]=7;
     plt_p[2]=plt_p[10]=plt_p[35]=plt_p[72]=plt_p[77]=plt_p[11]=plt_p[79]=plt_p[89]=plt_p[94]=plt_p[96]=5;
-    plt_p[20]=plt_p[34]=plt_p[44]=plt_cnt[13]=plt_p[54]=plt_p[70]=plt_p[73]=plt_p[74]=plt_p[75]=plt_p[80]=plt_p[91]=plt_p[98]=4;
+    plt_p[20]=plt_p[34]=plt_p[44]=plt_cnt[13]=plt_p[54]=plt_p[70]=plt_p[73]=plt_p[74]=plt_p[75]=plt_p[80]=plt_p[91]=plt_p[98]=plt_p[102]=4;
     plt_p[7]=plt_p[8]=plt_p[16]=plt_p[14]=plt_p[5]=plt_p[54]=plt_p[57]=plt_p[65]=plt_p[78]=plt_p[93]=plt_p[101]=3;
     plt_p[3]=plt_p[53]=plt_p[50]=plt_p[99]=2;
     plants[98].jian=40;
@@ -345,14 +346,14 @@ void MainWindow::InitZw()
     plants[76].attack=100;
     plants[59].attack=250;
     plants[26].attack=250;
+    plants[102].attack=200;
     plants[67].du=plants[68].du=25;
     plants[69].du=70;
     plants[55].tag=plants[62].tag=-1;//定向，存储
     plants[71].tag=-1e9;//棱镜
     plants[61].freeze=160;//强力寒冰
-    plants[83].freeze=100;//冰杨桃
     plants[82].freeze=200;//冰龙草
-    int shun[MAXSHU]={0,1,2,3,56,53,63,4,5,6,64,7,8,87,9,16,41,77,89,61,74,75,76,10,12,67,68,70,14,90,84,79,95,92,57,36,58,82,72,98,44,78,93,11,69,101,73,55,22,83,80,88,81,97,26,60,91,96,65,
+    int shun[MAXSHU]={0,1,2,3,56,53,63,4,5,6,64,7,8,87,9,16,41,77,89,61,74,75,76,10,12,67,68,70,14,102,90,84,79,95,92,57,36,58,82,72,98,44,78,93,11,69,101,73,55,22,83,80,88,81,97,26,60,91,96,65,
                         15,54,13,66,25,86,
                         17,18,59,19,20,32,40,
                         21,28,23,94,24,27,33,29,31,30,37,85,100,
@@ -361,11 +362,11 @@ void MainWindow::InitZw()
     for(int i=0;i<MAXSHU;i++)
         p_shun[i]=shun[i],q_shun[shun[i]]=i;
 
-    int zws[ZGQS]={5,8,7,6,5,4,5,6,6,7,    2,2,2},sp[21]={9,41,44,55,11,22,23,26,59,60,61,13,14,65,69,77,79,80,88,94,96};
+    int zws[ZGQS]={5,8,7,6,5,4,5,6,7,7,    2,2,2},sp[22]={9,41,44,55,11,22,23,26,59,60,61,13,14,65,69,77,79,80,88,94,96,102};
     zws[20]=3;zws[21]=2;zws[22]=2;
     zws[40]=zws[41]=zws[42]=zws[43]=zws[44]=zws[45]=2;zws[46]=1;
     zws[50]=zws[51]=zws[52]=zws[53]=zws[54]=1;
-    for(int i=0;i<21;i++)sp_plt[sp[i]]=1;
+    for(int i=0;i<22;i++)sp_plt[sp[i]]=1;
     //每关的增量
     for (int n=1; n<ZGQS; n++)
         zws[n] += zws[n - 1];
@@ -400,7 +401,7 @@ void MainWindow::InitZw()
     cd_spd[85]=1.5;cd_spd[86]=10;cd_spd[87]=10;cd_spd[88]=7;cd_spd[89]=8;
     cd_spd[90]=4;cd_spd[91]=3;cd_spd[92]=10;cd_spd[93]=2;cd_spd[94]=5;
     cd_spd[95]=2;cd_spd[96]=5;cd_spd[97]=4.5;cd_spd[98]=4;cd_spd[99]=4;
-    cd_spd[100]=6;cd_spd[101]=3;
+    cd_spd[100]=6;cd_spd[101]=3;cd_spd[102]=5;
     for(int i=0;i<MAXSHU;i++)tyToNumP[plants[i].type]=i;
     for(int i=0;i<MAXSHU;i++)expnd[i]=del_x[i]=not_imjsz[i]=0;
     expnd[45]=15000;expnd[46]=30000;expnd[47]=20000;
@@ -416,15 +417,15 @@ void MainWindow::InitJs()
     //创建僵尸：速度，生命，吃的速度，0，0，图片ID，编号，是否能跳跃，是否发射
     zombies[0].Create (2, 8, 1, 0, 0, 3, 0); //普通僵尸
     zombies[1].Create (2, 22, 1, 0, 0, 5, 1); //塑料僵尸
-    zombies[2].Create (3.7, 18, 1, 0, 0, 29, 5, true); //撑杆跳僵尸
+    zombies[2].Create (3.9, 14, 1, 0, 0, 29, 5, true); //撑杆跳僵尸
     zombies[23].Create(2, 15, 1,0,0,197,25);//向日葵僵尸
     zombies[3].Create (2, 62, 1, 0, 0, 6, 2); //铁桶僵尸
     zombies[4].Create (2, 21, 3, 0, 0, 32, 6); //大嘴僵尸
     zombies[6].Create (3, 26, 1, 0, 0, 90, 4); //报纸僵尸
     zombies[8].Create (2, 17, 1, 0, 0, 73, 13, false, true, 60); //豌豆射手僵尸
-    zombies[5].Create (4.2, 43, 1, 0, 0, 10, 3); //跑步僵尸
+    zombies[5].Create (4.5, 40, 1, 0, 0, 10, 3); //跑步僵尸
     zombies[22].Create(2, 90, 1.5, 0,0,192,24);//小坚果僵尸
-    zombies[7].Create (1.8, 62, 1, 0, 0, 39, 7); //铁门僵尸
+    zombies[7].Create (1.8, 90, 1, 0, 0, 39, 7); //铁门僵尸
     zombies[10].Create (2, 23, 1, 0, 0, 79, 14, false, true,60); //西瓜僵尸
     zombies[27].Create(2.5, 15, 1,0,0,244,32,false,true);//辣椒僵尸
     zombies[21].Create(1.4, 300, 0.7,0,0,188,23);//高坚果僵尸
@@ -494,6 +495,58 @@ void MainWindow::InitJs()
     for(int i=1;i<GQS;i++)z_cn[i]=z_cn[i-1]+jad[i];
 }
 
+void MainWindow::MakeTuJian()
+{
+    InitIcon();
+    QString str="## 植物图鉴\n";
+    str+="| 名称 | 图片 | 功能 | 阳光 | 冷却时间 | 生命值 | 攻击力 | 攻击间隔 | 溅射范围 |\n";
+    str+="| ---- | ---- | ---- | ---- | -------- | ------ | ------ | -------- | -------- |\n";
+    char zw_na[][20]={"向日葵","豌豆射手","小坚果","炸弹","玉米投手","巴豆","冰豆","火球射手","火爆辣椒","寒冰射手","双发射手","高坚果","倭瓜","卷心菜投手","西瓜投手","土豆地雷","三线射手",
+                    "普通机枪射手","激光豆","强力寒冰射手","虚弱炸弹","虚弱豆","虚弱射手","全息坚果","双子向日葵","有毒射手","双发有毒射手","毒气弹","大嘴花","橡木弓手","闪电射手","模仿者",
+                    "火龙草","导电坚果","辣椒投手","冰冻炸弹","火炬树桩","冰火炬树桩","冰龙草","小炸弹","椰子小炮","彩色机枪射手","火药桶","闪电炸弹","冰西瓜投手","有毒投手","中毒坚果",
+                    "水炸弹","激光射手","杨桃","寒冰杨桃","菜问","旋转射手","毒火炬","红薯","双头大喷菇","回旋镖射手","闪电芦苇","橙子射手","巨型射手","路灯","三叶草","仙桃","血瓶","反弹",
+                    "双头豌豆射手","阳光菇","小喷菇","大喷菇","毁灭菇","寒冰菇","魅惑菇","磁力菇","荷叶","咖啡豆","忧郁蘑菇","猫尾草","南瓜","大葱","大蒜","地刺","玉米加农炮1","玉米加农炮2",
+                    "豌豆荚","分裂泡泡","分裂射手","仙人掌","棱镜","加速器","有毒坚果","魅惑炸弹","血量升级","速度升级","攻击升级","金盏花","翻转工具","化肥","能量花","点火器","灭火器",
+                    "僵尸加速器","植物开关","培养皿"};
+    for(int s=0;s<MAXSHU;s++)
+    {
+        int i=p_shun[s],id=plants[i].id;
+        ico[id].toImage().scaled(50,50,Qt::KeepAspectRatio,Qt::SmoothTransformation).save(QString::asprintf("tujian/%d.png",id));
+        str+="| ";str+=zw_na[s];
+        str+=QString::asprintf(" | ![%s](./tujian/%d.png) | ",zw_na[s],id);
+        const Plant&zw=plants[i];
+        if(zw.mush)str+="蘑菇 | ";
+        else str+="| ";
+        str+=QString::asprintf("%d | ",zw.cost);
+        str+=QString::asprintf("%.1lf秒 | ",40.0/cd_spd[i]);
+        str+=QString::asprintf("%.1lf | ",zw.life/20.0);
+        if(zw.attack>=0)
+        {
+            if(zw.attack>0)
+                str+=QString::asprintf("%d",zw.attack/100);
+        }
+        else
+        {
+            if(zw.move_spd>0)
+                str+=QString::asprintf("%d",zw.move_spd*10);
+        }
+        if(zw.freeze>0)str+=QString::asprintf("（附加%.1lf秒寒冰效果）",zw.freeze/20.0);
+        if(zw.du>0)str+=QString::asprintf("（附加%.1lf点中毒效果）",zw.du/50.0);
+        if(zw.time>0&&zw.time<1e8)str+=QString::asprintf(" | %.1lf秒 | ",zw.time/1000.0);
+        else str+=QString::asprintf(" | | ");
+        if(zw.jian>0)str+=QString::asprintf("%d |",zw.jian);
+        else str+=QString::asprintf("|");
+        str+='\n';
+    }
+    QFile file("tujian.md");
+    file.open (QIODevice::WriteOnly);
+    QByteArray da;
+    QDataStream st(&da,QIODevice::WriteOnly);
+    st<<str;
+    file.write(da);
+    file.close();
+}
+
 void MainWindow::Init () {
     InitZw();InitJs();
     if (SI<=55) //双倍
@@ -519,11 +572,12 @@ void MainWindow::Init () {
     for (int i=0; i<6; i++)
         n_2048[plants[ne[i]].type]=plants[ne[i+1]].type;
     n_2048[plants[ne[6]].type]=-1;
+
+    //MakeTuJian();
 }
 
 void MainWindow::InitOneIcon(int i)
 {
-    //if((MN%5!=0||MM%9!=0)&&bgid>1)bgid=0;
     double zm=zoom*b_ret;laSI=SI;
     QString str=QString::asprintf ("://icons/%d.png", i);
     if(i==111)str=QString::asprintf("://icons/bg/%d/mi.png",bgid);
@@ -532,31 +586,42 @@ void MainWindow::InitOneIcon(int i)
     QImage ic(str);
     if(ic.isNull())return;
     ic=ic.convertToFormat(QImage::Format_RGBA8888);
-    if ((i>=116&&i<=124)||i==91||i==185) {
+    if ((i>=116&&i<=124)||i==91||i==185) {//按钮图片
         if(fabs(zm-lsZM)<eps)return;//避免不必要的刷新
         ico[i]=QPixmap::fromImage (ic);
     }
     else if(i==139||i==140||i==233||i==211||i==114||i==267||i==150||i==204)
+    {
+        if(fabs(zm-lsZM)<eps)return;//避免不必要的刷新
         ico[i]=QPixmap::fromImage (ic.scaled (ic.size()*zm,Qt::KeepAspectRatio,Qt::SmoothTransformation));
+        ico_si[i]=ic.size();
+    }
     else if(i==146||i==13||i==115)
+    {
+        if(fabs(zm-lsZM)<eps)return;//避免不必要的刷新
         ico[i]=QPixmap::fromImage (ic.scaled (ic.size()*zm/2, Qt::KeepAspectRatio,Qt::SmoothTransformation));
+        ico_si[i]=ic.size()/2;
+    }
     else if (i==112||i==113||i==14||i==174)//子弹图像
-        ico[i]=QPixmap::fromImage (ic.scaled (ic.size()*zm*SI/220, Qt::KeepAspectRatio,Qt::SmoothTransformation));
+        ico[i]=QPixmap::fromImage (ic.scaled (ic.size()*zm*SI/220, Qt::KeepAspectRatio,Qt::SmoothTransformation)),ico_si[i]=ic.size()*SI/220;
     else if(i==161)//大型子弹图像
-        ico[i]=QPixmap::fromImage (ic.scaled (ic.size()*zm*SI/440, Qt::KeepAspectRatio,Qt::SmoothTransformation));
+        ico[i]=QPixmap::fromImage (ic.scaled (ic.size()*zm*SI/440, Qt::KeepAspectRatio,Qt::SmoothTransformation)),ico_si[i]=ic.size()*SI/440;
     else if(i==111||i==125)//背景图像
     {
         int wi=(W1-50)/(1-XW-XT),hi=(HI-60)/(1-YW-YT);
         if(i==125)wi=hi*1536/1345;
+        ico_si[i]=QSize(wi,hi);
         ico[i]=QPixmap::fromImage (ic.scaled (ceil (wi * zm), ceil (hi * zm), Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
     }
     else {
-        double dx=SI*zm;
-        if (i==40||i==41||i==49||i==51||i==52||i==54)dx*=1.3;
-        else if (i>=216&&i<=219)dx*=1.6;
+        int dx=SI;
+        if (i==40||i==41||i==264||i==265)dx*=1.3;
+        else if(i==49||i==51||i==52||i==54)dx*=1.5;
+        else if (i>=216&&i<=219)dx*=1.7;
         else if(i==104||i==105)dx*=2;
-        ico[i]=QPixmap::fromImage (ic.scaled (floor (dx), floor (dx), Qt::KeepAspectRatio,Qt::SmoothTransformation));
-            if (i==28) {ico_red[i]=QPixmap::fromImage(ico[i].toImage().mirrored(1,0));return;}
+        ico_si[i]=QSize(dx,dx);
+        ico[i]=QPixmap::fromImage (ic.scaled (ceil (dx*zm), ceil (dx*zm), Qt::KeepAspectRatio,Qt::SmoothTransformation));
+        if (i==28) {ico_red[i]=QPixmap::fromImage(ico[i].toImage().mirrored(1,0));return;}
         auto rgb=ic.bits();int si=ic.width()*ic.height();
         long long sr=0,sg=0,sb=0;int cn=0;
         for(int s=0,t=0;s<si;s++,t+=4)//变蓝
@@ -633,7 +698,7 @@ bool MainWindow::AddPlant (int x, int y) {
         select=-1;return true;
     }
     Plant zw;zw.type=-1;
-    if (x>=0&&x<=(MM - 1) * SI&&y>=0&&y<MN&&select!=-1&&exp>=expnd[select]) {
+    if (x>=0&&x<MM*SI&&y>=0&&y<MN&&select!=-1&&exp>=expnd[select]) {
         if ((!is_boss||is12)&&!b_guan) //非滚卡
         {
             if (cd[select]>=800) {
@@ -789,6 +854,7 @@ void MainWindow::GenerateJs()
     if(js.shoot&&js.fs_nd>0)js.fss=RA()%js.fs_nd;
     while (js.type >= 0&&!can_wat[js.type]&&m_game.iswa[js.y])
         js.y = RA () % MN;
+    js.eat_jl=SI/3+RA()%(SI/3);
     if(b_zhu)//排山倒海
     {
         for(int s=0;s<MN;s++)
@@ -1244,7 +1310,7 @@ void MainWindow::DoTimer (int tm_id)
                 }
             }
             for (int y=0; y<MN; y++)
-                sc[y]*=(0.5+double(rand())/RAND_MAX);
+                sc[y]*=(0.5+double(RA())/RA.max());
             for (int y=0; y<MN; y++)
                 if (bos_ps[y]!=-1&&sc[y]>mx) //贪心
                     mx=sc[y],wz=y;
@@ -1596,7 +1662,7 @@ int MainWindow::CalTmrTime(int id,int tt)
             if(m_game.plants[w].Burning())tt*=1.2;
             if(m_game.plants[w].attack>0&&!m_game.is_tou[m_game.plants[w].type]&&m_game.plants[w].type!=26&&m_game.plants[w].type!=59)//防止同步
             {
-                if(RA()%5==0)tt*=(0.9+0.2*double(rand())/RAND_MAX);
+                if(RA()%5==0)tt*=(0.9+0.2*double(RA())/RA.max());
                 else if(RA()%20==0)tt/=1.5;
             }
             if(tt<20)tt=20;
@@ -2523,26 +2589,11 @@ void MainWindow::MakeImjs()
 
 void MainWindow::MakePreset()
 {
-
     m_game.m_yg=inf;
     for (int i=0; i<MM/2; i++)
         for (int j=0; j<MN; j++)
-            if (m_game.gird_type[i][j]==2)
-                m_game.gird_type[i][j]=3;
-    /*for (int i=0; i<MN; i++) {
-        for(int j=0;j<=12;j++)
-            m_game.m_ng[j][i]=600;
-        Plant zw=plants[12];
-        zw.tag=1;m_game.PlantZw (zw,0,i);
-        m_game.PlantZw (plants[11],1,i);
-        for(int j=1;j<=8;j++)//test
-            m_game.PlantZw (plants[44],j+2,i);
-        m_game.PlantZw (plants[39],2,i);
-        int w=660/SI;
-        m_game.PlantZw (plants[25],w+1,i);
-        m_game.PlantZw (plants[13],w,i);
-        m_game.PlantZw (plants[36],w-1,i);
-    }*/
+            if (m_game.grid_type[i][j]==1)
+                m_game.m_hy[i][j]=800;
     for (int i=0; i<MN; i++)
     {
         m_game.PlantZw (plants[12],0,i);
@@ -2850,7 +2901,7 @@ void MainWindow::Save (QDataStream &ar) {
     if(tcp.size()==0)
     {
         ar<<RXUAN<<XUAN<<a_xs;
-        for (int i=0; i<XUAN; i++)
+        for (int i=0; i<MAXXUAN; i++)
             ar << m_xuan[i]<<x_js[i];
         for (int i=0; i<a_xs; i++)
             ar << def_xuan[i];
@@ -2917,7 +2968,7 @@ void MainWindow::Load (QDataStream &ar) {
     if(tcp.size()==0)
     {
         ar>>RXUAN>>XUAN>>a_xs;
-        for (int i=0; i<XUAN; i++)
+        for (int i=0; i<MAXXUAN; i++)
             ar >> m_xuan[i]>>x_js[i];
         for (int i=0; i<a_xs; i++)
             ar >> def_xuan[i];

@@ -25,7 +25,7 @@ Game::Game () {
     fire_mul[15]=fire_mul[4]=fire_mul[13]=fire_mul[14]=fire_mul[17]=fire_mul[20]=fire_mul[22]
         =fire_mul[23]=fire_mul[24]=fire_mul[25]=fire_mul[31]=fire_mul[32]=fire_mul[33]=1.5;
     dian_mul[2]=dian_mul[3]=dian_mul[5]=dian_mul[7]=dian_mul[27]=1.5;dian_mul[11]=0.5;
-    dun_p[7]=0.7;dun_p[27]=dun_p[4]=dun_p[31]=0.5;
+    dun_p[7]=0.8;dun_p[27]=dun_p[4]=dun_p[31]=0.5;
     low_zw[17]=low_zw[32]=low_zw[53]=low_zw[63]=low_zw[51]=low_zw[75]=1;
     dang_mul[22]=2;dang_mul[19]=dang_mul[14]=dang_mul[32]=dang_mul[15]=dang_mul[18]=dang_mul[17]=dang_mul[20]=1.7;
     dang_mul[6]=dang_mul[13]=dang_mul[12]=1.5;
@@ -41,12 +41,12 @@ Game::Game () {
         if(x<=200)frez_spd[x]=pow(0.5,x/100.0);
         else frez_spd[x]=100.0/(x+200);
     }
-    int shr[22]={0,4,9,37,39,41,44,53,59,60,61,64,65,67,68,76,77,89,90,91,96,100};
-    for(int i=0;i<22;i++)is_shear[shr[i]]=1;
+    int shr[23]={0,4,9,37,39,41,44,53,59,60,61,64,65,67,68,76,77,89,90,91,96,100,102};
+    for(int i=0;i<23;i++)is_shear[shr[i]]=1;
     int zha[11]={3,5,42,57,70,72,73,74,7,93,99};
     for(int i=0;i<11;i++)is_zha[zha[i]]=zw_wudi[zha[i]]=1;
-    int cntovzw[9]={1,90,22,83,26,13,59,94,39};
-    for(int i=0;i<9;i++)can_overzw[cntovzw[i]]=0;
+    int cntovzw[10]={1,90,22,83,26,13,59,94,39,102};
+    for(int i=0;i<10;i++)can_overzw[cntovzw[i]]=0;
     car_num=1;car_ryg=0;
 }
 Game::~Game () {}
@@ -588,6 +588,9 @@ bool Game::DaZhao(int z_i,double p)
     case 37:
         zw.odtm=zw.time;zw.time=40;tm=true;
         break;
+    case 102:
+        zw.odtm=zw.time;zw.time=300;tm=true;
+        break;
     case 2:
     case 6:
     case 19:
@@ -640,7 +643,7 @@ void Game::EndDaZhao(int z_i)
     if(tm)ResetZwTimer(z_i);
 }
 
-bool Game::ZombieEatPlant(int j_i, int x, int y)
+bool Game::ZombieCanEatPlant(int j_i, int x, int y)
 {
     int z_i=GetZwShu(x*SI,y),zt=zombies[j_i].type;
     if(zt==19)return false;//气球
@@ -1026,6 +1029,19 @@ void Game::Goj (int z_i) //植物攻击
             NewZd (tz);
         }
     }
+    else if(plants[z_i].type==102&&(zmb_cnt>0||dzsy))//橡木弓手
+    {
+        zd.xie=true;zd.y_flt=zd.y*SI;
+        double spd=zd.vx,p=18;int s=1;
+        if(dzsy)s=3,p=36;
+        for(int i=-s;i<=s;i++)
+        {
+            Bullet tz=zd;
+            tz.setspd(spd,(i/p)*2*PI);
+            tz.y_flt+=sin((i/p)*2*PI)*zd.siz*1.1;
+            NewZd (tz);
+        }
+    }
     else if(plants[z_i].type==94)//猫尾草
     {
         int t=GetMWCGoal();
@@ -1261,9 +1277,10 @@ int Game::FakePlant(const Plant&zw)
         }
         else return 0;
     case 14: //荷叶
-        if (gird_type[zw.x / SI][zw.y] == 2) {
-            gird_type[zw.x / SI][zw.y] = 3;
-            m_hy[zw.x / SI][zw.y]=800*zw.mul;return 1;
+        if (grid_type[zw.x / SI][zw.y] == 1)
+        {
+            m_hy[zw.x / SI][zw.y]=zw.life;
+            return 1;
         }
         else return 0;
     case 43: //翻转
@@ -1336,21 +1353,28 @@ bool Game::PlantZw(Plant zw, int x, int y)
     return PlantZw(zw);
 }
 
+bool Game::Valid_Grid_Type(int x, int y) const
+{
+    return (grid_type[x][y]==0||m_hy[x][y]>0);
+}
+
 bool Game::PlantZw (Plant zw) {
-    if(zw.type==3&&zw.tag==1)
+    if(zw.type==3&&zw.tag==1)//大炮的炸弹
     {
         NewZw(zw);
         return true;
     }
-    if(m_yg<zw.cost||(IsIcy(zw.x/SI,zw.y)&&zw.type!=5&&zw.type!=3&&zw.type!=72))return false;
-    if (gird_type[zw.x / SI][zw.y] == 1||(gird_type[zw.x / SI][zw.y] == 2&&zw.type != 14)) //有坑，或有水且不是荷叶
+    int wx=zw.x/SI,wy=zw.y;
+    if(IsKeng(wx,wy))return false;//坑
+    if(m_yg<zw.cost||(IsIcy(zw.x/SI,zw.y)&&zw.type!=5&&zw.type!=3&&zw.type!=72))//有冰，而且不是炸弹，辣椒
+        return false;
+    if (grid_type[wx][wy]==1&&m_hy[wx][wy]==0&&zw.type!=14) //有坑，或有水且不是荷叶
     {
         int co=m_wnd->plants[21].cost;
-        if(((m_wnd->m_ai&&m_wnd->cd[21]>800-eps)||m_yg>inf/2)&&gird_type[zw.x / SI][zw.y]==2&&m_yg>=zw.cost+co)
+        if(((m_wnd->m_ai&&m_wnd->cd[21]>800-eps)||m_yg>inf/2)&&m_yg>=zw.cost+co)
         {
             m_yg-=co;m_wnd->cd[21]=0;
-            gird_type[zw.x / SI][zw.y] = 3;
-            m_hy[zw.x / SI][zw.y] = 800;
+            m_hy[wx][wy] = m_wnd->plants[21].life;
         }
         else return false;
     }
@@ -1408,7 +1432,16 @@ void Game::NewZw(Plant zw)
 
 bool Game::IsIcy(int x,int y)const
 {
+    if(x<0||x>=MM||y<0||y>=MN)
+        return false;
     return TM < m_ice[x][y];
+}
+
+bool Game::IsKeng(int x, int y)const
+{
+    if(x<0||x>=MM||y<0||y>=MN)
+        return false;
+    return TM < m_keng[x][y];
 }
 
 bool Game::Js_On_Grid(int j_i)
@@ -1442,13 +1475,9 @@ bool Game::Js_On_Grid(int j_i)
             if(m_wnd->m_imp)tt=1000;
             m_ice[tx][ty] = TM+tt;//小车生成冰
         }
-        if (zombies[j_i].type != 19&& gird_type[tx][ty] == 3&&zombies[j_i].type < 100&&GetZwShu (tx * SI, ty) == -1)//除了气球之外可以踩掉荷叶
-        {
+        if (Js_At_Sky(j_i) && GetZwShu (tx * SI, ty) == -1 && m_hy[tx][ty]>0)//除了气球之外可以踩掉荷叶
             m_hy[tx][ty]-=1;
-            if(m_hy[tx][ty]<=0)
-                gird_type[tx][ty] = 2;
-        }
-        if(zombies[j_i].type<100&&js_nd[tx][ty]>=0)
+        if(js_nd[tx][ty]>=0)
         {
             int t=zombies[j_i].type,d=zombies[j_i].id;
             if(d==3||d==17||d==18)t=0;
@@ -1569,6 +1598,7 @@ bool Game::MoveJs (int j_i) { //移动僵尸,返回是否被杀死
     if(zombies[j_i].y==-1)return true;
     int f=zombies[j_i].freeze;
     double s_p=(f<1000?frez_spd[f]:1.0/12.0),spd=zombies[j_i].vx*s_p;
+    if(IsKeng((zombies[j_i].x + SI/2) / SI,zombies[j_i].y))spd*=0.8;//坑
     zombies[j_i].xu=std::max(zombies[j_i].xu-s_p*XU_HF/(1.0+zombies[j_i].du*DU_XUHF),1.0);
     if(zombies[j_i].type==10&&zombies[j_i].fss!=-1)//小鬼投掷
     {
@@ -1584,7 +1614,7 @@ bool Game::MoveJs (int j_i) { //移动僵尸,返回是否被杀死
     if(TM<zombies[j_i].stp_tm)return 0;
     bool rt = false;
     int ex=zombies[j_i].x/SI+(zombies[j_i].vx<0?1:0),ey=zombies[j_i].y,z_i=-2;
-    if(ZombieEatPlant(j_i,ex,ey))z_i=GetZwShu(ex*SI,ey);//获取要吃的植物
+    if(ZombieCanEatPlant(j_i,ex,ey))z_i=GetZwShu(ex*SI,ey);//获取要吃的植物
     if(zombies[j_i].vy!=0)//斜线
     {
         zombies[j_i].y_flt+=zombies[j_i].vy;
@@ -1600,7 +1630,7 @@ bool Game::MoveJs (int j_i) { //移动僵尸,返回是否被杀死
         if(zombies[j_i].y_flt>(MN-1)*SI&&zombies[j_i].vy>0)
             zombies[j_i].vy=-zombies[j_i].vy;
     }
-    if (z_i!=-2&&abs(zombies[j_i].x-ex*SI)<=SI/2)//吃
+    if (z_i!=-2&&abs(zombies[j_i].x-ex*SI)<=zombies[j_i].eat_jl)//吃
     {
         zombies[j_i].eating = true;//正在吃
         rt = Eat (ex,ey,j_i,s_p);
@@ -1741,17 +1771,17 @@ bool Game::BulletOverZw(int bi)
         if (zd.color == BLUE)//寒冰
             zd.color = DBLUE,zd.freeze+=60,zd.fire=10;
         else if (zd.color == RED||zd.color==DBLUE)//火焰
-            zd.attack+=1000,zd.siz+=2,zd.fire+=5;
+            zd.attack=std::min(zd.attack*2,zd.attack+1000),zd.siz+=2,zd.fire+=5;
         else zd.color = RED,zd.fire=10;//普通
-        zd.attack+=plants[t].lev*300;
+        zd.attack=std::min(zd.attack*3/2,zd.attack+plants[t].lev*300);
     }
     else if (plants[t].type == 58) { //冰火炬
         if (zd.color == RED)//火焰
             zd.color = DBLUE,zd.freeze=160;
         else if(zd.color == BLUE||zd.color==DBLUE)//寒冰
-            zd.attack+=500,zd.siz+=2,zd.freeze+=60;
+            zd.attack=std::min(zd.attack*3/2,zd.attack+500),zd.siz+=2,zd.freeze+=60;
         else zd.color = BLUE,zd.freeze=100;//普通
-        zd.attack+=plants[t].lev*300;
+        zd.attack=std::min(zd.attack*3/2,zd.attack+plants[t].lev*300);
     }
     else if(plants[t].type==81)//毒火炬
         zd.du+=20;
@@ -1796,7 +1826,7 @@ int Game::CalHurt(int zi,int ki,int frez,double fire,int du,double xu,double q,i
         double d=zombies[zi].freeze*p;
         double ad=pow(d,1.4)*t;//冰火叠加增加伤害
         if(TM<zombies[zi].frez_stp)
-            ad+=(zombies[zi].frez_stp-TM)/40.0*t;
+            ad+=(zombies[zi].frez_stp-TM)*25*t;
         ki+=int(ad+0.5);
         zombies[zi].freeze-=int(d+0.5);
         if(fire>1)//毒+火
@@ -1834,7 +1864,7 @@ void Game::BulletOnJs(int bi,int zi,bool tou)
     if(zt==19&&((zd.from==39&&zd.siz==1)||zd.from==94))
         g*=5;//尖刺攻击气球
     if(hb>100)ft=std::min((hb-100)/5,20);
-    int ct=(f==59?10:(tou?5:0));//大喷菇投手穿透
+    int ct=(zd.ct?10:(tou||zd.from==102?5:0));//大喷菇投手穿透
     double fi=zd.fire/10.0;
     if(hb>0)fi=0;//冰火不能同时出现
     if(zombies[zi].dun)ft=ft*ct/10;
@@ -1849,16 +1879,19 @@ void Game::BulletOnJs(int bi,int zi,bool tou)
         DestroyJs(zi,0);
     else
         zombies[zi].id = GetJsIcon (zombies[zi]);
-    if(f==100&&zd.siz>3)//裂变
+    if(f==100)//裂变
     {
         double spd=zd.getspd(),st=zd.x_flt/(MM*SI);
-        st=double(rand())/RAND_MAX;
+        st=double(RA())/RA.max();
         for(int i=0;i<3;i++)
         {
             Bullet tz=zd;tz.xie=true;
             tz.vis=zombies[zi].ii;//防止原地攻击
             tz.setspd(spd,(i/3.0+st)*2*PI);
-            tz.siz-=3;tz.mul(1.0/3);
+            if(i==0)tz.siz-=3,tz.mul(1.0/2);
+            else tz.siz-=4,tz.mul(1.0/4);
+            if(tz.siz<=0||(tz.attack==0&&tz.freeze==0&&tz.fire==0&&tz.du==0))
+                continue;
             tz.move(2);
             tz.x=int(tz.x_flt+0.5);
             tz.y=int(tz.y_flt/SI+0.5);
@@ -1986,7 +2019,7 @@ void Game::RemoveExtraSt()
 
 bool Game::Zd_Extra(const Bullet &zd)
 {
-    if (zd.x > MM * SI + 50||zd.x < -200)//坐标超限
+    if (zd.x > MM * SI + 50||zd.x < -200||zd.y<0||zd.y>=MN)//坐标超限
         return true;
     if (zd.vx<0&&zd.attack<=0)//魅惑子弹死亡
         return true;
@@ -2074,6 +2107,7 @@ void Game::MoveAllZd (double spd) //双指针
             int c=b,fr=zd.from;
             if(zd.xie)
             {
+                if(c>=js[y])c-=1;
                 while(c+1<js[y]&&zombies[pj[y][c+1]].x<=zx+25)c+=1;//跳到最右面
                 while(c>=0&&zombies[pj[y][c]].x>=zx-25&&(CannotReach(&zd,pj[y][c])||!ZdHitJs(zd,pj[y][c])))//倒序寻找合法的
                     c-=1;
@@ -2122,11 +2156,11 @@ void Game::MoveAllZd (double spd) //双指针
                     if(z)NewRedPoint(zmb_i,z);
                 }
                 int oj=zd.jian+zd.fire+int(5*zd.q+0.5),ji=std::min(oj,100);
-                if (ji>0) //群体伤害
+                if (!zd.ct&&ji>0) //群体伤害（非穿透)
                 {
                     int tx = zombies[zmb_i].x,ty = zd.y;
                     int ki=int(pow(zd.attack,0.9)+0.5);//溅射伤害
-                    int ct=(tou?5:0)+2;//溅射可增加2点破盾力
+                    int ct=(tou||zd.from==102?5:0)+2;//溅射可增加2点破盾力
                     double fi=std::max(zd.fire/10.0-1,0.0);//火效果下降一级
                     if(oj>100)ki*=(1+(oj-100)/50.0);
                     const HURT hu(ki,zd.freeze/2,zd.du/2,ct,fi,zd.xu/2,zd.q*0.3);//毒性除以2
@@ -2172,7 +2206,7 @@ void Game::MoveAllZd (double spd) //双指针
                     }
                     zd_atk[t][zombies[zmb_i].ii]=1;
                 }
-                else if (zd.vx > 0)//子弹消失
+                else if (zd.vx > 0&&zd.from!=102)//子弹消失
                     zd.du = -1;//标记删除
                 if (zd.vx < 0) {//更新魅惑子弹图像
                     Zombie zz;
@@ -2368,7 +2402,7 @@ void Game::SpecialPlt (int z_i) //特殊植物
                     if(w!=-1&&plants[w].mxlf<=1e6)
                         HurtZw_Ty(zw.x/SI+i,zw.y+j,plants[w].mxlf/3,0,1);//对植物造成伤害
                 }
-            gird_type[zw.x / SI][zw.y] = 1; //坑
+            m_keng[zw.x/SI][zw.y]=std::max(m_keng[zw.x/SI][zw.y],TM+2400);//坑
             NewBaoZha(zw.x+SI/2,zw.y,ty,50);
             fw=2;DestroyZw (z_i,0);break;
         case 7: //寒冰菇
@@ -2406,7 +2440,7 @@ void Game::SpecialPlt (int z_i) //特殊植物
                     if (z != -1) {
                         if ((m_wnd->imjs&&plants[z].type == 1)||TM-plants[z].la_et<20)
                             continue;
-                        double mx=plants[z].mxlf,ad=2*pow(mx,0.3)*mul;
+                        double mx=plants[z].mxlf,ad=pow(mx,0.4)*mul;
                         plants[z].life = std::fmin(plants[z].life+ad,mx);
                         int tx = zw.x/SI+a, ty = zw.y + b;
                         if (m_ng[tx][ty]&&TM-le_ng[tx][ty]>=20)
@@ -2570,13 +2604,13 @@ void Game::SpecialPlt (int z_i) //特殊植物
             if (t == -1)break;
             if (zombies[t].x < zw.x + (gj==20?SI*0.8:SI*2)&&zw.grow == 0) {
                 oddps=dps;no_num=1;
-                int o=KillJsPos (zombies[t].x, zombies[t].y, FW,HURT(gj==20?70000:90000),ty);
+                int o=KillJsPos (zombies[t].x, zombies[t].y, FW,HURT(gj==20?60000:90000),ty);
                 no_num=0;NewNumberPoint(zw.x,zw.y*SI,dps-oddps,ty);
                 if (gj==20&&o>0) { //土豆地雷
                     DestroyZw (z_i,0);
                     break;
                 }
-                else zw.grow = sqrt(o)*sp;
+                else zw.grow = o*sp;
                 zw.id = GetZwIcon (zw);
             }
             break;
@@ -2766,6 +2800,7 @@ int Game::KillJs (int l, int r, int y, const HURT&hu, int from, bool jian) //伤
     if (y < 0||y >= MN)return 0;
     int rea=(hu.fire>0.1?1:0),rt=0;
     if(from==7)rea=2;//窝瓜
+    else if(from==16)rea=-1;
     for (int i = 0; i < zmb_cnt; i++) {
         int zt=zombies[i].type;
         if(zt==19&&from!=3&&from!=5&&from!=72&&from!=15)continue;
@@ -2863,8 +2898,8 @@ void Game::ClearGrid()
 {
     for (int i = 0; i < MM; i++) {
         for (int j = 0; j < MN; j++) {
-            gird_type[i][j] = m_ng[i][j] =m_hy[i][j]=0;
-            m_ice[i][j] = -1;
+            grid_type[i][j] = m_ng[i][j] =m_hy[i][j]=0;
+            m_ice[i][j] = m_keng[i][j] = -1;
             m_wnd->kp_noguan[i][j]=0;
         }
     }
@@ -2886,27 +2921,30 @@ void Game::MakeSI(int lx,int usermn,int usermm,int usersi)
     else MN=usermn,MM=usermm,SI=usersi;
 }
 
+void Game::SetWaterLine(int y,int hs)
+{
+    iswa[y]=true;
+    for(int x=0;x<MM;x++)
+        grid_type[x][y]=1;
+    for(int x=0;x<hs;x++)
+        m_hy[x][y]=800;
+}
+
 void Game::CreateGame (int lx) {
     ClearGrid();
     if (lx==4||lx==5) {//水池
         if (endless) {//无尽水池
-            for (int i = 0; i < MM; i++) {
-                for(int j=1;j<=MN/4;j++)
-                {
-                    gird_type[i][j] = 2, iswa[j] = true;
-                    gird_type[i][MN - 1-j] = 2, iswa[MN - 1-j] = true;
-                }
+            for(int y=1;y<=MN/4;y++)
+            {
+                SetWaterLine(y,2);
+                SetWaterLine(MN-1-y,2);
             }
-            for(int j=0;j<MN;j++)
-                if(iswa[j])gird_type[0][j]=gird_type[1][j]=3;
         }
         else
         {
-            int s=MN/3;if(s<1)s=1;
-            for(int i=0;i<MM;i++)
-                for(int j=s;j<MN-s;j++)
-                    gird_type[i][j] = 2, iswa[j] = true;
-            for(int j=s;j<MN-s;j++)gird_type[0][j] = 3;
+            int s=std::max(1,MN/3);
+            for(int y=s;y<MN-s;y++)
+                SetWaterLine(y,1);
         }
     }
     lstup=dps=fans=0;lstcar=lstfan=laygTM=-inf;
@@ -2973,7 +3011,7 @@ void Game::input (QDataStream &ar) {
     ar >> m_yg>>laygTM>>is_day>>is_fog>>is_cycle;
     for (int i = 0; i < MM; i++) {
         for (int j = 0; j < MN; j++)
-            ar >> gird_type[i][j] >> m_ng[i][j] >> m_ice[i][j]>>js_nd[i][j]>>le_ng[i][j]>>spd_mul[i][j]>>wz_fei[i][j]>>lf_mul[i][j];
+            ar >> grid_type[i][j] >> m_ng[i][j] >> m_ice[i][j]>>m_keng[i][j]>>js_nd[i][j]>>le_ng[i][j]>>spd_mul[i][j]>>wz_fei[i][j]>>lf_mul[i][j];
     }
     for (int i = 0; i < MN; i++) {
         ar >> cars[i] >> car_driv[i] >> iswa[i];
@@ -3023,7 +3061,7 @@ void Game::output (QDataStream &ar) {
     ar << m_yg<< laygTM<<is_day<<is_fog<<is_cycle;
     for (int i = 0; i < MM; i++) {
         for (int j = 0; j < MN; j++)
-            ar << gird_type[i][j] << m_ng[i][j] << m_ice[i][j]<<js_nd[i][j]<<le_ng[i][j]<<spd_mul[i][j]<<wz_fei[i][j]<<lf_mul[i][j];
+            ar << grid_type[i][j] << m_ng[i][j] << m_ice[i][j]<<m_keng[i][j]<<js_nd[i][j]<<le_ng[i][j]<<spd_mul[i][j]<<wz_fei[i][j]<<lf_mul[i][j];
     }
     for (int i = 0; i < MN; i++) {
         ar << cars[i] << car_driv[i] << iswa[i];
@@ -3398,5 +3436,14 @@ void Game::ChuiTick()
             if(zombies[i].tag==0)
                 zombies[i].tag=(80+RA()%41);
         }
+    }
+}
+
+void Game::merge2048(int sx, int sy, int dx, int dy, int k)
+{
+    for(int i=0;i<k;i++)
+    {
+        int w=GetZwShu(SI*(sx+i*dx),sy+i*dy);
+
     }
 }

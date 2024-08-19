@@ -18,7 +18,7 @@ public:
     int shi_cnt;//装饰物数目
     int m_yg;//阳光
     bool is_day,is_fog,is_cycle;//场景
-    int gird_type[MMM][MMN],m_hy[MMM][MMN];//是否为坑，荷叶血量
+    int grid_type[MMM][MMN],m_hy[MMM][MMN];//是否为坑，荷叶血量
     bool over,started,real;//是否结束,是否开始
     int cars[MMN],car_driv[MMN];//有无车，是否正在用车
     bool no_num,plt_kui,endless,iswa[MMN];//是否正在双指针，AI种葵，是否无尽，是否为水池
@@ -26,7 +26,7 @@ public:
     short pd[MMN][MAX_BUL_CNT],pj[MMN][MAX_ZMB_CNT];//排序用
     int row_zmb[MMN];//每行僵尸数目
     int XS,t_ai,lst[MMN];//AI用
-    int le_ng[MMM][MMN],m_ice[MMM][MMN];//南瓜，吃南瓜时间，冰道
+    int le_ng[MMM][MMN],m_ice[MMM][MMN],m_keng[MMM][MMN];//南瓜，吃南瓜时间，冰道
     int expad,ygad,lstcar,lstup,lstfan,js_nd[MMM][MMN];
     int jd,zjd,car_TM[MMN];std::vector<int> vdb;
     double lmw;
@@ -56,6 +56,7 @@ public:
     void ClearGrid();
     void MakeSI(int lx,int usermn,int usermm,int usersi);
     void CreateGame(int lx);
+    void SetWaterLine(int y,int hs=0);
     void KillAll();
     bool ZombieInide(int i,int xl,int xr,int yl,int yr,bool ck100=true);
     int KillJsLine(int y,const HURT&hu,int from=-1);
@@ -194,7 +195,7 @@ public:
     bool ZdHitJs(const Bullet&zd,int ji);
     void DoZwAnimine(int tm,double spd=1.0);
     void FlagTick();
-    bool ZombieEatPlant(int j_i,int x,int y);
+    bool ZombieCanEatPlant(int j_i,int x,int y);
     Bullet BulletFromZw(int zi);
     double CalScoreP();
     int GetMWCGoal();
@@ -202,6 +203,9 @@ public:
     int ColorToFrom(const QColor&co)const;
     void RightKey(int w,QPoint pt);
     void ChuiTick();
+    bool IsKeng(int x,int y)const;
+    bool Valid_Grid_Type(int x,int y)const;
+    void merge2048(int sx,int sy,int dx,int dy,int k);
 };
 
 #endif // GAME_H

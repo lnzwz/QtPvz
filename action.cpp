@@ -1025,8 +1025,9 @@ bool MainWindow::DoWSAD(int sx,int sy,int tx,int ty)
     sele_x=sx;sele_y=sy;bool rt=0;
     if (tx >= 0 && tx <= (MM - 1) * SI && ty >= 0 && ty < MN
             && wsad_col[tx/SI][ty]!=-1&&(sele_x==-1||wsad_col[tx/SI][ty]==wsad_col[sele_x/SI][sele_y])
-            &&m_game.GetZwShu (tx, ty) == -1 && !m_game.IsIcy(tx/SI,ty)
-            &&(m_game.gird_type[tx/SI][ty]==0||m_game.gird_type[tx/SI][ty]==3)) {
+            &&m_game.GetZwShu (tx, ty) == -1 && !m_game.IsIcy(tx/SI,ty) &&!m_game.IsKeng(tx/SI,ty)
+            &&(m_game.Valid_Grid_Type(tx/SI,ty)))
+    {
         int z = m_game.GetZwShu (sele_x, sele_y);
         if (z != -1)m_game.MoveZw(z,tx,ty),rt=1;
         sele_x = tx; sele_y = ty;

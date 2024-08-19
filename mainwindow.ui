@@ -320,7 +320,6 @@ QLineEdit::placeholder {
     padding: 6px 10px; /* 内边距 */
     text-align: center; /* 文本居中 */
     text-decoration: none; /* 去掉下划线 */
-    display: inline-block; /* 按钮类型 */
     font-size: 15px; /* 字体大小 */
     border-radius: 10px; /* 圆角半径 */
 }

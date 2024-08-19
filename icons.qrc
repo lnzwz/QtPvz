@@ -295,5 +295,7 @@
         <file>icons/278.png</file>
         <file>icons/279.png</file>
         <file>icons/280.png</file>
+        <file>icons/281.png</file>
+        <file>icons/282.png</file>
     </qresource>
 </RCC>

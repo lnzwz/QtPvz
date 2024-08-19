@@ -5,9 +5,10 @@
 int RXUAN,XUAN,TM,MM=9,MN=5,SI=110,FIRETM=30,ME,HI=610,W0=110,W1=1040,W2=140,TOP=50;
 double dan[100],zoom,sinra[10000],cosra[10000],PI=acos(-1.0),XW=616.0/2433,YW=400.0/1536,XT=81.0/2433,YT=172.0/1536;
 MainWindow *m_wnd;
-QPixmap *ico,*ico_bl,*icm,*ico_red,*icm_rd,*icm_bl,*ico_blk,*ico_sha;
+QPixmap *ico,*ico_bl,*ico_red,*ico_blk,*ico_sha;
 std::mt19937 RA(std::random_device{}());
 QString path;bool pub_bl[1000];
+QSize ico_si[ICCNT+1];
 int MyRand(int cnt[100],int p[100],int n);
 int GetMin(int a[100],int n)
 {

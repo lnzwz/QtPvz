@@ -112,6 +112,7 @@ public:
     void ResetIcons();
     int ChooseGQ();
     void EndLessNd();
+    void MakeTuJian();
 
     ~MainWindow();
 
@@ -131,7 +132,7 @@ public:
     int beans,labeanTM;//能量豆数目
     int plt_cnt[ZGQS];//每关植物数
     double cd[MAXSHU];//恢复进度
-    int m_xuan[MAXXUAN],x_js[MXUAN],def_xuan[MXUAN],xuan_st,a_xs;//选择的植物，僵尸
+    int m_xuan[MAXXUAN],x_js[MAXXUAN],def_xuan[MXUAN],xuan_st,a_xs;//选择的植物，僵尸
     bool del_x[MAXSHU];//无法选择的特殊植物
     int zmb_p[MAXJSH];//僵尸概率
     int plt_p[MAXSHU];//植物生成概率
