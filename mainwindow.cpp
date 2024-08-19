@@ -217,8 +217,8 @@ void MainWindow::InitZw()
     plants[2].Create (Qt::black, 0, 1e8, dzj, 2, 750, 0, 0, 4, 60, 2); //小坚果
     plants[3].Create (RED, -2, 0, 0, 100, 50, 0, 0, 7, 150, 3); //炸弹
     plants[56].Create(YUMI,1,1600,dza,4,80,0,0,210,120,56,ts);//玉米投手
-    plants[53].Create(QColor(186,49,36),0,1e8,1e8,0,1,0,0,196,40,53);//巴豆
-    plants[63].Create(nul,-28,1000,1e8,0,1,0,0,225,10,63);//冰豆
+    plants[53].Create(QColor(186,49,36),0,1e8,0,0,1,0,0,196,40,53);//巴豆
+    plants[63].Create(nul,-28,1000,0,0,1,0,0,225,10,63);//冰豆
     plants[4].Create (RED, 1, 1600, dza, 4, 80, 0, 0, 8, 150, 4, si); //火球射手
     plants[5].Create (RED, -3, 0, 0, 90, 50, 0, 0, 9, 125, 5); //火爆辣椒
     plants[6].Create (BLUE, 1, 1900, dza, 4, 80, 0, 0, 48, 100, 9, si, true); //寒冰射手
@@ -295,7 +295,7 @@ void MainWindow::InitZw()
     plants[24].Create (nul, 0, 0, 0, 0, 600, 0, 0, 268, 80, 24); //南瓜
     plants[27].Create (nul, -13, 2000, 0, 30, 40, 0, 0, 110, 20, 27); //大葱
     plants[33].Create (QColor (255, 140, 0), 0, 1e8, 0, 0, 80, 0, 0, 142, 25, 33); //大蒜
-    plants[29].Create (Qt::gray, 0, 1e8, 1e8, 0, 120, 0, 0, 132, 125, 29); //地刺
+    plants[29].Create (Qt::gray, 0, 1e8, 0, 0, 120, 0, 0, 132, 125, 29); //地刺
     plants[31].Create (nul, -26, 1e8, 0, 0, 160, 0, 0, 135, 275, 31); //大炮1
     plants[30].Create (nul, -14, 3600, 0, 10, 160, 0, 0, 134, 275, 30); //大炮2
     plants[37].Create (GREEN, 1, 1600, dzb, 4, 100, 0, 0, 155, 80, 37, si); //豌豆荚
@@ -309,9 +309,9 @@ void MainWindow::InitZw()
     plants[35].Create (YELLOW, 0, 1e8, dzj, 2, 750, 0, 0, 144, 100, 35); //有毒坚果
     plants[42].Create (nul, -17, 0, 0, 0, 50, 0, 0, 169, 200, 42); //魅惑炸弹
 
-    plants[45].Create (nul, 0, 1e8, 1e8, 0, 200, 0, 0, 115, 800, 45); //血量升级
-    plants[46].Create (nul, 0, 1e8, 1e8, 0, 200, 0, 0, 176, 1600, 46); //速度升级
-    plants[47].Create (nul, 0, 1e8, 1e8, 0, 200, 0, 0, 177, 1000, 47); //攻击升级
+    plants[45].Create (nul, 0, 1e8, 0, 0, 200, 0, 0, 115, 800, 45); //血量升级
+    plants[46].Create (nul, 0, 1e8, 0, 0, 200, 0, 0, 176, 1600, 46); //速度升级
+    plants[47].Create (nul, 0, 1e8, 0, 0, 200, 0, 0, 177, 1000, 47); //攻击升级
     plants[48].Create (nul, -19, 1000, 0, 0, 80, 0, 0, 179, 120, 48); //金盏花
 
     plants[43].Create(nul,0,0,0,0,0,0,0,170,5,43);//翻转工具
@@ -319,12 +319,12 @@ void MainWindow::InitZw()
     plants[99].Create(nul, -36, 0, 0, 0, 80, 0, 0, 276, 200, 99);//能量花
     plants[49].Create(nul,0,0,0,0,0,0,0,186,50,49);//点火器
     plants[50].Create(nul,0,0,0,0,0,0,0,187,50,50);//灭火器
-    plants[51].Create(nul,0,1e8,1e8,0,1,0,0,194,10,51);//僵尸加速器
+    plants[51].Create(nul,0,1e8,0,0,1,0,0,194,10,51);//僵尸加速器
     plants[52].Create(nul,0,0,0,0,0,0,0,195,5,52);//植物开关
-    plants[62].Create(nul,0,1e8,1e8,0,80,0,0,224,50,62);//培养皿
+    plants[62].Create(nul,0,1e8,0,0,80,0,0,224,50,62);//培养皿
 
 
-    for(int i=0;i<MAXSHU;i++)plants[i].dztm=plants[i].dztm/5*2;
+    for(int i=0;i<MAXSHU;i++)plants[i].dztm=plants[i].dztm/5;
     for(int i=0;i<MAXSHU;i++)plt_p[i]=10,plt_sum[i]=0,sp_plt[i]=0;
     int era[30]={0,12,15,17,18,19,21,27,28,30,31,33,40,43,45,46,47,48,49,51,52,59,62,71,84,85,86,55,42,38};
     for(int i=0;i<30;i++)plt_p[era[i]]=0;
@@ -499,8 +499,8 @@ void MainWindow::MakeTuJian()
 {
     InitIcon();
     QString str="## 植物图鉴\n";
-    str+="| 名称 | 图片 | 功能 | 阳光 | 冷却时间 | 生命值 | 攻击力 | 攻击间隔 | 溅射范围 |\n";
-    str+="| ---- | ---- | ---- | ---- | -------- | ------ | ------ | -------- | -------- |\n";
+    str+="| 名称 | 图片 | 功能 | 阳光 | 冷却时间 | 生命值 | 攻击力 | 攻击间隔 | 攻击范围 | 大招时间 |\n";
+    str+="| ---- | ---- | ---- | ---- | -------- | ------ | ------ | -------- | -------- | -------- |\n";
     char zw_na[][20]={"向日葵","豌豆射手","小坚果","炸弹","玉米投手","巴豆","冰豆","火球射手","火爆辣椒","寒冰射手","双发射手","高坚果","倭瓜","卷心菜投手","西瓜投手","土豆地雷","三线射手",
                     "普通机枪射手","激光豆","强力寒冰射手","虚弱炸弹","虚弱豆","虚弱射手","全息坚果","双子向日葵","有毒射手","双发有毒射手","毒气弹","大嘴花","橡木弓手","闪电射手","模仿者",
                     "火龙草","导电坚果","辣椒投手","冰冻炸弹","火炬树桩","冰火炬树桩","冰龙草","小炸弹","椰子小炮","彩色机枪射手","火药桶","闪电炸弹","冰西瓜投手","有毒投手","中毒坚果",
@@ -530,12 +530,28 @@ void MainWindow::MakeTuJian()
             if(zw.move_spd>0)
                 str+=QString::asprintf("%d",zw.move_spd*10);
         }
+        int fi=0;double q=0;
+        if(zw.attack>0&&(zw.color==RED||zw.color==DBLUE))fi=10;
+        if(zw.type==92)fi=20;
+        if(zw.type==90)q=0.9;
         if(zw.freeze>0)str+=QString::asprintf("（附加%.1lf秒寒冰效果）",zw.freeze/20.0);
         if(zw.du>0)str+=QString::asprintf("（附加%.1lf点中毒效果）",zw.du/50.0);
+        if(fi>0)str+=QString::asprintf("（附加%d点火焰效果）",fi/10);
+        if(q>0)str+=QString::asprintf("（附加%.1lf点电荷）",q);
         if(zw.time>0&&zw.time<1e8)str+=QString::asprintf(" | %.1lf秒 | ",zw.time/1000.0);
         else str+=QString::asprintf(" | | ");
-        if(zw.jian>0)str+=QString::asprintf("%d |",zw.jian);
-        else str+=QString::asprintf("|");
+        int ji=zw.jian+fi+int(5*q+0.5);
+        if(ji>0)str+=QString::asprintf("%d | ",ji);
+        else str+=QString::asprintf("| ");
+        if(zw.dztm>0)
+        {
+            int tm=100;
+            if(zw.type==41||zw.type==37)tm=40;
+            else if(zw.type==102)tm=300;
+            else if(m_game.jianguo[zw.type])tm=2000;
+            str+=QString::asprintf("%.1lf秒 | ",zw.dztm*tm/1000.0);
+        }
+        else str+=QString::asprintf("| ");
         str+='\n';
     }
     QFile file("tujian.md");
@@ -573,7 +589,7 @@ void MainWindow::Init () {
         n_2048[plants[ne[i]].type]=plants[ne[i+1]].type;
     n_2048[plants[ne[6]].type]=-1;
 
-    //MakeTuJian();
+    MakeTuJian();
 }
 
 void MainWindow::InitOneIcon(int i)
@@ -3511,7 +3527,7 @@ void MainWindow::ReadDelta(QDataStream&da)
     else if(ty==3)//Dz
     {
         int w;da>>w;
-        bool rt=m_game.DaZhao(w);
+        bool rt=m_game.DaZhao(w, 2.0);
         if(rt)beans-=1;
     }
     else if(ty==4)

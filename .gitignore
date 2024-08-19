@@ -2,6 +2,7 @@ android
 sounds
 android_release.keystore
 *.user
+*.user.*
 icons.qrc.depends
 idea0.txt
 idea1.txt
@@ -9,7 +10,8 @@ ideas_CHATGPT.md
 qrc_iconstmp.cpp
 trash.cpp
 updates.docx
-icons/*.old
-icons/old
+*.old
+old
 tj
 .cache
+.DS_Store

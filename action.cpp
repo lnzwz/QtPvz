@@ -658,7 +658,7 @@ void MainWindow::SolveDz (QPoint pt) //处理大招
         {
             int rt = m_game.GetZwShu (x, y);
             if (rt != -1) {
-                bool rtn = m_game.DaZhao (rt);
+                bool rtn = m_game.DaZhao (rt, 2.0);
                 if (rtn) //成功
                 {
                     beans -= 1;

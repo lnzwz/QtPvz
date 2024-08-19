@@ -673,7 +673,7 @@ void Game::AI () {
                         m_wnd->select = (!is_day?17:0);
                         m_wnd->AddPlant (x, y);
                         if (m_wnd->beans && !plt_kui) {
-                            DaZhao (plt_cnt - 1);
+                            DaZhao (plt_cnt - 1, 2.0);
                             m_wnd->beans -= 1;
                         }
                         else plt_kui=1;
@@ -865,7 +865,7 @@ void Game::AI () {
                     for (int x = 0; x <= 550; x += SI) {
                         int z = GetZwShu (x, zy);
                         if (z != -1 && plants[z].type == 44 && plants[z].time != 100) {
-                            DaZhao (z);
+                            DaZhao (z, 2.0);
                             lst[zy] = t_ai;
                             m_wnd->beans -= 1;
                             break;
@@ -877,7 +877,7 @@ void Game::AI () {
                         for (int x = 0; x <= 550; x += SI) {
                             int z = GetZwShu (x, zy);
                             if (z != -1 && plants[z].type == 10 && plants[z].time != 100) {
-                                DaZhao (z);
+                                DaZhao (z, 2.0);
                                 lst[zy] = t_ai;
                                 m_wnd->beans -= 1;
                                 break;
@@ -1017,7 +1017,7 @@ void Game::AI () {
         }
         if(w!=-1)
         {
-            DaZhao (w);
+            DaZhao (w, 2.0);
             m_wnd->beans -= 1;
         }
     }
